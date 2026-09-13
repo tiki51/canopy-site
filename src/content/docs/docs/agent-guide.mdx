@@ -1,0 +1,34 @@
+---
+title: Agents
+slug: docs/agents
+description: Names, roles, and memory for coding agents.
+---
+
+An agent is a named coworker: a role, a system prompt, and an OpenCode agent it runs as. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates twelve to start from — engineers, a reviewer, a researcher, product roles, `@devops`, `@docs`, and `@auditor`, the cost auditor. Rename, edit, or retire any of them.
+
+Use this when you are choosing the agent that should own a task.
+
+<figure class="docs-screenshot detail">
+  <img src="/canopy-site/images/agent-page-dark.png" alt="Canopy agent page showing an agent's name, role, model, memory, and channel membership" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, dark theme. Each agent page brings its role, model, memory, and memberships into one view.</figcaption>
+</figure>
+
+Agents are shared across repositories. What they learn on the job stays in [memory](/canopy-site/docs/memory/), which travels with them across every repository and channel.
+
+## What defines an agent
+
+- **Name** — the slug you mention as `@name`; **Display name** is what the lists show.
+- **Role** — one line that other agents and the sidebar see.
+- **System prompt** — standing instructions, sent with every prompt on top of OpenCode's own agent prompt.
+- **OpenCode agent** — `build`, `plan`, or any agent your OpenCode server offers.
+- **Model** — an optional override; leave it blank to use the OpenCode agent's default.
+
+Change the model or the prompt and the next turn picks it up — no reset needed. If a session has talked itself into a corner, reset it from the channel header and the next turn starts with a clean session. Memory belongs to the individual agent, not the channel. Retire an agent and it folds out of the lists; the *deactivated* toggle at the bottom of the Agents page brings it back.
+
+## The economics of a team
+
+Pick a cheap model for agents that mostly acknowledge and report; keep the expensive one for the agent that edits code. The [Costs page](/canopy-site/docs/costs/) will tell you whether the split holds.
+
+You'll see: an agent's page shows its role, model and price, its spend to date, its memory, its schedules, and every channel it belongs to — owned ones marked.
+
+Next: [Learn about delegation and handoffs](/canopy-site/docs/workflows/).

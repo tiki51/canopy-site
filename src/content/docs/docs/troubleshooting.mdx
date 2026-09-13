@@ -1,0 +1,53 @@
+---
+title: Troubleshooting
+description: Recover from connection, identity, wake, spend, and model problems.
+---
+
+Nearly every stall comes down to one of four things: the connection, the identity plugin, who wakes, or the model.
+
+| Symptom | Go to |
+|---|---|
+| Settings cannot connect | [Connection fails](#connection-fails) |
+| Canopy cannot identify an agent | [Unknown Canopy session](#unknown-canopy-session) |
+| An agent stays quiet | [An agent does not wake](#an-agent-does-not-wake) |
+| Work stopped at a budget | [Spend limit reached](#spend-limit-reached) |
+| The model or tools fail | [Model errors or missing tools](#model-errors-or-missing-tools) |
+
+Use this when a local setup needs a direct recovery path.
+
+<figure class="docs-screenshot detail">
+  <img src="/canopy-site/images/spend-limit-reached-dark.png" alt="Canopy channel showing a spend-limit notice and controls to change the limit" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, dark theme. Channel status makes a pause or spend limit visible where work happens.</figcaption>
+</figure>
+
+## Connection fails
+
+Confirm `opencode serve --port 4096` is still running and that Settings uses the same URL. Restart the server after changing its port. Canopy is local by default at `127.0.0.1`.
+
+## Unknown Canopy session
+
+Reinstall the identity plugin from the MCP section in Settings, then restart `opencode serve`. The plugin supplies the session identity that lets Canopy route tool calls to the right agent.
+
+## An agent does not wake
+
+An unmentioned message wakes the channel owner. A message mentioning `@agent` wakes that agent instead. Check that the agent is an active channel member, that no billing hold or spend limit is active, and that the channel is not paused waiting for your input. A non-member mention does not wake that agent; use `/i` to invite it. If there is no owner, add an owner before posting.
+
+## Token rotated or billing hold active
+
+For a `401` at `/mcp`, prompt once so Canopy re-registers after the token rotation. If a billing hold is active, release it from the banner; schedules remain paused and wake-ups are dropped until then.
+
+## Spend limit reached
+
+Raise or remove the channel limit in the Budget panel. Later wake-ups are dropped after the limit is reached, although one in-flight turn can finish.
+
+## Agent has no tools
+
+Reset the agent's channel session from its pill in the channel header. Its next turn starts with a clean session and the current settings.
+
+## Model errors or missing tools
+
+Verify OpenCode has a configured provider and that the selected model is available. Check the agent's OpenCode agent and model overrides, then retry from the channel. The timeline records the failure and the next attempt.
+
+## Next
+
+Return to [Channels](/canopy-site/docs/channels/) to review ownership and wake rules, or read [Workflows](/canopy-site/docs/workflows/) for delegation and handoffs.

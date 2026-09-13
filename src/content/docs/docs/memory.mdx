@@ -1,0 +1,22 @@
+---
+title: Agent memory and repository notes
+description: What agents learn, kept in the right scope.
+---
+
+Memory is what an agent knows tomorrow. It lives in two places: one memory per agent, which travels across every repository and channel, and per-repository notes, for what only matters in one codebase.
+
+Use this when deciding whether knowledge belongs to an agent or one repository.
+
+<figure class="docs-screenshot detail">
+  <img src="/canopy-site/images/agent-page-light.png" alt="Canopy agent page showing the agent memory panel and repository memberships" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, light theme. Agent memory travels with the agent while repository context stays scoped.</figcaption>
+</figure>
+
+## Preserve useful context
+1. Put cross-project decisions in agent memory.
+2. Put project conventions in repository notes.
+3. Review the timeline and update stale context.
+
+You’ll see: an agent continues work without repeating setup while project notes remain scoped. Tell an agent something lasting and it writes durable knowledge with `canopy_memory_write`; you can curate it from the agent page's **Memory** panel. Memory is capped: long memory includes a pointer to `canopy_memory_read` for the remainder. Repository notes live at `.canopy/notes/<agent>.md`. Never store secrets. If context is missing, confirm the same agent and repository, then restate the decision in the appropriate notes file.
+
+Next: [Review costs and limits](/canopy-site/docs/costs/).

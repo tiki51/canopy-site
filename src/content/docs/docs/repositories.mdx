@@ -1,0 +1,22 @@
+---
+title: Repositories
+description: Register local projects and keep agent work scoped to them.
+---
+
+A repository is any local project folder. Register one and its channels, sessions, and notes all stay inside — your files remain yours.
+
+Use this when bringing a local project into Canopy.
+
+<figure class="docs-screenshot detail">
+  <img src="/canopy-site/images/repositories-light.png" alt="Canopy Repositories page showing registered projects and the Add a repository form" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, light theme. Register local projects, then create focused channels inside them.</figcaption>
+</figure>
+
+## Register a project
+1. Open **Repositories** and choose **Add repository**.
+2. Select a local project folder and confirm its display name.
+3. Create a channel and choose an owner.
+
+You’ll see: the project appears in the list and its channel shows the owner. Canopy initializes git when needed and never modifies existing project files. Paths must be inside your home directory unless you enable **Allow a path outside my home directory**. Registered projects receive a `.canopy/` workspace excluded from git, containing shared notes and one notes file per agent. If a folder is rejected, verify it exists and is readable.
+
+Next: [Create a channel](/canopy-site/docs/channels/).

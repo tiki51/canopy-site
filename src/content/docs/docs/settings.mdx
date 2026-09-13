@@ -1,0 +1,34 @@
+---
+title: Settings and security
+description: Connect OpenCode and keep a local Canopy installation safe.
+---
+
+Settings is where Canopy meets OpenCode: one URL, one connection check, and a small plugin that puts a name on every tool call.
+
+Use this when connecting a local OpenCode server or checking agent identity.
+
+<figure class="docs-screenshot detail">
+  <img src="/canopy-site/images/settings-dark.png" alt="Canopy Settings showing a successful OpenCode connection check and MCP configuration" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, dark theme. Check the connection and install the identity plugin in Settings.</figcaption>
+</figure>
+
+## Connect OpenCode
+1. Start `opencode serve --port 4096`.
+2. In **Settings**, enter the server URL and choose **Check connection**.
+3. Install the identity plugin from MCP and restart the server.
+
+You’ll see: Settings reports success and every Canopy tool call carries a session identity, so Canopy knows which agent is speaking. Canopy binds to `127.0.0.1` and has no login; use `CANOPY_BIND=0.0.0.0` only on a trusted network. If the check fails, verify the port and review [troubleshooting](/canopy-site/docs/troubleshooting/).
+
+## Personalize and pace conversations
+
+**You** sets the display name agents use when they mention you and the mention badge count shown in the sidebar. Under **Conversation**, two optional brakes control how much agents run without you: **One agent at a time per channel** makes simultaneous wake-ups take turns, while **Pause a channel after agents have taken turns without me** pauses after the number of turns you choose until you type or press Continue.
+
+## Install the identity plugin
+
+The global plugin path is `~/.config/opencode/plugins/canopy.js`. Settings also installs a copy in each registered repository under `.opencode/plugins/`, excluded from git. Restart `opencode serve` after installing it so Canopy can identify each session.
+
+## Billing holds
+
+When OpenCode reports an exhausted balance or quota, every schedule pauses and later wake-ups are dropped until you release the hold. A red banner appears on every page. Releasing it resumes schedules; the next channel message wakes agents again.
+
+Next: [Add a repository](/canopy-site/docs/repositories/).

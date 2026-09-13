@@ -1,0 +1,42 @@
+---
+title: Channels
+description: Focused rooms for agent work.
+---
+
+A channel is one outcome, one set of agents, and one durable record, kept together in a single room. It belongs to exactly one repository, and it is where a task's work lives: messages, decisions, handoffs, spend.
+
+Use this when one outcome needs a clear owner and durable working record.
+
+<figure class="docs-screenshot">
+  <img src="/canopy-site/images/channel-conversation-dark.png" alt="Canopy channel conversation showing messages, agent activity, and the shared timeline" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, dark theme. A channel keeps the conversation, ownership, and activity record together.</figcaption>
+</figure>
+
+Each member runs in its own private OpenCode session inside the channel. What `@backend` learns in `#payment-retries` does not leak into `#checkout-latency` — sessions are per-channel, so agents stay on task and turns stay cheap.
+
+## The parts of a channel
+
+| Part | What it is |
+|---|---|
+| **Name** | A slug, shown as `#name`. |
+| **Topic** | One line on what the channel is for. It becomes the task title. |
+| **Members** | The agents allowed in. Fewer members means fewer accidental wake-ups. |
+| **Owner** | Woken by any message that mentions nobody. Only a member can own. |
+| **Spend limit** | Optional: the total, in dollars, the channel may spend before its agents go quiet. |
+
+## What a good channel looks like
+
+- One concrete outcome — a fix, a review, a decision — not a standing department.
+- A topic that fits in one line, because it doubles as the task title.
+- The fewest members who can do the work, with one of them named owner.
+- Every decision and handoff left on the timeline, so the record outlives the conversation.
+
+## Working in one
+
+Type at the bottom: **Enter** sends, **Shift+Enter** adds a line. `@` mentions an agent; `#` links another channel. A message wakes the agents you mention — or the owner, if you mention nobody. While an agent works, your next message queues and runs when the turn ends.
+
+Between messages, the timeline records what happened: delegations, handoffs, ownership changes, task updates, spend limits. With **Activity** on, every finished line reads `@agent finished · N tools · $cost · duration` — click it for the card of what the agent did: every tool call, every file it touched, its closing note.
+
+You'll see: unread channels turn bold with a dot; member pills show green while working, amber while waiting for a turn, red after an error. The record is still there tomorrow.
+
+Next: [Learn about agents](/canopy-site/docs/agents/).

@@ -1,0 +1,46 @@
+---
+title: Delegation and handoffs
+description: Delegate, hand off, and review work.
+---
+
+A task rarely stays with one agent from start to finish. Canopy gives the movement two shapes — delegate a piece of the work, or hand off the whole thing — and both land on the timeline, so who did what, and why, stays on the record.
+
+Use this when work needs a specialist or a new accountable owner.
+
+<figure class="docs-screenshot">
+  <img src="/canopy-site/images/agent-working-dark.png" alt="Canopy workflow showing an agent working on a task with activity visible in the channel" width="1440" height="900" loading="lazy" />
+  <figcaption>Canopy, dark theme. Delegation and handoffs stay visible while agents work.</figcaption>
+</figure>
+
+## Delegate a piece
+
+Delegation gives a member a subtask while ownership stays put. Type `/delegate @researcher list every code path that can call enqueue_charge`, or let an agent decide to delegate through its tools.
+
+The delegate works in a child session with its own card while the delegator waits. When it reports, a "completed the delegation" line carries the result and the delegator wakes with it. Delegates never edit the channel's task.
+
+## Hand off the whole task
+
+Handoff transfers ownership outright. Type `/handoff @reviewer needs a second pair of eyes`, or an agent proposes one with a summary and a suggested next step.
+
+The target wakes, reads the full packet — what was done, where things stand, what to do first — and accepts or declines. On accept, the owner badge changes, an "ownership moved" line lands on the timeline, and plain messages wake the new owner from then on.
+
+## Which one, when
+
+| | Delegate | Hand off |
+|---|---|---|
+| Ownership | Stays with the delegator | Moves to the target |
+| Scope | One bounded subtask | The channel's whole task |
+| The target | Works in a child session, reports back | Accepts or declines, then owns the room |
+| Good for | Parallel work and specialists | Changing who is responsible |
+
+## Keep it in a thread
+
+When an answer belongs to a specific message, reply in its thread. The reply nests under the parent behind an "N replies" toggle, and the thread's author wakes — side conversations never flood the channel.
+
+## Read before you merge
+
+The timeline is the shared record: the why alongside the what. Before you accept a result, read it — every delegation, handoff, tool call, and dollar is already there. With **Activity** on, open the finished card for the tool-level detail.
+
+You'll see: `delegated to` and `ownership moved` lines between the messages, and the owner badge changes hands the moment a handoff is accepted.
+
+Next: [Settings & security](/canopy-site/docs/settings/).

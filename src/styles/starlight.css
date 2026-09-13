@@ -1,0 +1,145 @@
+:root {
+  --sl-content-width: 42rem;
+  --sl-line-height: 1.65;
+  --sl-color-accent-low: #122548;
+  --sl-color-accent: #5bea78;
+  --sl-color-accent-high: #f0f5ff;
+  --sl-color-white: #f0f5ff;
+  --sl-color-gray-1: #d5def0;
+  --sl-color-gray-2: #a8b5cd;
+  --sl-color-gray-3: #6f7f9e;
+  --sl-color-gray-4: #536482;
+  --sl-color-gray-5: #364665;
+  --sl-color-gray-6: #122548;
+  --sl-color-black: #0a1730;
+}
+
+:root[data-theme='light'] {
+  --sl-color-white: #0a1730;
+  --sl-color-gray-1: #122548;
+  --sl-color-gray-2: #364665;
+  --sl-color-gray-3: #536482;
+  --sl-color-gray-4: #76839b;
+  --sl-color-gray-5: #b6c1d4;
+  --sl-color-gray-6: #e2e9f5;
+  --sl-color-gray-7: #ffffff;
+  --sl-color-black: #f7f9fd;
+  --sl-color-accent-low: #ddfbe4;
+  --sl-color-accent: #167a34;
+  --sl-color-accent-high: #0a3d1b;
+  --sl-color-text-accent: #167a34;
+  --sl-color-text-invert: #0a1730;
+  --sl-color-bg-accent: #5bea78;
+}
+
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+  background: #5bea78;
+  color: #0a1730;
+}
+
+.card-grid > .guide-card {
+  display: block;
+  color: inherit;
+}
+
+.card-grid > .guide-card .card {
+  height: 100%;
+}
+
+.card-grid > .guide-card:hover .card,
+.card-grid > .guide-card:focus-visible .card {
+  border-color: var(--sl-color-accent);
+}
+
+.card-grid > .guide-card .card {
+  padding: 1.5rem;
+  gap: .75rem;
+}
+
+.card-grid > .guide-card .card .title {
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+
+.card-grid > .guide-card .card .body {
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.site-title {
+  color: var(--sl-color-white);
+}
+
+:focus-visible {
+  outline: 2px solid #58b7ff;
+  outline-offset: 3px;
+}
+
+.sl-markdown-content .docs-screenshot {
+  margin: 2rem 0 2.25rem;
+}
+
+.sl-markdown-content .docs-screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.75rem;
+  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 16%);
+}
+
+.sl-markdown-content .docs-screenshot figcaption {
+  margin-top: 0.65rem;
+  color: var(--sl-color-gray-3);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* Detail views support a single concept without cropping product evidence. */
+.sl-markdown-content .docs-screenshot.detail {
+  max-width: 34rem;
+}
+
+/* Keep adjacent-document links as compact directional navigation. */
+.pagination-links {
+  gap: 1.5rem;
+}
+
+.pagination-links a {
+  min-height: 104px;
+  padding: 1rem 1.25rem;
+  gap: 0.5rem;
+}
+
+.pagination-links a > span {
+  font-size: 0.8125rem;
+  line-height: 1.3;
+}
+
+.pagination-links a > svg {
+  align-self: flex-start;
+  margin-top: 0.05rem;
+}
+
+.pagination-links .link-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+@media (max-width: 700px) {
+  .sl-markdown-content .docs-screenshot.detail {
+    width: 100%;
+  }
+
+  .pagination-links {
+    grid-template-columns: 1fr;
+  }
+
+  .pagination-links a {
+    min-height: 88px;
+  }
+}
