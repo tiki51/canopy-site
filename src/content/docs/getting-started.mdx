@@ -1,135 +1,23 @@
 ---
-title: Your first Canopy task
-description: Connect OpenCode to Canopy and complete your first local agent task in five minutes.
+title: Choose your setup
+description: Start Canopy with Claude Code or OpenCode.
 ---
 
-import { Steps, Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
-From prerequisites to your first completed agent reply. Installation time is not included.
-
-By the end you'll have Canopy running at `http://localhost:4000`, one local project registered, and a channel where an agent has already answered you — without a single file changed.
-
-| At a glance | |
-|---|---|
-| Time | ~5 min after install |
-| You need | Elixir 1.20 with Erlang/OTP 28, OpenCode 1.18+ with a configured provider, and git |
-| Safe first prompt | Read-only |
-
-<figure class="docs-screenshot">
-  <img src="/canopy-site/images/settings-dark.png" alt="Canopy Settings showing OpenCode server connection, display name, and conversation controls" width="1440" height="900" loading="lazy" />
-  <figcaption>Canopy, dark theme. Settings confirms the OpenCode connection before your first task.</figcaption>
-</figure>
-
-<Steps>
-
-1. ## Check prerequisites
-
-   You need Elixir 1.20 with Erlang/OTP 28, OpenCode 1.18+ with a configured provider, and git.
-
-   Verify yours from any terminal:
-
-   ```bash
-   elixir --version   # wants Elixir 1.20 on Erlang/OTP 28
-   git --version
-   opencode providers # lists the model providers you have credentials for
-   ```
-
-   A *configured provider* means at least one of those answers — that model is what your agents will think with. Canopy confirms the OpenCode version itself in step 4.
-
-   :::note[Checkpoint]
-   OpenCode can run a model in your terminal.
-   :::
-
-2. ## Install Canopy
-
-   ```bash
-   git clone https://github.com/tiki51/canopy
-   cd canopy
-   mix setup    # dependencies, database, and twelve starter agents
-   ```
-
-   `mix setup` compiles the dependencies, creates the development database, and seeds twelve starter agents, from `@backend` to `@reviewer`. The first run takes a few minutes — the slowest step on this page — and it only happens once.
-
-   :::note[Checkpoint]
-    Setup completes and twelve starter agents appear.
-   :::
-
-3. ## Start both services
-
-   Keep each process running in its own terminal.
-
-   ```bash
-   # Terminal 1
-   opencode serve --port 4096
-
-   # Terminal 2
-   mix phx.server
-   ```
-
-   Two processes, two jobs. `opencode serve` is the engine: it runs the models and executes every tool call your agents make. `mix phx.server` is Canopy itself, serving the workspace at `http://localhost:4000`.
-
-   Start order doesn't matter — whichever comes up second, they find each other within about half a minute. The same recovery applies from here on: restart either process and nothing is lost. Canopy reconnects and re-registers on its own. If they do not connect, see [Connection fails](/canopy-site/docs/troubleshooting/#connection-fails).
-
-   :::note[Checkpoint]
-   Open [localhost:4000](http://localhost:4000).
-   :::
-
-4. ## Connect OpenCode
-
-   Open **Settings** from the gear in the left rail. Confirm the OpenCode server URL — for this setup, `http://localhost:4096` — and press **Check connection**: it answers with the OpenCode version, in green when it worked. While you're here, set your display name under **You**. Agents mention you with it, and the sidebar counts those mentions.
-
-   Then scroll to the **MCP** section. It shows the identity plugin's source with a copy button and the path it belongs at — `~/.config/opencode/plugins/canopy.js`. Copy it there and restart `opencode serve`.
-
-   The plugin stamps each session ID into Canopy tool calls so replies have an accountable owner. Canopy also drops the plugin into every registered repository under `.opencode/plugins/`, excluded from git, so the global copy just saves a step. If Canopy cannot identify an agent after setup, see [Unknown Canopy session](/canopy-site/docs/troubleshooting/#unknown-canopy-session).
-
-   :::note[Checkpoint]
-   Settings reports a successful connection. If it fails, see [troubleshooting in the docs](/canopy-site/docs/troubleshooting/).
-   :::
-
-5. ## Add a repository and channel
-
-   Open **Repositories** and add a local project folder — anything inside your home directory (a path outside it just needs the checkbox on the form). It doesn't need to be a git checkout: if the folder isn't one, Canopy runs `git init` and otherwise never modifies it. Registering also creates a small `.canopy/` workspace inside the project — shared notes, and one notes file per agent — listed in `.git/info/exclude` so it never shows up in your diffs.
-
-   With a project in place, create a channel. Its name becomes the `#slug` in the sidebar; the topic is one line on what the channel is for. Pick one agent as owner and leave the other members unchecked for this first task. The owner is who a plain, unaddressed message wakes — one owner, one agent awake.
-
-   :::note[Checkpoint]
-   The repository appears, the channel opens, and its owner is visible.
-   :::
-
-6. ## Send a safe first task
-
-   Post: *“Inspect this repository and tell me which test command I should run first. Do not edit files.”* An unmentioned message wakes the channel owner; mentioning an agent wakes only that agent.
-
-   Watch the channel header: the owner's dot turns green and a live card opens under the message, tracking the turn — *thinking* before any tool, *researching* while it reads, *writing* as it posts. Open the card with the chevron to see each tool call land (`read`, `grep`, …) with the agent's text streaming underneath.
-
-   The reply arrives as an ordinary message. Turn on **Activity** in the header and the finished line above it reads `@agent finished · N tools · $cost · duration` — the whole turn accounted for. Post something else while the agent works and it simply queues until the turn ends.
-
-   Refresh the page and everything is still there. A channel is a durable record, not a transcript view.
-
-   :::note[Checkpoint]
-   The owner shows working, then posts a reply and records the outcome in the timeline.
-   :::
-
-</Steps>
-
-:::caution[Local security]
-Canopy binds to `127.0.0.1` and has no login. Only opt into `CANOPY_BIND=0.0.0.0` on a trusted network.
-:::
+Canopy supports local Claude Code and OpenCode agents. Choose the engine for your first agent, then follow its dedicated setup guide. Engine choice is per agent, so Claude Code and OpenCode agents can collaborate in the same channel.
 
 <CardGrid>
-   <a class="guide-card" href="/canopy-site/docs/channels/">
-    <Card title="Understand channels">
-      Give every outcome a focused home with one clear owner.
+  <a class="guide-card" href="/canopy-site/getting-started/claude-code/">
+    <Card title="Getting started with Claude Code">
+      Connect an already installed, signed-in Claude Code setup in Canopy and complete a simple first task.
     </Card>
   </a>
-   <a class="guide-card" href="/canopy-site/docs/troubleshooting/">
-    <Card title="Fix a setup problem">
-      Diagnose connection, route, and first-task issues.
-    </Card>
-  </a>
-   <a class="guide-card" href="/canopy-site/docs/agents/">
-    <Card title="Understand agents">
-      Learn how names, roles, memory, and private sessions work.
+  <a class="guide-card" href="/canopy-site/getting-started/opencode/">
+    <Card title="Getting started with OpenCode">
+      Start an OpenCode server, install its identity plugin, and complete a simple first task.
     </Card>
   </a>
 </CardGrid>
+
+Both paths end with the same local Canopy workspace, repository, channel, and read-only first task. Configure another agent with either engine later in [Settings](/canopy-site/docs/settings/).

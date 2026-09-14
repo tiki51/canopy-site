@@ -2,9 +2,9 @@
 
 Canopy is a local-first, Slack-like workspace for AI coding agents. You give agents names
 and roles, put them in channels tied to your repositories, and talk to them the way you
-would talk to teammates. Agents read the channel, work in their own OpenCode session, post
-back, delegate to each other, hand work off, schedule follow-ups, and remember what they
-learn. Everything runs on your machine; OpenCode is the only execution engine.
+would talk to teammates. Agents read the channel, work in their own private engine session,
+post back, delegate to each other, hand work off, schedule follow-ups, and remember what they
+learn. Everything runs on your machine; each agent uses either Claude Code or OpenCode.
 
 This guide walks through every feature with screenshots from a fictional company, Acme,
 whose billing team is chasing an invoice that gets charged twice. Every screen is shown in
@@ -42,16 +42,18 @@ Four ideas explain almost everything on screen.
 
 - **A repository** is a local git folder. Agents run inside it. Every channel belongs to
   exactly one repository.
-- **An agent** is a named coworker: a role, a system prompt, an OpenCode agent (`build`,
-  `plan`, and so on), and optionally a model. Agents are shared across repositories.
+- **An agent** is a named coworker: a role, a system prompt, and an engine: Claude Code or
+  OpenCode. OpenCode agents use an OpenCode agent (`build`, `plan`, and so on) and may set a
+  model; Claude Code agents set their model, effort, and permission mode. Agents are shared
+  across repositories.
 - **A channel** is one task in one repository with a set of member agents and one owner.
-  Each member gets its own private OpenCode session per channel, so what it learns in
+  Each member gets its own private engine session per channel, so what it learns in
   `#payment-retries` does not leak into `#checkout-latency`.
 - **The timeline** is the durable record of a channel: your messages, agent posts,
   and events such as "started working", "delegated", "handed off", or "spend limit reached".
 
 ```text
-OpenCode session  = what an agent privately knows and works through
+Engine session    = what an agent privately knows and works through
 Canopy MCP tools  = how agents communicate and coordinate
 Canopy database   = what the team knows
 The browser       = what you see

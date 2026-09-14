@@ -1,16 +1,24 @@
 ---
 title: Settings and security
-description: Connect OpenCode and keep a local Canopy installation safe.
+description: Set up Claude Code or OpenCode and keep a local Canopy installation safe.
 ---
 
-Settings is where Canopy meets OpenCode: one URL, one connection check, and a small plugin that puts a name on every tool call.
+Settings is where Canopy meets its engines: Claude Code runs locally through `claude -p`; OpenCode connects through its local server and identity plugin.
 
-Use this when connecting a local OpenCode server or checking agent identity.
+Use this when checking Claude Code, connecting a local OpenCode server, or checking agent identity.
 
 <figure class="docs-screenshot detail">
   <img src="/canopy-site/images/settings-dark.png" alt="Canopy Settings showing a successful OpenCode connection check and MCP configuration" width="1440" height="900" loading="lazy" />
   <figcaption>Canopy, dark theme. Check the connection and install the identity plugin in Settings.</figcaption>
 </figure>
+
+## Set up Claude Code
+
+1. Install Claude Code and sign in on this machine.
+2. In **Settings** under **Claude Code**, leave **Binary** as `claude` when it is on your PATH, or enter its path.
+3. Choose **Check Claude Code**, then select **Claude Code** as the engine when creating or editing an agent.
+
+Claude Code runs `claude -p` for each turn with its own local login. Canopy supplies a separate MCP token for every agent session, so identity and channel tools stay scoped to that session. Leave the optional config directory blank to use your own Claude Code login and settings.
 
 ## Connect OpenCode
 1. Start `opencode serve --port 4096`.

@@ -7,7 +7,7 @@ Nearly every stall comes down to one of four things: the connection, the identit
 
 | Symptom | Go to |
 |---|---|
-| Settings cannot connect | [Connection fails](#connection-fails) |
+| An engine is unavailable | [Engine setup fails](#engine-setup-fails) |
 | Canopy cannot identify an agent | [Unknown Canopy session](#unknown-canopy-session) |
 | An agent stays quiet | [An agent does not wake](#an-agent-does-not-wake) |
 | Work stopped at a budget | [Spend limit reached](#spend-limit-reached) |
@@ -20,9 +20,9 @@ Use this when a local setup needs a direct recovery path.
   <figcaption>Canopy, dark theme. Channel status makes a pause or spend limit visible where work happens.</figcaption>
 </figure>
 
-## Connection fails
+## Engine setup fails
 
-Confirm `opencode serve --port 4096` is still running and that Settings uses the same URL. Restart the server after changing its port. Canopy is local by default at `127.0.0.1`.
+For OpenCode, confirm `opencode serve --port 4096` is still running and that Settings uses the same URL. Restart the server after changing its port. For Claude Code, confirm `claude` is installed, available at the configured binary path, and logged in, then choose **Check Claude Code** in Settings. Canopy is local by default at `127.0.0.1`.
 
 ## Unknown Canopy session
 
@@ -46,7 +46,7 @@ Reset the agent's channel session from its pill in the channel header. Its next 
 
 ## Model errors or missing tools
 
-Verify OpenCode has a configured provider and that the selected model is available. Check the agent's OpenCode agent and model overrides, then retry from the channel. The timeline records the failure and the next attempt.
+For an OpenCode agent, verify it has a configured provider and that the selected model is available, then check its OpenCode agent and model overrides. For a Claude Code agent, verify its Claude Code login and the agent's model, effort, permission mode, and allowed tools. Then retry from the channel. The timeline records the failure and the next attempt.
 
 ## Next
 

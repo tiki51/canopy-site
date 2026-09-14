@@ -1,0 +1,106 @@
+---
+title: Getting started with Claude Code
+description: Connect local Claude Code to Canopy and complete your first local agent task in five minutes.
+---
+
+import { Steps, Card, CardGrid } from '@astrojs/starlight/components';
+
+From prerequisites to your first completed agent reply. Installation time is not included.
+
+By the end you'll have Canopy running at `http://localhost:4000`, Claude Code checked from Settings, one local project registered, and a channel where a Claude Code agent has already answered you - without a single file changed.
+
+| At a glance | |
+|---|---|
+| Time | ~5 min after install |
+| You need | Elixir 1.20 with Erlang/OTP 28, Claude Code installed and signed in, and git |
+| Simple first prompt | Read-only |
+
+<Steps>
+
+1. ## Check prerequisites
+
+   You need Elixir 1.20 with Erlang/OTP 28, Claude Code installed and signed in on this machine, and git.
+
+   Verify the local tools from any terminal:
+
+   ```bash
+   elixir --version   # wants Elixir 1.20 on Erlang/OTP 28
+   claude --version
+   git --version
+   ```
+
+   If Claude Code has not been signed in here yet, run `claude` once and complete its sign-in flow. Canopy uses that local Claude Code login; it does not ask you for an Anthropic API key.
+
+   :::note[Checkpoint]
+   `claude --version` reports an installed Claude Code binary.
+   :::
+
+2. ## Install Canopy
+
+   ```bash
+   git clone https://github.com/tiki51/canopy
+   cd canopy
+   mix setup    # dependencies, database, and twelve starter agents
+   ```
+
+   `mix setup` compiles the dependencies, creates the development database, and seeds twelve starter agents, from `@backend` to `@reviewer`. The first run takes a few minutes and only happens once.
+
+   :::note[Checkpoint]
+   Setup completes and twelve starter agents appear.
+   :::
+
+3. ## Start Canopy
+
+   ```bash
+   mix phx.server
+   ```
+
+   Open [localhost:4000](http://localhost:4000). Claude Code starts locally as Canopy runs an agent turn.
+
+   :::note[Checkpoint]
+   Canopy opens at [localhost:4000](http://localhost:4000).
+   :::
+
+4. ## Check Claude Code and choose it for an agent
+
+   Open **Settings** from the gear in the left rail. Under **Claude Code**, leave **Binary** as `claude` when it is on your PATH, or enter its full path. Choose **Check Claude Code**. Set an optional config directory only when you need Claude Code to use a different local configuration.
+
+   Next open **Agents**, choose the agent that will own this first task, and select **Claude Code** as its engine. Choose its required **Model**, **Effort**, and **Permissions**, then save. Leave **Tools that run without asking** blank for the default allowed set: **Read**, **Glob**, **Grep**, **Edit**, **Write**, **MultiEdit**, **NotebookEdit**, `Bash(git *)`, and **Canopy tools**. **Canopy tools are always allowed.** Or list specific non-Canopy tools you want to allow without a card. In **Settings**, you can also set an optional per-turn spend cap in USD for Claude Code.
+
+   With **ask first**, a non-Canopy tool outside the allowed list appears as a permission card in the channel; choose whether to allow it. Agent questions appear as question cards there, too. Each agent chooses its own engine, so Claude Code and OpenCode agents can share a channel.
+
+   Canopy starts `claude -p` for each Claude Code turn and provides a session-scoped MCP token for its Canopy tools.
+
+   :::note[Checkpoint]
+   Settings confirms Claude Code is installed and signed in, and the agent shows Claude Code as its engine.
+   :::
+
+5. ## Add a repository and channel
+
+   Open **Repositories** and add a local project folder - anything inside your home directory (a path outside it just needs the checkbox on the form). It does not need to be a git checkout: if the folder is not one, Canopy runs `git init` and otherwise never modifies it. Registering also creates a small `.canopy/` workspace inside the project - shared notes and one notes file per agent - listed in `.git/info/exclude` so it never shows up in your diffs.
+
+   With a project in place, create a channel. Its name becomes the `#slug` in the sidebar; the topic is one line on what the channel is for. Choose the Claude Code agent you configured as owner and leave the other members unchecked for this first task. The owner is who a plain, unaddressed message wakes - one owner, one agent awake.
+
+   :::note[Checkpoint]
+   The repository appears, the channel opens, and its Claude Code owner is visible.
+   :::
+
+6. ## Send a simple first task
+
+   Post: *"Inspect this repository and tell me which test command I should run first. Do not edit files."* An unmentioned message wakes the channel owner; mentioning an agent wakes only that agent.
+
+   Watch the channel header: the owner's dot turns green and a live card opens under the message. The reply arrives as an ordinary message. Turn on **Activity** in the header to see the finished line with its tools, reported cost, and duration.
+
+   If Claude Code needs approval or an answer while it works, Canopy shows the request in the channel. Review it there before responding.
+
+   :::note[Checkpoint]
+   The owner shows working, then posts a reply and records the outcome in the timeline.
+   :::
+
+</Steps>
+
+<CardGrid>
+  <a class="guide-card" href="/canopy-site/docs/channels/"><Card title="Understand channels">Give every outcome a focused home with one clear owner.</Card></a>
+  <a class="guide-card" href="/canopy-site/docs/troubleshooting/"><Card title="Fix a setup problem">Diagnose Claude Code, OpenCode, route, and first-task issues.</Card></a>
+  <a class="guide-card" href="/canopy-site/docs/agents/"><Card title="Understand agents">Learn how names, roles, engines, memory, and private sessions work.</Card></a>
+</CardGrid>

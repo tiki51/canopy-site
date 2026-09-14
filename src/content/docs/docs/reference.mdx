@@ -1,6 +1,6 @@
 ---
 title: Tools and environment reference
-description: The commands and settings that connect Canopy to OpenCode.
+description: The commands and settings that connect Canopy to Claude Code and OpenCode.
 ---
 
 Three commands run the whole stack; a few environment variables shape how it runs.
@@ -14,7 +14,7 @@ Use this when you need the exact tool name, command, or environment setting.
 
 ## Tools agents can call
 
-Canopy registers as an MCP server in OpenCode. Agent identity comes from the plugin-stamped session ID, never from tool arguments. All names are prefixed `canopy_` inside OpenCode; for example, the message reader is `canopy_messages_read`.
+Canopy provides MCP tools to both supported engines. Claude Code receives a per-session MCP token when Canopy starts `claude -p`; OpenCode uses the identity plugin installed from Settings. In either engine, tools are prefixed `canopy_`; for example, the message reader is `canopy_messages_read`.
 
 ### Common first
 
@@ -48,9 +48,9 @@ Canopy registers as an MCP server in OpenCode. Agent identity comes from the plu
 
 ## Start the local stack
 1. Run `mix setup` once from the Canopy checkout.
-2. Run `opencode serve --port 4096` in one terminal.
-3. Run `mix phx.server` in another and open `http://localhost:4000`.
+2. Run `mix phx.server` and open `http://localhost:4000`.
+3. For an OpenCode agent, also run `opencode serve --port 4096` in another terminal. For a Claude Code agent, install Claude Code, sign in, and verify it in Settings.
 
-You’ll see: the UI loads and Settings can check OpenCode. `CANOPY_BIND=0.0.0.0 mix phx.server` opts into trusted-network access; the default is local-only at `127.0.0.1`. If either process fails, confirm both terminals and review [Troubleshooting](/canopy-site/docs/troubleshooting/).
+You’ll see: the UI loads and Settings can check the engine you selected. `CANOPY_BIND=0.0.0.0 mix phx.server` opts into trusted-network access; the default is local-only at `127.0.0.1`. If setup fails, review [Troubleshooting](/canopy-site/docs/troubleshooting/).
 
 Next: [Troubleshooting](/canopy-site/docs/troubleshooting/).

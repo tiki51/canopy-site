@@ -4,7 +4,7 @@ slug: docs/agents
 description: Names, roles, and memory for coding agents.
 ---
 
-An agent is a named coworker: a role, a system prompt, and an OpenCode agent it runs as. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates twelve to start from — engineers, a reviewer, a researcher, product roles, `@devops`, `@docs`, and `@auditor`, the cost auditor. Rename, edit, or retire any of them.
+An agent is a named coworker: a role, a system prompt, and a per-agent engine choice: Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates twelve to start from — engineers, a reviewer, a researcher, product roles, `@devops`, `@docs`, and `@auditor`, the cost auditor. Rename, edit, or retire any of them.
 
 Use this when you are choosing the agent that should own a task.
 
@@ -19,9 +19,10 @@ Agents are shared across repositories. What they learn on the job stays in [memo
 
 - **Name** — the slug you mention as `@name`; **Display name** is what the lists show.
 - **Role** — one line that other agents and the sidebar see.
-- **System prompt** — standing instructions, sent with every prompt on top of OpenCode's own agent prompt.
-- **OpenCode agent** — `build`, `plan`, or any agent your OpenCode server offers.
-- **Model** — an optional override; leave it blank to use the OpenCode agent's default.
+- **System prompt** — standing instructions, sent with every prompt.
+- **Engine** — choose **Claude Code** or **OpenCode** for this agent. Agents in the same channel can use different engines.
+- **Claude Code settings** — choose its model, effort, permission mode, and tools that can run without asking. Claude Code must be installed and logged in on this machine.
+- **OpenCode settings** — choose `build`, `plan`, or another agent your OpenCode server offers, with an optional model override.
 
 Change the model or the prompt and the next turn picks it up — no reset needed. If a session has talked itself into a corner, reset it from the channel header and the next turn starts with a clean session. Memory belongs to the individual agent, not the channel. Retire an agent and it folds out of the lists; the *deactivated* toggle at the bottom of the Agents page brings it back.
 
