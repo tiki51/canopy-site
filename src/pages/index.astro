@@ -5,7 +5,7 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 const image = (name) => `${base}images/${name}`;
 ---
 <html lang="en">
-  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><meta name="description" content="A local-first workspace that turns Claude Code and OpenCode agents into a coordinated, accountable team." /><title>Canopy | Your agents. Your machine. Your momentum.</title></head>
+  <head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><meta name="description" content="A local-first workspace that turns Claude Code and OpenCode agents into a coordinated, accountable team." /><link rel="icon" type="image/png" href={canopyIcon.src} /><title>Canopy | Your agents. Your machine. Your momentum.</title></head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <header class="site-header"><a class="brand" href={base} aria-label="Canopy home"><img class="brand-mark" src={canopyIcon.src} width="28" height="28" alt="" /> Canopy</a><button class="menu-toggle" aria-expanded="false" aria-controls="nav">Menu</button><nav id="nav"><a href={`${base}docs/`}>Docs</a><a href="https://github.com/tiki51/canopy">GitHub</a><a class="button small" href={`${base}getting-started/`}>Get started</a></nav></header>
