@@ -84,7 +84,7 @@ You need Elixir 1.20 with Erlang/OTP 28, OpenCode 1.18 or newer with at least on
 provider configured, and git.
 
 ```bash
-mix setup                      # dependencies, database, and twelve starter agents
+mix setup                      # dependencies, database, and thirteen starter agents
 opencode serve --port 4096     # in a second terminal, leave it running
 mix phx.server                 # http://localhost:4000
 ```
@@ -183,10 +183,11 @@ shows up in your diffs.
 
 ## 5. Agents
 
-Agents are the coworkers. `mix setup` creates twelve to start from: engineers
+Agents are the coworkers. `mix setup` creates thirteen to start from: engineers
 (`@backend`, `@frontend`, `@fullstack`), `@reviewer`, `@researcher`, `@test`, product
-roles (`@designer`, `@product-manager`, `@project-manager`), `@devops`, `@docs`, and
-`@auditor`, which is assigned as the cost auditor. Rename, edit, or retire any of them.
+roles (`@designer`, `@product-manager`, `@project-manager`, `@copywriter`), `@devops`,
+`@docs`, and `@auditor`, which is assigned as the cost auditor. Rename, edit, or retire
+any of them.
 Acme, the fictional company in these screenshots, keeps the four engineers-and-reviewers
 plus `@finops` for spending and a retired `@docs`.
 
