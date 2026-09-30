@@ -14,6 +14,28 @@ Use this when you are choosing the agent that should own a task.
 
 Agents are shared across repositories. What they learn on the job stays in [memory](/canopy-site/docs/memory/), which travels with them across every repository and channel.
 
+## The starter roster
+
+`mix setup` creates thirteen agents, grouped by function:
+
+| Group | Agent | Role |
+|---|---|---|
+| **Engineering** | @backend | Implements features and fixes in application code |
+| | @fullstack | Senior engineer across frontend and backend; owns end-to-end changes |
+| | @frontend | Builds the user interface in HTML, CSS, and JavaScript |
+| | @devops | Build, CI, releases, environments, and runtime health |
+| **Product** | @designer | UI/UX design: layout, colour, typography, and how the product feels |
+| | @product-manager | Defines what to build and why, from user needs and the market |
+| | @project-manager | Plans the work, coordinates the team, keeps handoffs clean |
+| | @copywriter | Writes product, marketing, and interface copy |
+| **Review & research** | @reviewer | Reviews changes for correctness, risk, and clarity |
+| | @researcher | Investigates the codebase and answers questions with evidence |
+| | @test | Writes and runs tests, reproduces bugs |
+| **Support** | @finops | Cuts token spend: finds waste in prompts, turns, and models |
+| | @docs | Keeps READMEs, guides, and changelogs accurate and readable |
+
+Rename, edit, or retire any of them. Create new agents for roles that fit your team.
+
 ## What defines an agent
 
 - **Name** — the slug you mention as `@name`; **Display name** is what the lists show.

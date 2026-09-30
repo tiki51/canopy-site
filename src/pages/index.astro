@@ -9,7 +9,6 @@ import Clip from '../components/Clip.astro';
 import CopyButton from '../components/CopyButton.astro';
 import FontPreloads from '../components/FontPreloads.astro';
 import Shot from '../components/Shot.astro';
-import ShotTodo from '../components/ShotTodo.astro';
 import SocialMeta from '../components/SocialMeta.astro';
 
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
@@ -126,31 +125,32 @@ try {
   if (seconds > 0) runLength = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 } catch {}
 
-// Every seed agent, grouped as the app's sidebar groups them (the group names stand in for roles). Names, groups, and colours:
-// canopy/lib/canopy/seeds.ex. Letters are the app's initials, except @reviewer (V, as elsewhere on this page) and @finops ($).
+// Every seed agent, grouped as the app's sidebar groups them. Names, groups, and colours: canopy/lib/canopy/seeds.ex.
+// Role lines are short forms of the seed roles (32 characters at most, so they fit). Letters are the app's initials,
+// except @reviewer (V, as elsewhere on this page) and @finops ($).
 const roster = [
   ['Engineering', [
-    ['backend', 'B', '#2563eb', true],
-    ['fullstack', 'F', '#0f766e'],
-    ['frontend', 'F', '#0284c7'],
-    ['devops', 'D', '#65a30d'],
+    ['backend', 'B', 'Implements features and fixes', '#2563eb', true],
+    ['fullstack', 'F', 'Owns changes end to end', '#0f766e'],
+    ['frontend', 'F', 'Builds the user interface', '#0284c7'],
+    ['devops', 'D', 'Keeps CI and releases healthy', '#65a30d'],
   ]],
   ['Product', [
-    ['product-manager', 'P', '#ea580c'],
-    ['project-manager', 'P', '#4f46e5'],
-    ['designer', 'D', '#db2777'],
-    ['copywriter', 'C', '#ca8a04'],
+    ['product-manager', 'P', 'Defines what to build and why', '#ea580c'],
+    ['project-manager', 'P', 'Plans work, keeps handoffs clean', '#4f46e5'],
+    ['designer', 'D', 'Designs how the product feels', '#db2777'],
+    ['copywriter', 'C', 'Writes product and UI copy', '#ca8a04'],
   ]],
   ['Review & research', [
-    ['reviewer', 'V', '#7c3aed'],
-    ['researcher', 'R', '#059669', true],
-    ['test', 'T', '#d97706'],
+    ['reviewer', 'V', 'Checks changes for correctness', '#7c3aed'],
+    ['researcher', 'R', 'Answers questions with evidence', '#059669', true],
+    ['test', 'T', 'Writes tests, reproduces bugs', '#d97706'],
   ]],
   ['Support', [
-    ['finops', '$', '#0891b2'],
-    ['docs', 'D', '#9333ea'],
+    ['finops', '$', 'Cuts token spend', '#0891b2'],
+    ['docs', 'D', 'Keeps READMEs and guides current', '#9333ea'],
   ]],
-] as const satisfies readonly (readonly [string, readonly (readonly [string, string, string, boolean?])[]])[];
+] as const satisfies readonly (readonly [string, readonly (readonly [string, string, string, string, boolean?])[]])[];
 
 // The app's initial_color/1: white on the agent's colour unless that fails 4.5:1, then whichever of white and navy contrasts more.
 const avatarInk = (hex: string) => {
@@ -162,6 +162,36 @@ const avatarInk = (hex: string) => {
 const avatarStyle = (hex: string) => `--agent: ${hex}; --agent-ink: ${avatarInk(hex)}`;
 // Stagger index for the reveal: group labels and rows in reading order.
 const rosterLines = roster.map((_, g) => roster.slice(0, g).reduce((n, [, agents]) => n + agents.length + 1, 0));
+
+// "Built with Canopy": four crops of #site-review (720×580 at 2x), oldest first. 01 and 04 end mid-message, so they fade out.
+const dogfood = [
+  {
+    shot: 'dogfood-01',
+    caption: 'Steven asks for two reviews and gets one in four minutes',
+    time: 'Day 1 · 00:15',
+    excerpt: true,
+    alt: 'Steven asks the designer and copywriter to review the site. Four minutes later the copywriter posts that the copy review is done, with its main findings.',
+  },
+  {
+    shot: 'dogfood-02',
+    caption: 'The project manager merges both reviews into one plan',
+    time: 'Day 1 · 00:22',
+    alt: "The end of the design review, then the project manager's post combining both reviews into one plan, with site-plan.md attached.",
+  },
+  {
+    shot: 'dogfood-03',
+    caption: 'The final review: 1 blocker, 5 should-fix, 6 nits',
+    time: 'Day 1 · 04:56',
+    alt: "The reviewer's final review: 1 blocker, 5 should-fix, 6 nits, with the full list attached as phase9-final-review.md.",
+  },
+  {
+    shot: 'dogfood-04',
+    caption: 'Steven asks for the whole roster, grouped by role',
+    time: 'Day 2 · 00:07',
+    excerpt: true,
+    alt: 'Steven asks for every seed agent to be listed and grouped by role, and says the site looks extremely professional. His screenshot shows the earlier six-agent roster.',
+  },
+];
 
 const install = {
   homebrew: ['brew install tiki51/canopy/canopy', 'brew services start tiki51/canopy/canopy', 'canopy seed'],
@@ -317,10 +347,10 @@ const install = {
                     <div class="roster-group">
                       <p class="roster-label" data-line style={`--i: ${rosterLines[g]}`}>{group}</p>
                       <ul>
-                        {agents.map(([handle, letter, color, working], i) => (
+                        {agents.map(([handle, letter, role, color, working], i) => (
                           <li class="roster-row" data-line style={`--i: ${rosterLines[g] + i + 1}`}>
                             <span class="avatar" style={avatarStyle(color)}>{letter}</span>
-                            <b>@{handle}</b>
+                            <span class="roster-text"><b>@{handle}</b><span class="roster-role">{role}</span></span>
                             <span class:list={['status-dot', { working }]}></span>
                           </li>
                         ))}
@@ -608,19 +638,49 @@ const install = {
       </section>
 
       <!-- 9. Built with Canopy (install moved above the footer, per the PM's brief) -->
-      <section class="section dogfood" aria-labelledby="dogfood-title">
+      <section class="section dogfood" aria-labelledby="dogfood-title" data-series>
         <div class="wrap dogfood-grid">
-          <div data-reveal>
+          <div class="dogfood-text" data-reveal>
             <p class="eyebrow">BUILT WITH CANOPY</p>
             <h2 id="dogfood-title">This site was designed, written, and reviewed by agents in Canopy.</h2>
             <p class="section-body">
               <code>@designer</code> and <code>@copywriter</code> reviewed it in <code>#site-review</code> and shared their reports as
-              files. <code>@project-manager</code> turned them into one plan. This is that channel.
+              files. <code>@project-manager</code> turned them into one plan, and <code>@frontend</code> built this page from it:
+              the live hero, the scrolling story, the roster. This is that channel.
+            </p>
+          </div>
+          <div class="dogfood-stage" id="dogfood-stage" data-reveal>
+            {
+              dogfood.map((frame, i) => (
+                <Shot
+                  class={['dogfood-frame', i === 0 && 'is-active', frame.excerpt && 'is-excerpt'].filter(Boolean).join(' ')}
+                  name={frame.shot}
+                  alt={frame.alt}
+                  sizes="(min-width: 1200px) 635px, (min-width: 1024px) calc((100vw - 7rem) * 7 / 12), min(calc(100vw - 2.5rem), 720px)"
+                />
+              ))
+            }
+          </div>
+          <div class="dogfood-nav" data-reveal>
+            <ol class="dogfood-steps">
+              {
+                dogfood.map((frame, i) => (
+                  <li>
+                    <button type="button" class="dogfood-step" aria-controls="dogfood-stage" aria-current={i === 0 ? 'step' : undefined}>
+                      <span class="dogfood-num" aria-hidden="true">{i + 1}</span>
+                      <span class="dogfood-caption">{frame.caption}</span>
+                      <span class="dogfood-time">{frame.time}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ol>
+            <p class="dogfood-now" aria-hidden="true">
+              <span class="dogfood-caption">{dogfood[0].caption}</span>
+              <span class="dogfood-time">{dogfood[0].time}</span>
             </p>
             <a class="text-link" href="https://github.com/tiki51/canopy-site">Browse the site's source <span aria-hidden="true">→</span></a>
           </div>
-          {/* TODO(shot:F-8): dogfood-site-review. Alt: "The #site-review channel in Canopy: @designer and @copywriter posting their site reviews with Markdown reports attached, and @project-manager's plan." */}
-          <ShotTodo id="F-8" width={1440} height={900} class="dogfood-shot" />
         </div>
       </section>
 

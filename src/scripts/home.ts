@@ -213,6 +213,50 @@ function lightboxes() {
   });
 }
 
+// "Built with Canopy": the steps pick a frame. With motion it also advances every 6s (the active step's rule animation is
+// the timer), only while the stage is on screen and nothing in the band is hovered or focused; the first click stops it.
+function series() {
+  const root = document.querySelector<HTMLElement>('[data-series]');
+  if (!root) return;
+  const steps = [...root.querySelectorAll<HTMLButtonElement>('.dogfood-step')];
+  const frames = [...root.querySelectorAll<HTMLElement>('.dogfood-frame')];
+  const now = root.querySelector<HTMLElement>('.dogfood-now')!;
+  let current = 0;
+
+  const show = (i: number) => {
+    current = i;
+    steps.forEach((s, n) => (n === i ? s.setAttribute('aria-current', 'step') : s.removeAttribute('aria-current')));
+    frames.forEach((f, n) => f.classList.toggle('is-active', n === i));
+    now.replaceChildren(...[...steps[i].querySelectorAll('.dogfood-caption, .dogfood-time')].map((el) => el.cloneNode(true)));
+  };
+  root.addEventListener('click', (e) => {
+    const step = (e.target as Element).closest<HTMLButtonElement>('.dogfood-step');
+    if (!step) return;
+    delete root.dataset.autoplay;
+    show(steps.indexOf(step));
+  });
+  if (!motion()) return;
+
+  const holds = new Set<string>();
+  const hold = (why: string, on: boolean) => {
+    if (on) holds.add(why);
+    else holds.delete(why);
+    root.classList.toggle('is-paused', holds.size > 0);
+  };
+  hold('offscreen', true);
+  root.dataset.autoplay = '';
+  root.addEventListener('animationend', (e) => {
+    if ('autoplay' in root.dataset && (e.target as Element).classList.contains('dogfood-step')) show((current + 1) % steps.length);
+  });
+  root.addEventListener('pointerenter', () => hold('hover', true));
+  root.addEventListener('pointerleave', () => hold('hover', false));
+  root.addEventListener('focusin', () => hold('focus', true));
+  root.addEventListener('focusout', (e) => hold('focus', root.contains(e.relatedTarget as Node | null)));
+  new IntersectionObserver(([entry]) => hold('offscreen', !entry.isIntersecting), { threshold: 0.35 }).observe(
+    root.querySelector('.dogfood-stage')!,
+  );
+}
+
 function tabs() {
   const list = document.querySelector<HTMLElement>('[role="tablist"]');
   if (!list) return;
@@ -310,6 +354,7 @@ export function initHome() {
   story();
   tiles();
   lightboxes();
+  series();
   if (!motion()) return;
   reveals();
   clips();
