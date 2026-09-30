@@ -1,0 +1,48 @@
+---
+/**
+ * <ShotTodo id="ST-7" width={1440} height={900} />
+ *
+ * A sized, empty screenshot frame for a capture that doesn't exist yet. It reserves the final
+ * CSS size so swapping in <Shot> later causes no layout shift. Search for `TODO(shot:` to find them.
+ */
+interface Props {
+  /** Capture id from design §9.3, e.g. "ST-7". */
+  id: string;
+  /** Final CSS size of the capture (file size ÷ 2). */
+  width: number;
+  height: number;
+  class?: string;
+}
+
+const { id, width, height, class: className } = Astro.props;
+---
+
+<figure class:list={['shot', 'shot-todo', className]} style={`--shot-w: ${width}px`} aria-hidden="true">
+  <div class="shot-frame" style={`aspect-ratio: ${width} / ${height}`}>
+    <span>{id} · capture pending</span>
+  </div>
+</figure>
+
+<style>
+  .shot {
+    width: 100%;
+    max-width: min(100%, var(--shot-w));
+    margin: 2rem auto 2.25rem;
+  }
+
+  .shot-frame {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-md);
+    background:
+      repeating-linear-gradient(135deg, transparent 0 14px, #ffffff05 14px 28px),
+      var(--bg-raised);
+  }
+
+  span {
+    color: var(--text-subtle);
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+</style>

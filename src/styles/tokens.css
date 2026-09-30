@@ -1,0 +1,93 @@
+/*
+ * Design tokens shared by the landing page (site.css) and the docs (starlight.css).
+ * Source: _claude_docs/site-design-review.md §4. Change values here, not at the call site.
+ */
+@import '@fontsource-variable/geist/wght.css';
+@import '@fontsource-variable/geist-mono/wght.css';
+
+/*
+ * Metric-matched fallbacks so the swap to Geist causes no layout shift.
+ * Values come from @capsizecss/metrics: size-adjust = Geist avg width / fallback avg width,
+ * then ascent/descent are divided by size-adjust.
+ */
+@font-face {
+  font-family: 'Geist Fallback';
+  src: local('Arial'), local('ArialMT'), local('Liberation Sans');
+  size-adjust: 104.75%;
+  ascent-override: 95.94%;
+  descent-override: 28.16%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Geist Mono Fallback';
+  src: local('Courier New'), local('CourierNewPSMT'), local('Menlo');
+  size-adjust: 99.98%;
+  ascent-override: 100.52%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+
+:root {
+  /* Colour */
+  --bg: #0a1730;
+  --bg-raised: #0f1f3d;
+  --bg-inset: #06122a;
+  --line: #243555;
+  --line-strong: #364665;
+  --text: #f0f5ff;
+  --text-muted: #a8b5cd;
+  --text-subtle: #7a8aaa;
+  --accent: #5bea78;
+  --accent-hover: #8bf39e;
+  --accent-soft: #5bea7826;
+  --accent-ink: #06120a;
+  --info: #58b7ff;
+  --info-soft: #58b7ff1f;
+  --warn: #f5c451;
+  --agent-backend: #2563eb; /* seed colours: canopy/lib/canopy/seeds.ex */
+  --agent-researcher: #059669;
+  --agent-reviewer: #7c3aed;
+
+  /* Type */
+  --font-sans: 'Geist Variable', 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono Fallback', ui-monospace, monospace;
+  --text-display: clamp(3rem, 6.5vw, 5rem);
+  --text-h2: clamp(2rem, 4vw, 3rem);
+  --text-h3: 1.25rem;
+  --text-lede: clamp(1.125rem, 1.6vw, 1.3rem);
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-eyebrow: 0.75rem;
+
+  /* Layout */
+  --container: 1200px;
+  --container-wide: 1280px;
+  --gutter: 1.25rem;
+  --section-y: 6rem;
+  --header-h: 64px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  /* Screenshot frame */
+  --frame-shadow: 0 30px 80px -20px #000a, inset 0 0 0 1px #ffffff08;
+
+  /* Motion */
+  --dur-1: 150ms;
+  --dur-2: 250ms;
+  --dur-3: 400ms;
+  --dur-4: 700ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* Two breakpoints only: md 768px, lg 1024px. */
+@media (min-width: 768px) {
+  :root {
+    --gutter: 2rem;
+    --section-y: 8rem;
+  }
+}

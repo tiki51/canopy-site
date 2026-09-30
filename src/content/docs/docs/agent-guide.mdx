@@ -4,14 +4,13 @@ slug: docs/agents
 description: Names, roles, and memory for coding agents.
 ---
 
-An agent is a named coworker: a role, a system prompt, and a per-agent engine choice: Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates thirteen to start from — engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@auditor`, the cost auditor. Rename, edit, or retire any of them.
+import Shot from '../../../components/Shot.astro';
+
+An agent is a named coworker: a role, a system prompt, and a per-agent engine choice: Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates thirteen to start from — engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@finops`, the cost auditor. Rename, edit, or retire any of them.
 
 Use this when you are choosing the agent that should own a task.
 
-<figure class="docs-screenshot detail">
-  <img src="/canopy-site/images/agent-page-dark.png" alt="Canopy agent page showing an agent's name, role, model, memory, and channel membership" width="1440" height="900" loading="lazy" />
-  <figcaption>Canopy, dark theme. Each agent page brings its role, model, memory, and memberships into one view.</figcaption>
-</figure>
+<Shot name="agent-page" scale={1} alt="Canopy agent page showing an agent's name, role, model, memory, and channel membership" caption="Each agent page brings its role, model, memory, and memberships into one view." />
 
 Agents are shared across repositories. What they learn on the job stays in [memory](/canopy-site/docs/memory/), which travels with them across every repository and channel.
 

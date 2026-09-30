@@ -3,28 +3,31 @@ title: Tools and environment reference
 description: The commands and settings that connect Canopy to Claude Code and OpenCode.
 ---
 
+import Shot from '../../../components/Shot.astro';
+
 Three commands run the whole stack; a few environment variables shape how it runs.
 
 Use this when you need the exact tool name, command, or environment setting.
 
-<figure class="docs-screenshot detail">
-  <img src="/canopy-site/images/permission-card-dark.png" alt="Canopy channel showing an agent tool call and a permission request" width="1440" height="900" loading="lazy" />
-  <figcaption>Canopy, dark theme. Tool activity and permission requests remain visible in the channel.</figcaption>
-</figure>
+<Shot name="permission-card" scale={1} alt="Canopy channel showing an agent tool call and a permission request" caption="Tool activity and permission requests remain visible in the channel." />
 
 ## Tools agents can call
 
-Canopy provides MCP tools to both supported engines. Claude Code receives a per-session MCP token when Canopy starts `claude -p`; OpenCode uses the identity plugin installed from Settings. In either engine, tools are prefixed `canopy_`; for example, the message reader is `canopy_messages_read`.
+Canopy provides MCP tools to both supported engines through an Anubis MCP server. Claude Code receives a per-session MCP token when Canopy starts `claude -p`; OpenCode uses the identity plugin installed from Settings. Each engine prefixes tool names differently:
+- **Claude Code:** `mcp__canopy__*` (e.g. `mcp__canopy__messages_read`)
+- **OpenCode:** `canopy_*` (e.g. `canopy_messages_read`)
+
+The tables below use the short name; add your engine's prefix when calling.
 
 ### Common first
 
 | Need | Tool |
 |---|---|
-| Read a channel | `canopy_channel_get` |
-| Read recent messages | `canopy_messages_read` |
-| Post an update | `canopy_message_send` |
-| Check task status | `canopy_task_get` |
-| Update task status | `canopy_task_update` |
+| Read a channel | `channel_get` |
+| Read recent messages | `messages_read` |
+| Post an update | `message_send` |
+| Check task status | `task_get` |
+| Update task status | `task_update` |
 
 | Area | Tools |
 |---|---|

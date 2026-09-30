@@ -1,17 +1,21 @@
+@import './tokens.css';
+
 :root {
+  --sl-font: var(--font-sans);
+  --sl-font-mono: var(--font-mono);
   --sl-content-width: 42rem;
   --sl-line-height: 1.65;
   --sl-color-accent-low: #122548;
-  --sl-color-accent: #5bea78;
-  --sl-color-accent-high: #f0f5ff;
-  --sl-color-white: #f0f5ff;
+  --sl-color-accent: var(--accent);
+  --sl-color-accent-high: var(--text);
+  --sl-color-white: var(--text);
   --sl-color-gray-1: #d5def0;
-  --sl-color-gray-2: #a8b5cd;
-  --sl-color-gray-3: #6f7f9e;
+  --sl-color-gray-2: var(--text-muted);
+  --sl-color-gray-3: var(--text-subtle);
   --sl-color-gray-4: #536482;
-  --sl-color-gray-5: #364665;
+  --sl-color-gray-5: var(--line-strong);
   --sl-color-gray-6: #122548;
-  --sl-color-black: #0a1730;
+  --sl-color-black: var(--bg);
 }
 
 :root[data-theme='light'] {
@@ -32,30 +36,50 @@
   --sl-color-bg-accent: #5bea78;
 }
 
+:focus-visible {
+  outline: 2px solid var(--info);
+  outline-offset: 3px;
+}
+
+/* Header: same logo size and wordmark weight as the landing page. */
+.site-title {
+  gap: 0.75rem;
+  color: var(--sl-color-white);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.site-title img {
+  height: 32px;
+  width: auto;
+}
+
 .sidebar-content a[aria-current='page'],
 .sidebar-content a[aria-current='page']:hover,
 .sidebar-content a[aria-current='page']:focus {
-  background: #5bea78;
-  color: #0a1730;
+  background: var(--accent);
+  color: var(--bg);
 }
 
+/* Linked cards: <a class="guide-card"><Card …/></a>. The link must not underline the card text. */
 .card-grid > .guide-card {
   display: block;
   color: inherit;
+  text-decoration: none;
 }
 
 .card-grid > .guide-card .card {
   height: 100%;
+  padding: 1.5rem;
+  gap: 0.75rem;
+  border-radius: var(--radius-md);
+  transition: border-color var(--dur-1) ease;
 }
 
 .card-grid > .guide-card:hover .card,
 .card-grid > .guide-card:focus-visible .card {
   border-color: var(--sl-color-accent);
-}
-
-.card-grid > .guide-card .card {
-  padding: 1.5rem;
-  gap: .75rem;
 }
 
 .card-grid > .guide-card .card .title {
@@ -68,41 +92,6 @@
   line-height: 1.55;
 }
 
-.site-title {
-  color: var(--sl-color-white);
-}
-
-:focus-visible {
-  outline: 2px solid #58b7ff;
-  outline-offset: 3px;
-}
-
-.sl-markdown-content .docs-screenshot {
-  margin: 2rem 0 2.25rem;
-}
-
-.sl-markdown-content .docs-screenshot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--sl-color-gray-5);
-  border-radius: 0.75rem;
-  box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 16%);
-}
-
-.sl-markdown-content .docs-screenshot figcaption {
-  margin-top: 0.65rem;
-  color: var(--sl-color-gray-3);
-  font-size: 0.875rem;
-  line-height: 1.5;
-  text-align: center;
-}
-
-/* Detail views support a single concept without cropping product evidence. */
-.sl-markdown-content .docs-screenshot.detail {
-  max-width: 34rem;
-}
-
 /* Keep adjacent-document links as compact directional navigation. */
 .pagination-links {
   gap: 1.5rem;
@@ -112,6 +101,7 @@
   min-height: 104px;
   padding: 1rem 1.25rem;
   gap: 0.5rem;
+  border-radius: var(--radius-md);
 }
 
 .pagination-links a > span {
@@ -130,11 +120,7 @@
   line-height: 1.3;
 }
 
-@media (max-width: 700px) {
-  .sl-markdown-content .docs-screenshot.detail {
-    width: 100%;
-  }
-
+@media (max-width: 767px) {
   .pagination-links {
     grid-template-columns: 1fr;
   }

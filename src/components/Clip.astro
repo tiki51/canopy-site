@@ -1,0 +1,73 @@
+---
+/**
+ * <Clip name="story-02-working" width={720} height={540} label="…" />
+ *
+ * Muted, looping screen recording in the same frame as <Shot>. Files live in public/images/:
+ * {name}.webm, {name}.mp4 and {name}-poster.jpg. The poster is a lazy <img> (a `poster` attribute would
+ * download with the page) and the video fades in over it once it plays. home.ts plays it while it is on
+ * screen, and only with `html.motion`, so reduced motion and no-JS see the poster alone.
+ * width/height are CSS pixels of the capture (it is recorded at 2x); they fix the aspect ratio.
+ */
+interface Props {
+  name: string;
+  /** Accessible name for the whole figure; the poster and video inside are decorative duplicates of it. */
+  label: string;
+  width: number;
+  height: number;
+  class?: string;
+  style?: string;
+}
+
+const { name, label, width, height, class: className, style } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const src = (file: string) => `${base}images/${file}`;
+---
+
+<figure class:list={['shot', 'clip', className]} style={style} role="img" aria-label={label}>
+  <div class="shot-frame not-content">
+    <div class="clip-media" style={`aspect-ratio: ${width} / ${height}`}>
+      <img src={src(`${name}-poster.jpg`)} alt="" width={width} height={height} loading="lazy" decoding="async" />
+      <video data-clip muted loop playsinline disablepictureinpicture preload="none" width={width} height={height} aria-hidden="true">
+        <source src={src(`${name}.webm`)} type="video/webm" />
+        <source src={src(`${name}.mp4`)} type="video/mp4" />
+      </video>
+    </div>
+  </div>
+</figure>
+
+<style>
+  .clip {
+    width: 100%;
+    margin: 0;
+  }
+
+  .shot-frame {
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
+    background: var(--bg-raised);
+    box-shadow: var(--frame-shadow);
+  }
+
+  .clip-media {
+    width: 100%;
+  }
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  video {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--dur-2) ease;
+  }
+
+  .is-playing video {
+    opacity: 1;
+  }
+</style>

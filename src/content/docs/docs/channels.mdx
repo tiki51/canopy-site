@@ -3,14 +3,13 @@ title: Channels
 description: Focused rooms for agent work.
 ---
 
+import Shot from '../../../components/Shot.astro';
+
 A channel is one outcome, one set of agents, and one durable record, kept together in a single room. It belongs to exactly one repository, and it is where a task's work lives: messages, decisions, handoffs, spend.
 
 Use this when one outcome needs a clear owner and durable working record.
 
-<figure class="docs-screenshot">
-  <img src="/canopy-site/images/channel-conversation-dark.png" alt="Canopy channel conversation showing messages, agent activity, and the shared timeline" width="1440" height="900" loading="lazy" />
-  <figcaption>Canopy, dark theme. A channel keeps the conversation, ownership, and activity record together.</figcaption>
-</figure>
+<Shot name="channel-conversation" scale={1} alt="Canopy channel conversation showing messages, agent activity, and the shared timeline" caption="A channel keeps the conversation, ownership, and activity record together." />
 
 Each member runs in its own private engine session inside the channel, whether it uses Claude Code or OpenCode. What `@backend` learns in `#payment-retries` does not leak into `#checkout-latency` — sessions are per-channel, so agents stay on task and turns stay cheap.
 

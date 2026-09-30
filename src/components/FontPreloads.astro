@@ -1,0 +1,9 @@
+---
+// Preload the Latin subsets that tokens.css loads, so text swaps to Geist before first paint in most cases.
+// Vite fingerprints these once, so the URLs match the ones in the @font-face rules.
+import geist from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+import geistMono from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
+---
+
+<link rel="preload" href={geist} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={geistMono} as="font" type="font/woff2" crossorigin />

@@ -1,0 +1,150 @@
+# Screenshot capture and component guide
+
+The `<Shot>` component displays theme-aware product screenshots on the Canopy site. This guide covers how to use it in documentation and how to capture new screenshots.
+
+## Using the Shot component
+
+The `<Shot>` component automatically shows the right image variant based on the reader's theme preference (dark or light) and their viewport size. All images are optimized to AVIF + WebP formats with responsive srcsets.
+
+### Basic usage in MDX
+
+```mdx
+import Shot from '../../../components/Shot.astro';
+
+<Shot 
+  name="channel-conversation" 
+  alt="A Canopy channel with a conversation in progress"
+  caption="The channel view shows messages from team members and the task at the top"
+/>
+```
+
+### Component props
+
+| Prop | Type | Default | Meaning |
+|---|---|---|---|
+| `name` | string | required | Base filename in `src/assets/shots/` without theme suffix or extension |
+| `alt` | string | required | Alt text for accessibility |
+| `caption` | string | none | Optional `<figcaption>`. Don't mention theme in captions; the image follows the reader's theme |
+| `scale` | 1 \| 2 | 2 | Device pixel ratio of the capture. Existing screenshots use `scale={1}`; new captures use `scale={2}` |
+| `eager` | boolean | false | Set to true for above-the-fold images to load eagerly with high priority |
+| `chrome` | boolean | false | Adds a faux window title bar (28px) with three dots; see design §4.3 |
+| `sizes` | string | auto-calculated | Override responsive sizing when the image sits in a narrower column than the viewport |
+
+### Example: above-the-fold image with chrome
+
+```mdx
+<Shot 
+  name="first-message" 
+  alt="Priya posts the double-charge bug in #payment-retries"
+  eager
+  chrome
+/>
+```
+
+## Image naming and file layout
+
+Screenshots are stored as PNG files in `src/assets/shots/`. The component looks up the `name` prop and finds the right variants automatically.
+
+### File naming convention
+
+Use the kebab-case names from the screenshot list in the design review (§9.3), e.g. `story-03-delegate`, `memory-panel`, `question-card`.
+
+```
+src/assets/shots/
+├── channel-conversation-dark.png    ← Shown on dark theme
+├── channel-conversation-light.png   ← Shown on light theme
+├── channel-conversation-mobile-dark.png   ← Optional: art-directed crop for mobile
+├── channel-conversation-mobile-light.png  ← Optional: shown below 768px
+└── theme-neutral-single.png         ← Falls back when no dark/light pair exists
+```
+
+### When Shot looks for files
+
+For `<Shot name="channel-conversation" … />`:
+
+1. **First choice:** `channel-conversation-dark.png` + `channel-conversation-light.png` (pair, swapped by theme)
+2. **Second choice:** `channel-conversation.png` (theme-neutral)
+3. **Mobile variants (optional):** If `channel-conversation-mobile-dark.png` and `-mobile-light.png` exist, they are shown on viewports below 768px
+4. **Build fails** if none of these are found, with a clear error message
+
+## CSS sizing rules
+
+Text in screenshots must stay legible. The `<Shot>` component enforces a sizing rule: **display width = min(container, file width ÷ scale)**.
+
+A 2x capture is never shown larger than its CSS size, so UI text is never upscaled.
+
+### Legibility check
+
+Effective text size = app text size × displayed width ÷ CSS file width.  
+Target: ≥11px (app body text is 13–14px).
+
+### Size categories (file = 2× capture)
+
+| Kind | CSS size | Where | Notes |
+|---|---|---|---|
+| `full` | 1440×900 | Homepage scroll-story only | The only full-window size |
+| `wide` crop | ≤1200 wide | Homepage sections, bento layouts | |
+| `docs` crop | **≤800 wide** (aim for 640–760) | Docs page content column (`--sl-content-width` 42rem = 672px) | 14px text stays ≥11.7px at 672px |
+| `detail` | ≤480 wide | One card, chip, or panel | Readable at 390px without a mobile variant |
+| `-mobile` | ≤440 wide, portrait | Optional for crops that must be readable at 390px | Shown below 768px |
+
+## Capturing new screenshots
+
+Screenshots are captured with Playwright at 2x device pixel ratio (DPR), then stored as PNG. `astro:assets` automatically creates AVIF + WebP variants and responsive srcsets.
+
+### Capture process
+
+1. **Run the Canopy app** against a known seed (e.g. `acme` seed for the demo and test suite)
+2. **Use Playwright** with `deviceScaleFactor: 2` to capture at 2x resolution
+3. **Crop** to element boundaries plus 16–24px of app background
+4. **Remove browser chrome** (use the `<Shot chrome>` prop instead for a faux frame)
+5. **Hide the composer hint line** and cursor before capture
+6. **Capture both dark and light themes** for every shot
+
+### File output
+
+- **Format:** PNG (not JPEG; text quality matters)
+- **Naming:** kebab-case (e.g. `story-03-delegate-dark.png`, `memory-panel-light.png`)
+- **Location:** `src/assets/shots/`
+- **Dark/light pair:** Always capture both for consistency, unless the shot is inherently theme-neutral
+
+### How the site shots are made
+
+Don't write one-off capture scripts. The stills are generated by the Canopy e2e suite, which plays the `#payment-retries` story live against the fake engines and captures every shot in both themes:
+
+- `canopy/e2e/tests/site-shots.spec.ts`: the stills (ST-1…ST-7, F-1…F-7, D-1, D-2), written to `canopy_site/src/assets/shots/`
+- `canopy/e2e/tests/site-video.spec.ts`: the story recording (WebM + MP4 + poster), written to `canopy_site/public/images/`
+- `canopy/e2e/tests/site-helpers.ts`: theme switching (`phx:theme` in localStorage), the capture CSS (no composer hint, no caret), and the 2x element crops
+
+Run it from `canopy/e2e` (both specs only run when `SITE=1`):
+
+```bash
+SITE=1 CANOPY_SEED=e2e/bin/seed-acme.exs FAKE_TURN_DELAY_MS=2500 npx playwright test site-shots
+```
+
+To add a shot, add a step to `site-shots.spec.ts` that uses the helpers there. The 2x scale comes from the browser context (`deviceScaleFactor: 2`), not from `page.screenshot()`.
+
+## Tips for good screenshots
+
+- **Crop tightly** around the element you're showing, with just enough background context (16–24px)
+- **Use consistent seeds and agent names** so screenshots are recognizable and consistent across docs
+- **Capture at natural size:** with 2x DPR, a 800px CSS width screenshot is 1600px on disk
+- **Test legibility:** at the docs column width (672px), 14px body text should stay ≥11.7px; use the sizing rule above
+- **Select by the element ids** Canopy's templates already set (`#timeline`, `section[id^="permission-"]`); the app doesn't use `data-testid`
+- **Document your crop:** add a comment in the capture script noting what element and context the shot contains
+
+## Updating existing screenshots
+
+When features change or the UI is rebuilt:
+
+1. Update both `-dark.png` and `-light.png` variants
+2. Keep the filename the same (the Shot component doesn't change)
+3. Don't rename files unless the feature itself is renamed
+4. Commit the new PNGs; let `astro:assets` handle AVIF/WebP optimization
+
+The build will fail loudly if a `<Shot name>` references a file that doesn't exist, so missing updates are caught early.
+
+## Next steps
+
+- Read the full [Shot API specification](shot-api.md) for component details
+- See `canopy/e2e/tests/site-shots.spec.ts` for the site captures and `canopy/e2e/tests/user-guide.spec.ts` for the user-guide images

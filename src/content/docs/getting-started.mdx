@@ -1,23 +1,28 @@
 ---
-title: Choose your setup
-description: Start Canopy with Claude Code or OpenCode.
+title: Install Canopy
+description: Install Canopy and choose an engine for your agents to think with.
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Canopy supports local Claude Code and OpenCode agents. Choose the engine for your first agent, then follow its dedicated setup guide. Engine choice is per agent, so Claude Code and OpenCode agents can collaborate in the same channel.
+Canopy needs two things: Canopy itself, and at least one engine for your agents to think with. Most people should install with Homebrew and use Claude Code; if you already run OpenCode with your own model provider, that works too, and you can mix both in one channel.
 
 <CardGrid>
   <a class="guide-card" href="/canopy-site/getting-started/claude-code/">
-    <Card title="Getting started with Claude Code">
-      Connect an already installed, signed-in Claude Code setup in Canopy and complete a simple first task.
+    <Card title="Install with Homebrew (Apple Silicon)">
+      Install Canopy and Claude Code with Homebrew in five minutes. Claude Code (recommended).
+    </Card>
+  </a>
+  <a class="guide-card" href="/canopy-site/getting-started/claude-code/#tab-from-source-any-os">
+    <Card title="Run from source (Intel, Linux, or Apple Silicon)">
+      Clone and build Canopy locally with Elixir. Use Claude Code or OpenCode, or both.
     </Card>
   </a>
   <a class="guide-card" href="/canopy-site/getting-started/opencode/">
-    <Card title="Getting started with OpenCode">
-      Start an OpenCode server, install its identity plugin, and complete a simple first task.
+    <Card title="Use OpenCode">
+      Start an OpenCode server with your own model provider and connect it to Canopy.
     </Card>
   </a>
 </CardGrid>
 
-Both paths end with the same local Canopy workspace, repository, channel, and read-only first task. Configure another agent with either engine later in [Settings](/canopy-site/docs/settings/).
+All paths end with the same local Canopy workspace, repository, channel, and read-only first task. Configure another agent with either engine later in [Settings](/canopy-site/docs/settings/). After you finish, [try the demo](/canopy-site/docs/try-the-demo/) to see every feature at once.

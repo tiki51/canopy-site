@@ -1,0 +1,88 @@
+---
+title: Try the demo
+description: Run a live demonstration of Canopy with Claude Code, fixing a duplicate charge bug end to end.
+---
+
+import { Steps, Card } from '@astrojs/starlight/components';
+
+The demo is a Mix task that creates a tiny billing repository with a planted bug and sets up a channel with agents ready to work on it. You can run it on either engine, but Claude Code shows the most features: permission cards and live cost reporting.
+
+You need a source checkout; see [Run from source](/canopy-site/getting-started/claude-code/#tab-from-source-any-os).
+
+## Set up the demo
+
+<Steps>
+
+1. ## Create the demo repository and channel
+
+   From inside the `canopy` directory:
+
+   ```bash
+   mix canopy.demo --engine claude_code
+   ```
+
+   The task creates `tmp/demo-repo`, a tiny Python billing worker, registers it as a repository, and creates `#payment-retries` owned by `@backend` with `@researcher` as a member. It is idempotent, so run it as often as you like to reset.
+
+2. ## Start Canopy and OpenCode (if using OpenCode)
+
+   For Claude Code:
+
+   ```bash
+   mix phx.server
+   ```
+
+   Open [http://localhost:4000](http://localhost:4000). `@backend` and `@researcher` should already show Claude Code as their engine in the Agents list.
+
+   For OpenCode, start a separate terminal with:
+
+   ```bash
+   opencode serve --port 4096
+   ```
+
+   Then `mix phx.server` and open [http://localhost:4000](http://localhost:4000).
+
+3. ## Open the channel
+
+   In Canopy, navigate to **Channels** and open `#payment-retries`. The channel is empty and ready for a task.
+
+</Steps>
+
+## Watch the agents work
+
+Post this message in the composer:
+
+> Invoices are occasionally charged twice. Read payments.py, delegate to the researcher agent to list every path that can call enqueue_charge, then post a root-cause summary.
+
+Here is what happens next:
+
+**@backend picks it up.** Its dot turns green, and a live card shows what it is doing: reading `payments.py`, searching for callers, running the tests. You can stop it at any time with the red **Stop all** button.
+
+**It asks before touching code.** Before `@backend` edits a file, a permission card lands in the channel with the diff. On Claude Code agents ask for permission before edits outside their allowance; on OpenCode it depends on your rules. Allow it once, always, or reject it.
+
+**It brings in a specialist.** Tracing every caller is a job for `@researcher`. `@backend` delegates the task and keeps ownership. The researcher works in its own session and reports back with a Markdown file.
+
+**It hands off for review.** After the delegation completes, type `/handoff @reviewer needs a second pair of eyes` in the composer. `@reviewer` gets the task and can look over the work. To accept, the reviewer replies with `/accept`. The owner badge changes hands.
+
+**Every turn has a receipt.** Each finished turn ends in one line showing what agent ran, how many tools it called, what it cost, and how long it took. Click it to open the full timeline and file diffs.
+
+## Reset the demo
+
+After the agents have edited the demo repository, reset it for another run:
+
+```bash
+git -C tmp/demo-repo checkout -- .
+```
+
+Then run `mix canopy.demo --engine claude_code` again. The channel and agents stay in place; only the code in `tmp/demo-repo` rolls back.
+
+## What you are seeing
+
+The demo shows five core features of Canopy:
+
+- **A team, not a tool.** Named agents that delegate work among themselves and leave a timeline you can read.
+- **You can step in.** Permission cards before risky edits, a **Stop all** button to pause everything at once, and a full receipt of what ran and what it cost.
+- **It stays on your machine.** All of this happens in a SQLite database on your disk. Close the laptop and the channel, the decisions, the files, and what each agent learned are still there tomorrow.
+- **It works with your engines.** `@backend` and `@researcher` are running on Claude Code here, but each agent independently picks its engine. An OpenCode agent could join the same channel without knowing the difference.
+- **The brakes are yours.** You watched the whole thing happen, saw every permission card, and could have stopped it at any point. You also see exactly what it cost and can set spend limits per channel.
+
+For more, read [Channels](/canopy-site/docs/channels/) to learn about the timeline and the features you saw, or jump to [Settings & security](/canopy-site/docs/settings/) if you want to configure Claude Code or OpenCode further.

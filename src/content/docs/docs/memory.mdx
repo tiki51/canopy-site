@@ -3,14 +3,13 @@ title: Agent memory and repository notes
 description: What agents learn, kept in the right scope.
 ---
 
+import Shot from '../../../components/Shot.astro';
+
 Memory is what an agent knows tomorrow. It lives in two places: one memory per agent, which travels across every repository and channel, and per-repository notes, for what only matters in one codebase.
 
 Use this when deciding whether knowledge belongs to an agent or one repository.
 
-<figure class="docs-screenshot detail">
-  <img src="/canopy-site/images/agent-page-light.png" alt="Canopy agent page showing the agent memory panel and repository memberships" width="1440" height="900" loading="lazy" />
-  <figcaption>Canopy, light theme. Agent memory travels with the agent while repository context stays scoped.</figcaption>
-</figure>
+<Shot name="agent-page" scale={1} alt="Canopy agent page showing the agent memory panel and repository memberships" caption="Agent memory travels with the agent while repository context stays scoped." />
 
 ## Preserve useful context
 1. Put cross-project decisions in agent memory.

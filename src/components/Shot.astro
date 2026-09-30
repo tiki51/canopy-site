@@ -1,0 +1,177 @@
+---
+/**
+ * <Shot name="channel-conversation" alt="…" caption="…" />
+ *
+ * Theme-aware product screenshot. Looks up files in src/assets/shots/:
+ *   {name}-dark.png + {name}-light.png   shown per [data-theme] (docs); dark on the landing page
+ *   {name}.png                           theme-neutral fallback when there is no pair
+ *   {name}-mobile-dark.png / -light.png  optional art-directed crop used below 768px
+ *
+ * Captures are 2x (Playwright deviceScaleFactor: 2). The image is never shown wider than its
+ * CSS size (file width / scale), so UI text is never upscaled. Pass scale={1} for legacy 1x captures.
+ * Output is AVIF + WebP with a srcset; width/height are set so nothing shifts while loading.
+ */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  alt: string;
+  caption?: string;
+  /** Device pixel ratio of the capture. */
+  scale?: 1 | 2;
+  /** Above-the-fold images: load eagerly with high priority. */
+  eager?: boolean;
+  /** Faux window title bar with three dots. */
+  chrome?: boolean;
+  /** Override the default `sizes` when the image sits in a narrower column than the viewport. */
+  sizes?: string;
+  class?: string;
+  /** Extra inline declarations for the figure, e.g. custom properties. */
+  style?: string;
+}
+
+const { name, alt, caption, scale = 2, eager = false, chrome = false, sizes, class: className, style: extraStyle } = Astro.props;
+
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/shots/*.png', { eager: true });
+const find = (file: string) => files[`/src/assets/shots/${file}.png`]?.default;
+
+type Theme = 'dark' | 'light' | 'any';
+const pick = (suffix: string): [Theme, ImageMetadata][] => {
+  const dark = find(`${name}${suffix}-dark`);
+  const light = find(`${name}${suffix}-light`);
+  if (dark && light) return [['dark', dark], ['light', light]];
+  const single = dark ?? light ?? find(`${name}${suffix}`);
+  return single ? [['any', single]] : [];
+};
+
+const main = pick('');
+if (main.length === 0) {
+  throw new Error(`<Shot name="${name}">: no ${name}-dark.png, ${name}-light.png or ${name}.png in src/assets/shots/`);
+}
+const mobile = new Map(pick('-mobile'));
+const mobileFor = (theme: Theme) => mobile.get(theme) ?? mobile.get('any') ?? mobile.get('dark');
+
+const cssSize = (img: ImageMetadata) => ({
+  width: Math.round(img.width / scale),
+  height: Math.round(img.height / scale),
+});
+
+const srcset = async (img: ImageMetadata, format: 'avif' | 'webp') => {
+  const widths = [...new Set([640, 960, 1280, 1920, 2560].filter((w) => w < img.width).concat(img.width))];
+  const results = await Promise.all(widths.map((width) => getImage({ src: img, width, format })));
+  return results.map((result, i) => `${result.src} ${widths[i]}w`).join(', ');
+};
+
+const { width, height } = cssSize(main[0][1]);
+const mobileSize = mobileFor(main[0][0]) && cssSize(mobileFor(main[0][0])!);
+const defaultSizes = `(min-width: ${width}px) ${width}px, 100vw`;
+
+const pictures = await Promise.all(
+  main.map(async ([theme, img]) => {
+    const small = mobileFor(theme);
+    const fallback = await getImage({ src: img, width: Math.min(img.width, 1280), format: 'webp' });
+    return {
+      theme,
+      avif: await srcset(img, 'avif'),
+      webp: await srcset(img, 'webp'),
+      fallback: fallback.src,
+      mobile: small && {
+        avif: await srcset(small, 'avif'),
+        webp: await srcset(small, 'webp'),
+        ...cssSize(small),
+      },
+    };
+  }),
+);
+
+const style = [`--shot-w: ${width}px`, mobileSize && `--shot-w-m: ${mobileSize.width}px`, extraStyle].filter(Boolean).join('; ');
+---
+
+<figure class:list={['shot', className]} style={style} data-mobile={mobileSize ? '' : undefined}>
+  <div class:list={['shot-frame', 'not-content', { 'has-chrome': chrome }]}>
+    {
+      pictures.map((p) => (
+        <picture class={`shot-${p.theme}`}>
+          {p.mobile && (
+            <source media="(max-width: 767px)" type="image/avif" srcset={p.mobile.avif} sizes="100vw" width={p.mobile.width} height={p.mobile.height} />
+          )}
+          {p.mobile && (
+            <source media="(max-width: 767px)" type="image/webp" srcset={p.mobile.webp} sizes="100vw" width={p.mobile.width} height={p.mobile.height} />
+          )}
+          <source type="image/avif" srcset={p.avif} sizes={sizes ?? defaultSizes} />
+          <source type="image/webp" srcset={p.webp} sizes={sizes ?? defaultSizes} />
+          <img
+            src={p.fallback}
+            alt={alt}
+            width={width}
+            height={height}
+            loading={eager ? 'eager' : 'lazy'}
+            fetchpriority={eager ? 'high' : undefined}
+            decoding="async"
+          />
+        </picture>
+      ))
+    }
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .shot {
+    width: 100%;
+    max-width: min(100%, var(--shot-w));
+    margin: 2rem auto 2.25rem;
+  }
+
+  .shot-frame {
+    overflow: hidden;
+    border: 1px solid var(--shot-line, var(--line-strong, #364665));
+    border-radius: var(--radius-md, 12px);
+    background: var(--bg-raised, #0f1f3d);
+    box-shadow: var(--shot-shadow, var(--frame-shadow));
+  }
+
+  :global(:root[data-theme='light']) .shot-frame {
+    --shot-line: #b6c1d4;
+    --shot-shadow: 0 1rem 2.5rem rgb(10 23 48 / 12%);
+    background: #ffffff;
+  }
+
+  .has-chrome::before {
+    content: '';
+    display: block;
+    height: 28px;
+    border-bottom: 1px solid var(--shot-line, var(--line-strong, #364665));
+    background:
+      radial-gradient(circle at 16px 50%, var(--shot-line, #364665) 4px, transparent 4.5px),
+      radial-gradient(circle at 30px 50%, var(--shot-line, #364665) 4px, transparent 4.5px),
+      radial-gradient(circle at 44px 50%, var(--shot-line, #364665) 4px, transparent 4.5px);
+  }
+
+  picture,
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  :global(:root[data-theme='light']) .shot-dark,
+  :global(:root:not([data-theme='light'])) .shot-light {
+    display: none;
+  }
+
+  figcaption {
+    margin-top: 0.65rem;
+    color: var(--sl-color-gray-3, var(--text-subtle, #7a8aaa));
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 767px) {
+    .shot[data-mobile] {
+      max-width: min(100%, var(--shot-w-m));
+    }
+  }
+</style>

@@ -1,0 +1,47 @@
+---
+title: FAQ
+description: Answers to common questions about Canopy, security, cost, and features.
+---
+
+## Does my code leave my machine?
+
+Only what your engine already sends to its model provider.
+
+Canopy itself stays on your machine. Your repositories, the channel history, agent memory, and shared files are all in a SQLite database on your disk. The Canopy server listens on `127.0.0.1` only, and there is no cloud service.
+
+When Claude Code or OpenCode agents work, they send code and questions to their model provider (Anthropic, OpenAI, or another service behind OpenCode), the same as you would if you typed the same thing into the CLI. Canopy shows you what is being sent and lets you stop it.
+
+## Do I need an API key?
+
+Not for Claude Code. Canopy uses your existing Claude Code login; there is no API key to paste.
+
+OpenCode requires you to set up your own model provider (with credentials managed by OpenCode itself), but Canopy does not handle keys. Install the identity plugin and point OpenCode at your model provider once; after that, OpenCode agents in Canopy work the same way.
+
+## Can my team share one Canopy?
+
+Not yet. Canopy is single-user by design: it binds to `127.0.0.1`, has no login, and stores everything in one SQLite file. It is built to run on one machine and be visible to one person.
+
+If you want to share Canopy on a trusted network, you can run from source with `CANOPY_BIND=0.0.0.0 mix phx.server`, but this is a development-only override. Multi-user and remote deployment are not in scope yet.
+
+## What does it cost?
+
+Canopy is free and open source. You pay your model provider for every turn; Canopy shows you exactly what for.
+
+Every finished turn reports its cost on the timeline. Open the turn to see every tool call and the context tokens used. The **Costs** view breaks spending down by agent, channel, model, and what woke them. Pick an agent and ask `@finops` for a spend audit; it will read the numbers and reply with ranked recommendations. You can also set dollar limits per channel; when the limit is reached, agents in that channel go quiet until you raise it.
+
+## Can I mix Claude Code and OpenCode?
+
+Yes. Each agent independently picks its engine. A Claude Code `@backend` and an OpenCode `@researcher` can work in the same channel without knowing the difference. Configure one agent on Claude Code and another on OpenCode in Settings, and they will collaborate normally.
+
+## Windows / Linux / Intel Mac?
+
+Run from source anywhere Elixir 1.20 and Erlang/OTP 28 run.
+
+The Homebrew installation is Apple Silicon Macs only; it ships a prebuilt release. For Intel Macs, Linux, or Windows with WSL, clone the repository and run `mix setup && mix phx.server`.
+
+## Known gaps
+
+- Timestamps render in UTC.
+- Diffs have no syntax highlighting.
+- Single user, single machine. Multi-user and remote deployment are not in scope yet.
+- OpenCode's permission list endpoint returns a 400 for some pending patch permissions. The event stream is the source of truth, so approvals still work.
