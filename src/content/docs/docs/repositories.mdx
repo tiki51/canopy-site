@@ -5,17 +5,32 @@ description: Register local projects and keep agent work scoped to them.
 
 import Shot from '../../../components/Shot.astro';
 
-A repository is any local project folder. Register one and its channels, sessions, and notes all stay inside — your files remain yours.
+A repository is any local project folder. Register one and its channels, agent sessions, and shared notes all belong to it; your files remain yours.
 
-Use this when bringing a local project into Canopy.
+Use this when bringing a local project into Canopy, or checking which MCP servers agents get there.
 
-<Shot name="repositories" scale={1} alt="Canopy Repositories page showing registered projects and the Add a repository form" caption="Register local projects, then create focused channels inside them." />
+<Shot name="repositories" scale={1} alt="Canopy Repositories page showing registered projects with their branch and channel count" caption="Register local projects, then create focused channels inside them." />
 
 ## Register a project
-1. Open **Repositories** and choose **Add repository**.
-2. Select a local project folder and confirm its display name.
-3. Create a channel and choose an owner.
 
-You’ll see: the project appears in the list and its channel shows the owner. Canopy initializes git when needed and never modifies existing project files. Paths must be inside your home directory unless you enable **Allow a path outside my home directory**. Registered projects receive a `.canopy/` workspace excluded from git, containing shared notes and one notes file per agent. If a folder is rejected, verify it exists and is readable.
+1. Open **Repositories** and add a local project folder with a display name (or add it on the last step of first-run setup).
+2. Use **Channel** on its row to create a channel there and choose an owner.
+
+You'll see: the project appears with its current branch and channel count. Canopy runs `git init` when the folder is not a git repository and otherwise never modifies it. Paths must be inside your home directory unless you tick **Allow a path outside my home directory**. Registering also creates a small `.canopy/` workspace (a README and the team's shared `NOTES.md`), listed in `.git/info/exclude` so it never shows up in your diffs. If a folder is rejected, verify it exists and is readable.
+
+## MCP servers
+
+**MCP** on a repository's row opens a page listing the MCP servers agents get there, one section per engine, with each server's status (*connected*, *failed*, *needs auth*, *disabled*, *unknown*), how it connects, and the file it came from. Secrets are masked before they reach the page.
+
+<Shot name="repository-mcp" scale={1} alt="A repository's MCP servers page with OpenCode and Claude Code sections and server statuses" caption="Which MCP servers each engine loads in this repository, and whether they work." />
+
+- **OpenCode** loads every server in its config (global and repository `opencode.json`) plus Canopy's own. Every enabled server's tools go to the model on every turn, so a repository server costs context.
+- **Claude Code** agents load Canopy's server and the repository's `.mcp.json`, re-read every turn. Your personal servers in `~/.claude.json` stay out; the page lists them under *Configured but not loaded*.
+
+:::caution[Treat `.mcp.json` like code you run]
+The servers in a repository's `.mcp.json` start on every Claude Code turn without Claude Code's usual one-time approval prompt. Only register repositories whose `.mcp.json` you trust, and review changes to it.
+:::
+
+The OpenCode section also offers **Re-register Canopy**, **Reconnect** on a failed server, and **Reinstall plugin** for the repository's identity plugin.
 
 Next: [Create a channel](/canopy-site/docs/channels/).

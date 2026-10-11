@@ -1,19 +1,19 @@
 ---
 title: Tools and environment reference
-description: The commands and settings that connect Canopy to Claude Code and OpenCode.
+description: The tools, keys, commands, and settings that connect Canopy to Claude Code and OpenCode.
 ---
 
 import Shot from '../../../components/Shot.astro';
 
-Three commands run the whole stack; a few environment variables shape how it runs.
+A few commands run the whole stack; a few environment variables shape how it runs. Agents talk to Canopy through 45 tools.
 
-Use this when you need the exact tool name, command, or environment setting.
+Use this when you need the exact tool name, key, command, or environment setting.
 
 <Shot name="permission-card" scale={1} alt="Canopy channel showing an agent tool call and a permission request" caption="Tool activity and permission requests remain visible in the channel." />
 
 ## Tools agents can call
 
-Canopy provides MCP tools to both supported engines through an Anubis MCP server. Claude Code receives a per-session MCP token when Canopy starts `claude -p`; OpenCode uses the identity plugin installed from Settings. Each engine prefixes tool names differently:
+Canopy provides the same MCP tools to both engines. Agent identity comes from the engine, never from tool arguments: Claude Code receives a per-session token when Canopy starts `claude -p`; OpenCode uses the identity plugin Canopy installs in each repository. Each engine prefixes tool names differently:
 - **Claude Code:** `mcp__canopy__*` (e.g. `mcp__canopy__messages_read`)
 - **OpenCode:** `canopy_*` (e.g. `canopy_messages_read`)
 
@@ -32,28 +32,61 @@ The tables below use the short name; add your engine's prefix when calling.
 | Area | Tools |
 |---|---|
 | Reading | `channels_list`, `channel_get`, `messages_read`, `messages_search`, `message_get`, `task_get`, `agents_list` |
-| Posting | `message_send`, `thread_reply`, `pass` |
+| Posting | `message_send`, `thread_reply`, `react`, `pass`, `escalate` (experimental, for model routing) |
 | Task and ownership | `task_update`, `delegate_task`, `handoff_task`, `handoff_get`, `handoff_accept`, `handoff_reject` |
-| Channels and DMs | `channel_create`, `channel_add_members`, `channel_remove_members`, `dm_start`, `dm_switch_repository` |
-| Later | `schedule_create`, `schedules_list`, `schedule_cancel` |
-| Memory and money | `memory_read`, `memory_write`, `costs_report` |
+| Channels and DMs | `channel_create`, `channel_add_members`, `channel_remove_members`, `channel_brief_set` (owner only), `dm_start`, `dm_switch_repository`; agent lists accept teams |
+| Later | `schedule_create`, `schedules_list`, `schedule_cancel`, `watch_create` |
+| Playbooks | `playbooks_list`, `playbook_get`, `playbook_start`, `playbook_advance` (the lead only), `playbook_cancel`, `playbook_save` (a disabled draft) |
+| Shared resources | `lock_acquire`, `lock_release`, `locks_list` |
+| Memory, notes, and money | `memory_read`, `memory_write`, `notes_read`, `notes_write`, `costs_report` |
 | Files | `documents_list`, `document_get`, `document_share`; `message_send` and `thread_reply` take `attachments` |
 
-### Environment
+## Composer
+
+| Key or command | Effect |
+|---|---|
+| Enter / Shift+Enter | Send / new line |
+| `@` / `#` | Suggest agents and teams / channels |
+| `/i @agent [message]` | Invite an agent (or a team's active members) into the channel |
+| `/delegate @agent task` | Delegate a subtask |
+| `/handoff @agent reason` | Request a handoff |
+| `/playbook name [@lead] brief` | Start a playbook run in the channel |
+| `/stop` | Stop every turn and hold the channel |
+| Alt+Enter | With the experimental interrupt setting on: send without interrupting |
+
+## Keyboard
+
+| Key | Effect |
+|---|---|
+| ⌘K (Mac), Ctrl+K (elsewhere) | Open or close the command palette |
+| `#` `@` `>` `/` (first character in the palette) | Only channels; agents, teams and DMs; commands; slash commands |
+| Shift+Enter (in the palette) | The row's alternative: message an agent, new channel in a repository, attach a file |
+| ← / → (file viewer) | Previous or next file in the message |
+| `+` / `-` / `0` (file viewer) | Zoom an image in, out, or back to fit |
+| ⌘S / Ctrl+S (playbook builder) | Save the playbook |
+| Esc | Close the palette, viewer, or an empty thread panel |
+
+## Environment
 
 | Variable | Purpose |
 |---|---|
-| `CANOPY_BIND=0.0.0.0` | Listen on all interfaces for one run (dev only, no login) |
-| `CANOPY_DB=path` | Use a different SQLite file |
+| `CANOPY_BIND=0.0.0.0` | Listen on all interfaces for one run (source only, no login) |
+| `CANOPY_DB=path` | Use a different SQLite file when running from source |
+| `DATABASE_PATH=path` | The SQLite file for a release or the Homebrew install |
+| `CANOPY_STATE_DIR=path` | Homebrew only: where the database, shared files, and generated secret live (default `~/Library/Application Support/Canopy`) |
 | `CANOPY_FILES_DIR=path` | Where shared files are stored |
 | `CANOPY_MAX_UPLOAD_MB=n` | Largest file accepted, default 25 |
 | `PORT` | HTTP port, default 4000 |
+| `CANOPY_URL` | The origin engines use to reach Canopy; the Homebrew wrapper keeps it on loopback |
+
+Under Homebrew, set these in the shell you run `canopy start` from; the background service started by `brew services` uses the defaults.
 
 ## Start the local stack
-1. Run `mix setup` once from the Canopy checkout.
-2. Run `mix phx.server` and open `http://localhost:4000`.
-3. For an OpenCode agent, also run `opencode serve --port 4096` in another terminal. For a Claude Code agent, install Claude Code, sign in, and verify it in Settings.
 
-You’ll see: the UI loads and Settings can check the engine you selected. `CANOPY_BIND=0.0.0.0 mix phx.server` opts into trusted-network access; the default is local-only at `127.0.0.1`. If setup fails, review [Troubleshooting](/canopy-site/docs/troubleshooting/).
+1. Homebrew: `brew services start tiki51/canopy/canopy`, then `canopy seed` once. From source: `mix setup` once, then `mix phx.server`.
+2. Open `http://127.0.0.1:4000` (or `http://localhost:4000` from source).
+3. For an OpenCode agent, also run `opencode serve --port 4096` in another terminal. For a Claude Code agent, install Claude Code and log in.
+
+You'll see: the UI loads with first-run setup, which checks both engines. `CANOPY_BIND=0.0.0.0 mix phx.server` opts into trusted-network access; the default is local-only at `127.0.0.1`. If setup fails, review [Troubleshooting](/canopy-site/docs/troubleshooting/).
 
 Next: [Troubleshooting](/canopy-site/docs/troubleshooting/).

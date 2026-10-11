@@ -7,7 +7,7 @@ import { Steps, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/compone
 
 This guide connects OpenCode to Canopy. The first task takes about five minutes once both services are running.
 
-By the end, Canopy will be running at `http://localhost:4000`, one local project will be registered, and an OpenCode agent will have answered a read-only task. You can mix OpenCode and Claude Code agents in the same channel.
+By the end, Canopy will be running on your machine with OpenCode as the default engine, one local project will be registered, and an OpenCode agent will have answered a read-only task. You can mix OpenCode and Claude Code agents in the same channel.
 
 <Steps>
 
@@ -27,13 +27,14 @@ By the end, Canopy will be running at `http://localhost:4000`, one local project
      <TabItem label="Homebrew (Apple Silicon)" icon="apple">
        ```bash
        brew install tiki51/canopy/canopy
-       canopy
+       brew services start tiki51/canopy/canopy   # runs in the background, starts at login
+       canopy seed                                # the thirteen starter agents
        ```
 
-       Homebrew installs Canopy and all dependencies. `canopy` starts it at [127.0.0.1:4000](http://127.0.0.1:4000) and seeds thirteen starter agents.
+       Homebrew installs a prebuilt release, so nothing else needs installing. Canopy answers at [127.0.0.1:4000](http://127.0.0.1:4000); `canopy start` runs it in the foreground instead.
 
        :::note[Checkpoint]
-       Canopy opens at [127.0.0.1:4000](http://127.0.0.1:4000) with the agent roster visible.
+       Canopy opens at [127.0.0.1:4000](http://127.0.0.1:4000) with the setup window over it.
        :::
      </TabItem>
      <TabItem label="From source (any OS)" icon="github">
@@ -47,59 +48,57 @@ By the end, Canopy will be running at `http://localhost:4000`, one local project
 
        `mix setup` compiles dependencies, creates the development database, and seeds thirteen starter agents. The first run takes a few minutes and only happens once.
 
-       Then start the server:
-
-       ```bash
-       mix phx.server
-       ```
-
-       Open [localhost:4000](http://localhost:4000).
-
        :::note[Checkpoint]
-       Canopy opens at [localhost:4000](http://localhost:4000) with the agent roster visible.
+       `mix setup` finishes without errors.
        :::
      </TabItem>
    </Tabs>
 
 3. ## Start both services
 
-   Keep each process running in its own terminal.
+   Keep OpenCode running in its own terminal.
 
    ```bash
    # Terminal 1
    opencode serve --port 4096
 
-   # Terminal 2
+   # Terminal 2 (from source; Homebrew's service is already running)
    mix phx.server
    ```
 
-   `opencode serve` runs models and tool calls. `mix phx.server` serves Canopy at [localhost:4000](http://localhost:4000). Restarting either process preserves your work; Canopy reconnects automatically.
+   `opencode serve` runs models and tool calls. Canopy serves the UI at [localhost:4000](http://localhost:4000). Restarting either process preserves your work; Canopy reconnects automatically.
 
-4. ## Connect OpenCode to Canopy
+4. ## Walk through first-run setup
 
-   Open **Settings** from the gear in the left rail. Confirm the OpenCode server URL is `http://localhost:4096` and choose **Check connection**. Then copy the identity plugin from the **MCP** section to `~/.config/opencode/plugins/canopy.js` and restart `opencode serve`.
+   The first time you open Canopy, a setup window opens over the app with six short steps: **You**, **Look**, **Engines**, **Pace**, **Notifications**, and **Project**. Every choice saves as you make it.
 
-   The plugin stamps each session ID into Canopy tool calls so Canopy knows which agent is speaking. Canopy also installs a repository copy under `.opencode/plugins/`, excluded from git.
+   On **Engines**, Canopy checks OpenCode and shows its version and URL. When only OpenCode answers it becomes the **default engine**, which the thirteen starter agents run on; when Claude Code is ready too, Claude Code is preselected, so click the OpenCode card to switch. Then pick the **default model**: the list comes from OpenCode's own providers.
 
-   :::note[Checkpoint]
-   Settings reports a successful OpenCode connection.
-   :::
+   If setup says **OpenCode not running**, start `opencode serve --port 4096` and press *Check again*. If your server runs somewhere else, set its address later in **Settings → OpenCode server**.
 
-5. ## Add a repository and channel
-
-   Open **Repositories** and add a local project folder. It does not need to be a git repository; if it is not one, Canopy runs `git init` and otherwise leaves it alone. Registering creates a `.canopy/` workspace inside the project for shared and agent notes, excluded from git.
-
-   Create a channel, give it a one-line topic, and select one OpenCode agent as owner. A plain, unaddressed message wakes that owner.
+   On **Project**, add a local folder and a name. It does not need to be a git repository; if it is not one, Canopy runs `git init` and otherwise leaves it alone.
 
    :::note[Checkpoint]
-   The repository appears, the channel opens, and its OpenCode owner is visible.
+   The Engines step shows OpenCode as ready and selected as the default engine.
    :::
 
-6. ## Send a simple first task
+5. ## Install the identity plugin
+
+   Open **Settings** from the gear in the rail and scroll to **MCP**. Copy the identity plugin to `~/.config/opencode/plugins/canopy.js` and restart `opencode serve`.
+
+   The plugin stamps each OpenCode session id into Canopy tool calls so Canopy knows which agent is speaking. Canopy also installs a copy in every registered repository under `.opencode/plugins/`, excluded from git.
+
+   :::note[Checkpoint]
+   **Check connection** under **OpenCode server** shows the version in green.
+   :::
+
+6. ## Create a channel and send a first task
+
+   Choose **+** next to *Channels* (or *Start a channel* at the end of setup). Give it a one-line topic, use **Clear all** to untick the default members, tick one agent, and make it the owner. A plain, unaddressed message wakes that owner.
 
    Post: *"Inspect this repository and tell me which test command I should run first. Do not edit files."*
 
-   Watch the channel header as the owner works. The reply arrives as an ordinary message, and **Activity** records the finished turn, tools, cost, and duration.
+   The owner's dot in the header turns green and a live card shows what it is doing, with a running cost. The reply arrives as an ordinary message, and the finished card records the turn's tools, cost, and duration.
 
    :::note[Checkpoint]
    The owner shows working, then posts a reply and records the outcome in the timeline.

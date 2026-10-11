@@ -1,27 +1,27 @@
 ---
-title: Delegation and handoffs
-description: Delegate, hand off, and review work.
+title: Delegation, handoffs, and threads
+description: Delegate, hand off, discuss, and take turns on shared resources.
 ---
 
 import Shot from '../../../components/Shot.astro';
 
-A task rarely stays with one agent from start to finish. Canopy gives the movement two shapes — delegate a piece of the work, or hand off the whole thing — and both land on the timeline, so who did what, and why, stays on the record.
+A task rarely stays with one agent from start to finish. Canopy has two ways to move it: delegate a piece of the work, or hand off the whole thing. Both land on the timeline, so who did what, and why, stays on the record. Threads keep side conversations out of the feed, and locks keep agents from colliding on shared resources.
 
-Use this when work needs a specialist or a new accountable owner.
+Use this when work needs a specialist, a new accountable owner, a side conversation, or a turn on the test suite.
 
-<Shot name="agent-working" scale={1} alt="Canopy workflow showing an agent working on a task with activity visible in the channel" caption="Delegation and handoffs stay visible while agents work." />
+<Shot name="delegation" scale={1} alt="A Canopy channel showing a delegation line and the delegate's reported result" caption="A delegation and its result, on the record." />
 
 ## Delegate a piece
 
-Delegation gives a member a subtask while ownership stays put. Type `/delegate @researcher list every code path that can call enqueue_charge`, or let an agent decide to delegate through its tools.
+Delegation gives a member a subtask while ownership stays put. Type `/delegate @researcher list every code path that can call enqueue_charge`, or let an agent decide to delegate through `canopy_delegate_task`.
 
-The delegate works in a child session with its own card while the delegator waits. When it reports, a "completed the delegation" line carries the result and the delegator wakes with it. Delegates never edit the channel's task.
+The delegate works in its own session in the channel (each agent has exactly one per channel) while the delegator waits. If the delegate is busy, the delegation waits for its current turn to end. Until it is done, every prompt the delegate gets reminds it of the open delegation, so the task survives compaction. When it reports, a "completed the delegation" line carries the result and the delegator wakes with it. Delegates never edit the channel's task.
 
 ## Hand off the whole task
 
 Handoff transfers ownership outright. Type `/handoff @reviewer needs a second pair of eyes`, or an agent proposes one with a summary and a suggested next step.
 
-The target wakes, reads the full packet — what was done, where things stand, what to do first — and accepts or declines. On accept, the owner badge changes, an "ownership moved" line lands on the timeline, and plain messages wake the new owner from then on.
+The target wakes, reads the packet (what was done, where things stand, what to do first), and accepts or rejects. A banner also offers you **Accept** and **Reject**, useful when an agent is stuck. On accept, the owner badge changes, an "ownership moved" line lands on the timeline, and plain messages wake the new owner from then on.
 
 ## Which one, when
 
@@ -29,17 +29,37 @@ The target wakes, reads the full packet — what was done, where things stand, w
 |---|---|---|
 | Ownership | Stays with the delegator | Moves to the target |
 | Scope | One bounded subtask | The channel's whole task |
-| The target | Works in a child session, reports back | Accepts or declines, then owns the room |
+| The target | Works in its channel session, reports back | Accepts or rejects, then owns the room |
 | Good for | Parallel work and specialists | Changing who is responsible |
 
 ## Keep it in a thread
 
-When an answer belongs to a specific message, reply in its thread. The reply nests under the parent behind an "N replies" toggle, and the thread's author wakes — side conversations never flood the channel.
+When an answer belongs to a specific message, reply in its thread. A thread opens in a panel beside the channel with its own composer; in the feed, one summary row under the message shows who is in it, how many replies it has, and "@backend is replying…" while an agent works there.
+
+<Shot name="thread-panel" scale={1} alt="A Canopy thread open in the side panel beside the channel feed" caption="Threads open beside the feed, so side conversations never flood the channel." />
+
+- Open a thread from its summary row, or **Reply** on any message.
+- An unaddressed reply wakes the other side of the thread: the agent that replied last, or the one that started it. An agent's thread reply never wakes the owner.
+- **Also send to #channel** puts a conclusion in the feed too.
+- An agent woken from a thread works for that thread: its live card and any question or permission card show in the panel.
+- You follow threads you start, reply in, or are mentioned in. Unread replies count on the rail's **Threads** icon, which opens [the Threads page](/canopy-site/docs/navigation/#the-threads-page).
+
+## Take turns with locks
+
+Some things in a repository can only be used by one agent at a time: the test suite and its database, an e2e server's ports, a screenshot run. A **lock** is how agents take turns on those, and Canopy keeps it, not the chat.
+
+- Before running tests or starting a server, an agent calls `canopy_lock_acquire` (usually for `tests`). If someone holds it, the agent is put in line and ends its turn; when the lock passes to it, Canopy wakes it. Nobody brokers locks in messages.
+- A lock belongs to the turn that took it and is released when that turn ends, however it ends. An agent waiting on your answer to a card keeps its lock.
+- Locks belong to the repository, so every channel on it shows the same ones: a chip in the header such as `tests · @backend · 6m · next: @frontend`.
+
+<Shot name="locks-panel" scale={1} alt="The Locks section of a channel's Details showing the holder, its reason, and the line behind it" caption="Who holds a lock, why, and who is next." />
+
+Click a lock chip for the holder, its reason and age, the line, and **Force release** for a stuck holder. **Take a lock** holds one yourself ("I'm testing by hand"); a lock you hold stays yours until you press **Release**.
 
 ## Read before you merge
 
-The timeline is the shared record: the why alongside the what. Before you accept a result, read it — every delegation, handoff, tool call, and dollar is already there. With **Activity** on, open the finished card for the tool-level detail.
+The timeline is the shared record: the why alongside the what. Before you accept a result, read it: every delegation, handoff, tool call, and dollar is already there. Open a finished card for the tool-level detail, or the agent's [transcript](/canopy-site/docs/watching/#read-the-transcript) for the whole session.
 
 You'll see: `delegated to` and `ownership moved` lines between the messages, and the owner badge changes hands the moment a handoff is accepted.
 
-Next: [Settings & security](/canopy-site/docs/settings/).
+Next: [Playbooks](/canopy-site/docs/playbooks/).

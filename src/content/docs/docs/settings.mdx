@@ -1,41 +1,72 @@
 ---
 title: Settings and security
-description: Set up Claude Code or OpenCode and keep a local Canopy installation safe.
+description: Set up Claude Code or OpenCode, choose defaults, and keep a local Canopy installation safe.
 ---
 
 import Shot from '../../../components/Shot.astro';
 
-Settings is where Canopy meets its engines: Claude Code runs locally through `claude -p`; OpenCode connects through its local server and identity plugin.
+Settings is where Canopy meets its engines: Claude Code runs locally through `claude -p`; OpenCode connects through its local server and identity plugin. It also holds the workspace-wide defaults. Open it from the gear in the rail; **Run setup again**, top right, reopens first-run setup with your current choices filled in.
 
-Use this when checking Claude Code, connecting a local OpenCode server, or checking agent identity.
+Use this when checking an engine, choosing defaults, or deciding how much agents do on their own.
 
-<Shot name="settings" scale={1} alt="Canopy Settings showing a successful OpenCode connection check and MCP configuration" caption="Check the connection and install the identity plugin in Settings." />
+<Shot name="settings" scale={1} alt="Canopy Settings showing the default engine cards and the OpenCode and Claude Code panels" caption="Choose the default engine, check each engine, and set the default models." />
+
+## Choose the default engine and models
+
+**Default engine** is the engine every agent without one of its own runs on, including the thirteen starter agents. Each engine shows whether it is ready. Changing the default reaches those agents at their next turn in each channel: a session belongs to one engine, so each starts a fresh one on the new engine, with a line in the channel saying so. Memory and the channel's history carry over.
+
+Each engine panel also has a **default model** (and, for Claude Code, a default effort) for agents without their own. A line counts the agents that follow the default; **Use the default for all** clears their own choice. A changed default reaches every inheriting agent on its next turn.
 
 ## Set up Claude Code
 
 1. Install Claude Code and sign in on this machine.
-2. In **Settings** under **Claude Code**, leave **Binary** as `claude` when it is on your PATH, or enter its path.
-3. Choose **Check Claude Code**, then select **Claude Code** as the engine when creating or editing an agent.
+2. Under **Claude Code**, leave **Binary** as `claude` when it is on your PATH, or enter its path.
+3. Choose **Check Claude Code**: it reports the version and whether you are logged in.
 
-Claude Code runs `claude -p` for each turn with its own local login. Canopy supplies a separate MCP token for every agent session, so identity and channel tools stay scoped to that session. Leave the optional config directory blank to use your own Claude Code login and settings.
+Each turn runs `claude -p` with your local login. Canopy gives every agent session its own MCP token, so identity and channel tools stay scoped to that session. Leave the optional config directory blank to use your own Claude Code login; point it elsewhere to give agents a login of their own. The optional **spend cap per turn** is passed to Claude Code as `--max-budget-usd`.
 
 ## Connect OpenCode
+
 1. Start `opencode serve --port 4096`.
-2. In **Settings**, enter the server URL and choose **Check connection**.
-3. Install the identity plugin from MCP and restart the server.
+2. Under **OpenCode server**, enter the URL and choose **Check connection**. The default provider and model come from OpenCode's own list, so they stay disabled until it answers.
+3. Install the identity plugin from **MCP** and restart the server.
 
-You’ll see: Settings reports success and every Canopy tool call carries a session identity, so Canopy knows which agent is speaking. Canopy binds to `127.0.0.1` and has no login; use `CANOPY_BIND=0.0.0.0` only on a trusted network. If the check fails, verify the port and review [troubleshooting](/canopy-site/docs/troubleshooting/).
-
-## Personalize and pace conversations
-
-**You** sets the display name agents use when they mention you and the mention badge count shown in the sidebar. Under **Conversation**, two optional brakes control how much agents run without you: **One agent at a time per channel** makes simultaneous wake-ups take turns, while **Pause a channel after agents have taken turns without me** pauses after the number of turns you choose until you type or press Continue.
+You'll see: the version in green, and every Canopy tool call carries a session identity, so Canopy knows which agent is speaking. If the check fails, verify the port and review [troubleshooting](/canopy-site/docs/troubleshooting/).
 
 ## Install the identity plugin
 
-The global plugin path is `~/.config/opencode/plugins/canopy.js`. Settings also installs a copy in each registered repository under `.opencode/plugins/`, excluded from git. Restart `opencode serve` after installing it so Canopy can identify each session.
+**MCP** shows the endpoint Canopy registers with OpenCode, the bearer token that protects it (rotate it here; Canopy re-registers on the next prompt), and the identity plugin's source with a copy button. The global path is `~/.config/opencode/plugins/canopy.js`. Canopy also installs a copy in each registered repository under `.opencode/plugins/`, excluded from git. Restart `opencode serve` after installing it. Claude Code agents need nothing here.
+
+## Personalize and pace conversations
+
+**You** sets the display name agents use when they mention you; the sidebar's mention badges count those mentions.
+
+**Conversation** holds the brakes. Three presets set them in one click (*Careful*, *Balanced*, *Autonomous*; see [Taking turns](/canopy-site/docs/watching/#taking-turns)), or set them yourself:
+
+- **One agent at a time per channel** makes agents woken together take turns.
+- **Pause a channel after agents have taken turns without me** holds a channel after the number of turns you choose, until you type or press **Continue**. Leave it off when you want agents to run for as long as the work takes, and use spend limits as the backstop.
+- **Minutes a Claude Code question waits for you** (10 by default, up to 29).
+- **Minutes an agent may keep a lock across turns** (30 by default).
+- **Mentioning a working agent interrupts it** (experimental, off by default).
+
+**Collaboration prompt** is the instructions every agent gets above its own role prompt, with `{{variables}}` Canopy fills in per agent.
+
+## Appearance, notifications, and GitHub
+
+- **Appearance**: System, Light, or Dark, and four palettes (*Blue Hour Jungle*, *Moss & Paper*, *Graphite*, *Ember*). Kept in this browser.
+- **Notifications**: desktop notifications when an agent needs you, mentions you, or finishes work. See [Find your way around](/canopy-site/docs/navigation/#desktop-notifications).
+- **GitHub**: the `gh` binary that [GitHub watches](/canopy-site/docs/context/#watch-github) run. *Check gh* reports its version and login. Canopy stores no GitHub token.
 
 ## Billing holds
 
-When OpenCode reports an exhausted balance or quota, every schedule pauses and later wake-ups are dropped until you release the hold. A red banner appears on every page. Releasing it resumes schedules; the next channel message wakes agents again.
+When an engine reports an exhausted balance, quota, or credits, Canopy stops spending on your behalf: every schedule pauses, wake-ups are dropped with one note per channel, and a red banner appears on every page. On Claude Code that includes a subscription usage limit (the 5-hour or the weekly one); the hold stays on after the limit resets, so release it yourself once you can work again.
+
+<Shot name="hold-banner" scale={1} alt="The red billing hold banner across the top of Canopy with a Release hold button" caption="A billing hold stops all spending until you release it." />
+
+**Release hold** resumes the paused schedules; the next channel message wakes agents again.
+
+## Security
+
+Canopy binds to `127.0.0.1` and has no login. When running from source, `CANOPY_BIND=0.0.0.0` opts in to all interfaces for one run; use it only on a trusted network. The Homebrew build always stays on loopback.
 
 Next: [Add a repository](/canopy-site/docs/repositories/).
