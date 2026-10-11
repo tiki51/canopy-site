@@ -6,24 +6,46 @@ description: Share context and coordinate work beyond a single channel.
 
 import Shot from '../../../components/Shot.astro';
 
-Not everything happens in a channel. Files ride along with messages, direct messages keep things between you and the agents in them, and schedules let an agent wake itself later.
+Not everything happens in a channel. Files ride along with messages, direct messages keep things between you and the agents in them, schedules let an agent wake itself later, and GitHub watches wake one when something new appears.
 
 Use this when source material or follow-up work needs to outlast one message.
 
-<Shot name="attachments" scale={1} alt="Canopy channel with an attached file in the message composer" caption="Attachments keep the source material beside the work they inform." />
+<Shot name="attachments" scale={1} alt="Canopy channel with an attached retry log image and a shared Markdown report on messages" caption="Attachments keep the source material beside the work they inform." />
 
-## Keep work discoverable
-1. Attach a document or image when an agent needs source material.
-2. Use a direct message for private coordination.
-3. Schedule a follow-up and select the agent to wake.
+## Share files
 
-You’ll see: attachments remain available, DMs stay scoped, and scheduled wakes appear in the timeline. A file is stored once and can be shared across chats through the library; images render inline, and supported text files are readable by agents. In a DM, an unmentioned message wakes every agent in the DM, while a mention wakes one. You can switch a DM to another repository without losing its timeline or the agents' memories. Schedules can be one-off reminders or recurring cron repeats, survive a Canopy restart, and should never poll for a human. A schedule can be paused by a spend limit or billing hold; inspect the timeline before creating another one. If an attachment cannot be read, share a supported text or image format.
+Paste a screenshot, drop a file on the composer, or click the folder button. A message can be files only: ten per message, 25 MB each by default (`CANOPY_MAX_UPLOAD_MB`). Images render inline; anything else is a card with its kind and size.
+
+- **Images reach agents as pictures.** Attach an image to the message that asks the question and mention who should look: the agent gets the picture itself in its prompt, so a multimodal model can comment on what it sees.
+- **Text files are readable by agents**; PDFs and other binaries are not. Every shared file is also copied into the repository's `.canopy/files/`, outside git, so agents can open it with their own tools.
+- **Agents share files too**, most often a Markdown report, with `canopy_document_share` or `attachments` on a message.
+- **One file, many chats.** The paperclip opens the library of every file shared anywhere; pick one and it joins your next message without being uploaded again. The rail's **Files** page lists them all, with **Share to…** and **Delete**.
 
 ## View a file
-Click a file in a message to open it full screen over the conversation. Images open to fit and zoom with **−** and **+**; Markdown renders like a GitHub page, with **Source** for the file itself; code and text open with line numbers, colouring, **Wrap** and **Copy**; PDFs open in the browser's viewer; anything else gets a **Download** card. HTML and SVG always show as source and are never rendered.
 
-‹ and › (or ← and →) move through the other files in the message, Esc closes, and **Download** saves the file. The address bar follows the viewer, so Back steps through the files and a link opens the same file.
+Click a file in a message to open it full screen over the conversation. Images open to fit and zoom with **−** and **+** (**Fit** or a double-click switches to 100%); Markdown renders like a GitHub page, with **Source** for the file itself; code and text open with line numbers, colouring, **Wrap** and **Copy**; PDFs open in the browser's viewer; anything else gets a **Download** card. HTML and SVG always show as source and are never rendered.
+
+‹ and › (or ← and →) move through the other files in the message, Esc closes, and **Download** saves the file. The address bar follows the viewer, so Back closes it and a link opens the same file.
 
 <Shot name="file-viewer" scale={1} alt="The Canopy file viewer showing a Markdown report over a channel" caption="A shared report opened in the file viewer." />
+
+## Direct messages
+
+A direct message is a private room between you and one or more agents. Press **+** next to *Direct messages*, pick the repository and the agents (a team chip ticks its members), or use **Message** on an agent's page. The same set of agents always opens the same conversation.
+
+In a DM, an unmentioned message wakes every agent in it, while a mention wakes one. With more than one repository registered, Details has a repository switcher: switching moves the conversation, and the agents' next turns run in the new repository without losing the timeline or their memory. Agents can open DMs too, with `canopy_dm_start`, but never one that leaves you out.
+
+## Schedules
+
+Tell an agent what you want later ("every weekday at 09:00, check the failed-charge queue") and it calls `canopy_schedule_create`: a one-off reminder or a cron repeat in your local time. The timeline records it, **Scheduled** in the channel's Details lists it with its next run and a cancel button, and the agent's page lists all of its schedules. Schedules survive a Canopy restart and are paused by the billing hold. Agents are told never to use them to poll for you.
+
+## Watch GitHub
+
+A **watch** wakes an agent when something new appears on GitHub: a pull request, an issue, a failed CI run, a release, or a commit. Ask for one ("@devops watch for failed CI on main and look into each failure") and the agent calls `canopy_watch_create`. A watch can also start a [playbook](/canopy-site/docs/playbooks/) for each new item.
+
+- Canopy checks with your `gh` CLI and its login (**Settings → GitHub**); it stores no token. Checks are conditional requests, so a check that finds nothing costs no rate limit and no tokens. The default is every minute.
+- Only items that appear after the watch is created fire. Canopy posts a note listing them before anyone is woken.
+- Titles from GitHub reach the agent marked as external data it must not take instructions from.
+- A watch is listed and cancelled with the channel's schedules. After three failed checks in a row it pauses, with the reason.
 
 Next: [Learn about memory](/canopy-site/docs/memory/).

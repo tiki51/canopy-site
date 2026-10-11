@@ -5,17 +5,33 @@ description: What agents learn, kept in the right scope.
 
 import Shot from '../../../components/Shot.astro';
 
-Memory is what an agent knows tomorrow. It lives in two places: one memory per agent, which travels across every repository and channel, and per-repository notes, for what only matters in one codebase.
+Memory is what an agent knows tomorrow. It lives in two places: one memory per agent, which travels across every repository and channel, and one set of shared notes per repository, for what every agent working there needs.
 
-Use this when deciding whether knowledge belongs to an agent or one repository.
+Use this when deciding whether knowledge belongs to an agent, a repository, or a channel.
 
-<Shot name="agent-page" scale={1} alt="Canopy agent page showing the agent memory panel and repository memberships" caption="Agent memory travels with the agent while repository context stays scoped." />
+<Shot name="agent-page" scale={1} alt="Canopy agent page showing the agent's Memory panel beside its details" caption="Agent memory travels with the agent while repository notes stay with the project." />
 
 ## Preserve useful context
-1. Put cross-project decisions in agent memory.
-2. Put project conventions in repository notes.
-3. Review the timeline and update stale context.
 
-You’ll see: an agent continues work without repeating setup while project notes remain scoped. Tell an agent something lasting and it writes durable knowledge with `canopy_memory_write`; you can curate it from the agent page's **Memory** panel. Memory is capped: long memory includes a pointer to `canopy_memory_read` for the remainder. Repository notes live at `.canopy/notes/<agent>.md`. Never store secrets. If context is missing, confirm the same agent and repository, then restate the decision in the appropriate notes file.
+1. Put cross-project lessons and preferences in agent memory.
+2. Put project conventions (how to run and test things, decisions that stuck) in the repository's notes.
+3. Put what is always true in one channel in its [brief](/canopy-site/docs/channels/#the-brief).
+
+Tell an agent something lasting ("remember that charges must be idempotent per invoice") and it writes it with `canopy_memory_write`. The **Memory** panel on its page updates without a reload; **Edit** lets you trim, correct, or clear it.
+
+Each repository's shared notes live in `.canopy/NOTES.md`. Canopy puts them into every prompt for that repository, so a fact one agent writes with `canopy_notes_write` is there for the next agent that wakes. The file is plain Markdown, so you can edit it by hand.
+
+Both are capped: a long memory or long notes go into the prompt as their first part, with a pointer to `canopy_memory_read` or `canopy_notes_read` for the rest. Never store secrets.
+
+## The four kinds of context
+
+| Layer | Scope | Who writes it | How the agent sees it |
+|---|---|---|---|
+| Memory | one agent, everywhere | the agent, or you on its page | in every prompt |
+| Notes | one repository, every agent | any agent, or you by hand | in every prompt there |
+| Brief | one channel, every member | you, and the channel's owner agent | in every prompt there |
+| Task | one channel, now | the owner and delegates, or you | fetched with `canopy_task_get` |
+
+You'll see: an agent continues work without repeating setup, while project notes stay with the project. If context is missing, confirm it's the same agent and repository, then restate the decision in the right place.
 
 Next: [Review costs and limits](/canopy-site/docs/costs/).

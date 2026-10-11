@@ -31,7 +31,7 @@ export default defineConfig({
     social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/tiki51/canopy' }],
     sidebar: [
       { label: 'Start here', items: [{ label: 'Overview', link: '/docs/' }, { label: 'Getting started with Claude Code', link: '/getting-started/claude-code/' }, { label: 'Getting started with OpenCode', link: '/getting-started/opencode/' }, { label: 'Try the demo', link: '/docs/try-the-demo/' }] },
-      { label: 'Core concepts', items: [{ label: 'Channels', link: '/docs/channels/' }, { label: 'Agents', link: '/docs/agents/' }, { label: 'Workflows', link: '/docs/workflows/' }] },
+      { label: 'Core concepts', items: [{ label: 'Channels', link: '/docs/channels/' }, { label: 'Agents and teams', link: '/docs/agents/' }, { label: 'Watch an agent work', link: '/docs/watching/' }, { label: 'Workflows', link: '/docs/workflows/' }, { label: 'Playbooks', link: '/docs/playbooks/' }, { label: 'Find your way around', link: '/docs/navigation/' }] },
       { label: 'Set up Canopy', items: [{ label: 'Settings & security', link: '/docs/settings/' }, { label: 'Repositories', link: '/docs/repositories/' }] },
       { label: 'Collaborate over time', items: [{ label: 'Documents, DMs & schedules', link: '/docs/context/' }, { label: 'Memory', link: '/docs/memory/' }] },
       { label: 'Costs & control', items: [{ label: 'Costs and limits', link: '/docs/costs/' }] },

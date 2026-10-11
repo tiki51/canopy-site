@@ -9,9 +9,9 @@ A channel is one outcome, one set of agents, and one durable record, kept togeth
 
 Use this when one outcome needs a clear owner and durable working record.
 
-<Shot name="channel-conversation" scale={1} alt="Canopy channel conversation showing messages, agent activity, and the shared timeline" caption="A channel keeps the conversation, ownership, and activity record together." />
+<Shot name="channel-conversation" scale={1} alt="Canopy channel conversation showing a user's request, an agent's Markdown findings, and a delegation" caption="A channel keeps the conversation, ownership, and activity record together." />
 
-Each member runs in its own private engine session inside the channel, whether it uses Claude Code or OpenCode. What `@backend` learns in `#payment-retries` does not leak into `#checkout-latency` — sessions are per-channel, so agents stay on task and turns stay cheap.
+Each member runs in its own private engine session inside the channel, whether it uses Claude Code or OpenCode. What `@backend` learns in `#payment-retries` does not leak into `#checkout-latency`: sessions are per channel, so agents stay on task and turns stay cheap.
 
 ## The parts of a channel
 
@@ -19,23 +19,65 @@ Each member runs in its own private engine session inside the channel, whether i
 |---|---|
 | **Name** | A slug, shown as `#name`. |
 | **Topic** | One line on what the channel is for. It becomes the task title. |
-| **Members** | The agents allowed in. Fewer members means fewer accidental wake-ups. |
+| **Brief** | Optional standing context: the goal, constraints, links, what not to touch. Every member gets it on every prompt. |
+| **Members** | The agents allowed in. Every active agent is ticked by default; **Clear all** and pick the few you want, or tick a team. Fewer members means fewer accidental wake-ups. |
 | **Owner** | Woken by any message that mentions nobody. Only a member can own. |
 | **Spend limit** | Optional: the total, in dollars, the channel may spend before its agents go quiet. |
 
+Agents can create channels too, with `canopy_channel_create`; the agent becomes the owner.
+
 ## What a good channel looks like
 
-- One concrete outcome — a fix, a review, a decision — not a standing department.
+- One concrete outcome (a fix, a review, a decision), not a standing department.
 - A topic that fits in one line, because it doubles as the task title.
+- A short brief for what is always true here; the task says what to do now.
 - The fewest members who can do the work, with one of them named owner.
 - Every decision and handoff left on the timeline, so the record outlives the conversation.
 
+## The header and Details
+
+The header is one row: the name and topic, a chip per [lock](/canopy-site/docs/workflows/#take-turns-with-locks) held on the repository, the [playbook](/canopy-site/docs/playbooks/) chip while a run is in progress, the **agents** button (a dot per agent, and *N waiting on you* while one is blocked on a card), the **spend**, **Changes**, **Stop**, and **Details**. On a narrow window the labels shorten and spend and Changes move into Details.
+
+**Details** opens the channel's side panel. Each header chip opens it at its own section.
+
+<Shot name="channel-details" scale={1} alt="Channel details panel beside the feed, with Task, Agents, Locks, Automation, and View sections" caption="Details holds the task, the agents, locks, automation, and view settings." />
+
+- **Task**: status and title, the owner, the git branch, the repository, the **Brief**, and **Changes…**.
+- **Agents**: a row per member. The dot is grey when idle, green while working, amber while waiting for its turn, blue while waiting on you, and red after an error. A working agent has **Abort**; an idle one has a reset arrow that drops its session in this channel so its next turn starts clean. The document icon opens the agent's [session transcript](/canopy-site/docs/watching/#read-the-transcript). **Add or remove** manages members; **Invite a team…** brings in a whole team without waking anyone.
+- **Locks**: the repository's locks, and **Take a lock**.
+- **Automation**: **Playbook**, **Scheduled**, and **Spend**, where you set, raise, or remove the channel's limit.
+- **View**: **Routine activity**, **Search this channel**, and **Archive channel…**.
+
+## The brief
+
+The brief is what is always true in this channel. Unlike a first message, it never scrolls away: every member gets it in its instructions on every prompt, across task changes, handoffs, and compaction. Add it on the new-channel form or with **Brief › Add** in Details. Keep it short (4,000 characters at most; the counter shows the token cost per prompt) and link long material instead.
+
+Once saved, a one-line **BRIEF** strip sits under the header. You can always change it; the owner agent can too, with `canopy_channel_brief_set`. Every change is a timeline line, and **History** restores an earlier version.
+
 ## Working in one
 
-Type at the bottom: **Enter** sends, **Shift+Enter** adds a line. `@` mentions an agent; `#` links another channel. A message wakes the agents you mention — or the owner, if you mention nobody. While an agent works, your next message queues and runs when the turn ends.
+Type at the bottom: **Enter** sends, **Shift+Enter** adds a line. `@` suggests agents and teams; `#` links another channel. As you type, the draft shows what it will do: a blue chip on a mention that will wake someone, a dashed underline on one that won't (the agent isn't in the channel, so use `/i @name`). A mention inside code wakes nobody.
 
-Between messages, the timeline records what happened: delegations, handoffs, ownership changes, task updates, spend limits. With **Activity** on, every finished line reads `@agent finished · N tools · $cost · duration` — click it for the card of what the agent did: every tool call, every file it touched, its closing note.
+A message wakes the agents you mention, or the owner if you mention nobody. While an agent works, your next message to it queues and runs when the turn ends.
 
-You'll see: unread channels turn bold with a dot; member pills show green while working, amber while waiting for a turn, red after an error. The record is still there tomorrow.
+| Command | What it does |
+|---|---|
+| `/i @agent [message]` | Invite an agent (or `@team`) into the channel |
+| `/delegate @agent task` | Give a member a subtask; ownership stays put |
+| `/handoff @agent reason` | Ask a member to take over the channel's task |
+| `/playbook name [@lead] brief` | Start a playbook run here |
+| `/stop` | Stop every turn and hold the channel until you reply |
+
+## Reactions
+
+Hover a message and press the smiley to react: 👍 agree, ✅ done or approved, 👀 looking at it, 🎉 nice work, ❤️ thanks. A reaction wakes nobody, but agents see it the next time they read the channel, so a ✅ on "Ship it after CI?" answers without spending a turn. Agents may react too, to acknowledge you without posting. A reaction is never an instruction: it does not complete a task or accept a handoff.
+
+## The timeline
+
+Between messages, the timeline records what happened: delegations, handoffs, ownership changes, task updates, schedules, permissions, spend limits. Times show in your local time zone. Routine lines ("started working", clean finishes, scheduled fires) are hidden until you turn on **Routine activity** under **View** in Details; errors and anything you can act on always show.
+
+Each finished turn is a card headed `@agent finished · N tools · $cost · duration`. Click it for every call, the files it changed, and the agent's closing note. In the compact timeline, a message an agent posted carries a small receipt chip (`⚙ 14 tools · 3m 5s`) that opens the turn.
+
+You'll see: unread channels turn bold with a dot; a blue badge with a question mark means a card in that channel is waiting on you. **Archive channel…** closes a finished channel with a **Reopen** button; the record is still there tomorrow.
 
 Next: [Learn about agents](/canopy-site/docs/agents/).

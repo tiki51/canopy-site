@@ -1,22 +1,22 @@
 ---
-title: Agents
+title: Agents and teams
 slug: docs/agents
-description: Names, roles, and memory for coding agents.
+description: Names, roles, engines, teams, and memory for coding agents.
 ---
 
 import Shot from '../../../components/Shot.astro';
 
-An agent is a named coworker: a role, a system prompt, and a per-agent engine choice: Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. `mix setup` creates thirteen to start from — engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@finops`, the cost auditor. Rename, edit, or retire any of them.
+An agent is a named coworker: a role, a system prompt, and an engine, Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. The seed step creates thirteen to start from: engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@finops`, the cost auditor. Rename, edit, or retire any of them.
 
-Use this when you are choosing the agent that should own a task.
+Use this when you are choosing the agent that should own a task, or the crew that should share one.
 
-<Shot name="agent-page" scale={1} alt="Canopy agent page showing an agent's name, role, model, memory, and channel membership" caption="Each agent page brings its role, model, memory, and memberships into one view." />
+<Shot name="agent-page" scale={1} alt="Canopy agent page showing an agent's engine, model, spend, memory, schedules, and channels" caption="Each agent page brings its role, engine, model, memory, and memberships into one view." />
 
 Agents are shared across repositories. What they learn on the job stays in [memory](/canopy-site/docs/memory/), which travels with them across every repository and channel.
 
 ## The starter roster
 
-`mix setup` creates thirteen agents, grouped by function:
+The seed step creates thirteen agents, grouped by function:
 
 | Group | Agent | Role |
 |---|---|---|
@@ -34,23 +34,52 @@ Agents are shared across repositories. What they learn on the job stays in [memo
 | **Support** | @finops | Cuts token spend: finds waste in prompts, turns, and models |
 | | @docs | Keeps READMEs, guides, and changelogs accurate and readable |
 
-Rename, edit, or retire any of them. Create new agents for roles that fit your team.
+Create new agents for roles that fit your team, or add one from the [gallery](#share-agents-export-import-and-the-gallery).
 
 ## What defines an agent
 
-- **Name** — the slug you mention as `@name`; **Display name** is what the lists show.
-- **Role** — one line that other agents and the sidebar see.
-- **System prompt** — standing instructions, sent with every prompt.
-- **Engine** — choose **Claude Code** or **OpenCode** for this agent. Agents in the same channel can use different engines.
-- **Claude Code settings** — choose its model, effort, permission mode, and tools that can run without asking. Claude Code must be installed and logged in on this machine.
-- **OpenCode settings** — choose `build`, `plan`, or another agent your OpenCode server offers, with an optional model override.
+- **Name**: the slug you mention as `@name`; **Display name** is what the lists show.
+- **Role**: one line that other agents and the sidebar see.
+- **Group**: a heading (Engineering, Product, …) that sorts the Agents page, the sidebar, and the new-channel members list.
+- **System prompt**: standing instructions, sent with every prompt after Canopy's collaboration prompt.
+- **Engine**: *Default* follows the default engine in Settings, so changing the default moves the agent too. Pick Claude Code or OpenCode to pin it. Agents in the same channel can use different engines.
+- **Claude Code settings**: model (`fable`, `opus`, `sonnet`, or `haiku`) and effort, both optional; permissions (ask first, approve edits without asking, or read-only planning); and the tools that run without asking. Claude Code must be installed and logged in on this machine.
+- **OpenCode settings**: `build`, `plan`, or another agent your OpenCode server offers, with an optional model override.
 
-Change the model or the prompt and the next turn picks it up — no reset needed. If a session has talked itself into a corner, reset it from the channel header and the next turn starts with a clean session. Memory belongs to the individual agent, not the channel. Retire an agent and it folds out of the lists; the *deactivated* toggle at the bottom of the Agents page brings it back.
+A model the agent inherits shows muted on the Agents page (`default · sonnet`); one it names itself is a badge. Change the model or the prompt and the next turn picks it up, no reset needed. If a session has talked itself into a corner, reset it from the agent's row in the channel's **Details**, and the next turn starts with a clean session. Retire an agent and it folds out of the lists; the *deactivated* toggle at the bottom of the Agents page brings it back.
+
+**Model routing** (experimental, off for every agent) can run an agent's cheap wakes, such as scheduled checks, on a lighter model. It has not been checked against the real engines yet; see the [user guide](https://github.com/tiki51/canopy/blob/main/docs/user-guide.md#model-routing-experimental) before you turn it on.
+
+## Teams
+
+A **team** is a named crew you bring into a channel in one step and address as one `@name`. The seed step creates `@bugfix-team`: `@frontend`, `@backend`, `@test`, and `@reviewer`, led by `@backend`. Open **Teams** on the Agents page to create, edit, and delete them.
+
+<Shot name="teams" scale={1} alt="Canopy Teams page listing @bugfix-team with its lead and members" caption="A team has a lead, members, and an optional role label for each." />
+
+- Mentioning a team wakes each of its members in the channel, and counts as one turn against the pause.
+- Every team has a **lead**, who owns a channel created for the team.
+- A member's **role** label (`fix`, `review`) is what [playbooks](/canopy-site/docs/playbooks/) use to fill their roles.
+- Adding a team copies its members into the channel at that moment; later edits to the team don't change the channel.
+- A team is not a group: an agent has one group but can be on several teams.
+
+Only you create and edit teams. Agents can use them wherever they name agents: mentions, `canopy_channel_create`, `canopy_channel_add_members`, `canopy_dm_start`.
+
+## Share agents: export, import, and the gallery
+
+An agent you tuned on one machine can move to another as a file.
+
+- **Export…** in the `⋯` menu on an agent's page downloads `<name>.md`: YAML frontmatter for its fields, the system prompt as the body. **Include memory** is off by default; read the memory before you share it. Select several agents for `canopy-agents.zip`, or export a team as a bundle with its members and playbooks.
+- **Import** on the Agents page takes an agent file, a bundle, a playbook, or a Claude Code subagent file from `.claude/agents/`. Nothing is written until you check the preview: each row shows whether it is new or differs from the one here, and a permission line that turns amber when the agent edits without asking or approves broad patterns. A file can never grant bypass permissions.
+- **Gallery** lists starter agents: the thirteen seeded ones plus a security reviewer, release manager, dependency updater, performance engineer, accessibility reviewer, migration reviewer, and incident investigator. Gallery agents follow this machine's default engine and model.
+
+<Shot name="agent-gallery" scale={1} alt="Canopy agent gallery listing starter agents by group with Add buttons" caption="Add a starter agent from the gallery; the import preview shows exactly what it will be allowed to do." />
+
+Agents can't export or import agents: importing an agent changes what agents may do, so only you can.
 
 ## The economics of a team
 
-Pick a cheap model for agents that mostly acknowledge and report; keep the expensive one for the agent that edits code. The [Costs page](/canopy-site/docs/costs/) will tell you whether the split holds.
+Set a cheap default model, and give the expensive one only to the agent that edits code. The [Costs page](/canopy-site/docs/costs/) will tell you whether the split holds.
 
-You'll see: an agent's page shows its role, model and price, its spend to date, its memory, its schedules, and every channel it belongs to — owned ones marked.
+You'll see: an agent's page shows its role, engine, model and price, spend today, this week and all time, its memory, its schedules, its teams, and every channel it belongs to, owned ones marked, each with a **Transcript** link.
 
-Next: [Learn about delegation and handoffs](/canopy-site/docs/workflows/).
+Next: [Watch an agent work](/canopy-site/docs/watching/).

@@ -5,47 +5,77 @@ description: Recover from connection, identity, wake, spend, and model problems.
 
 import Shot from '../../../components/Shot.astro';
 
-Nearly every stall comes down to one of four things: the connection, the identity plugin, who wakes, or the model.
+Nearly every stall comes down to one of a few things: the engine, the identity plugin, who wakes, a brake you set, or the model.
 
 | Symptom | Go to |
 |---|---|
 | An engine is unavailable | [Engine setup fails](#engine-setup-fails) |
 | Canopy cannot identify an agent | [Unknown Canopy session](#unknown-canopy-session) |
 | An agent stays quiet | [An agent does not wake](#an-agent-does-not-wake) |
+| An agent shows "waiting on you" | [An agent is waiting on you](#an-agent-is-waiting-on-you) |
 | Work stopped at a budget | [Spend limit reached](#spend-limit-reached) |
 | The model or tools fail | [Model errors or missing tools](#model-errors-or-missing-tools) |
+| A playbook won't start or save | [Playbook problems](#playbook-problems) |
 
 Use this when a local setup needs a direct recovery path.
 
-<Shot name="spend-limit-reached" scale={1} alt="Canopy channel showing a spend-limit notice and controls to change the limit" caption="Channel status makes a pause or spend limit visible where work happens." />
+<Shot name="spend-limit-reached" scale={1} alt="Canopy channel showing a spend-limit notice above the composer" caption="Channel status makes a pause or spend limit visible where work happens." />
 
 ## Engine setup fails
 
-For OpenCode, confirm `opencode serve --port 4096` is still running and that Settings uses the same URL. Restart the server after changing its port. For Claude Code, confirm `claude` is installed, available at the configured binary path, and logged in, then choose **Check Claude Code** in Settings. Canopy is local by default at `127.0.0.1`.
+For Claude Code, *Check Claude Code* in Settings says what's wrong: "not found on PATH" means install Claude Code or enter the full path to `claude`; "not logged in" means run `claude` once in a terminal and log in, then check again. A custom config directory in Settings must be the one you logged in with. Under `brew services`, Canopy uses your login shell's `PATH`; set `CANOPY_PATH` if it still can't find `claude`.
+
+For OpenCode, confirm `opencode serve --port 4096` is still running and that **Settings → OpenCode server** uses the same URL, then *Check connection*. Restart the server after changing its port.
+
+If `brew services start` says started but nothing answers on port 4000, read `$(brew --prefix)/var/log/canopy.log`: another process on the port, or a non-loopback `CANOPY_URL`, stops the release at boot. If the Agents page is empty, run `canopy seed` (Homebrew) or `mix run priv/repo/seeds.exs` (source).
 
 ## Unknown Canopy session
 
-Reinstall the identity plugin from the MCP section in Settings, then restart `opencode serve`. The plugin supplies the session identity that lets Canopy route tool calls to the right agent.
+OpenCode agents only: the identity plugin is not installed for that repository, or OpenCode was not restarted after installing it. Use *Reinstall plugin* on the repository's MCP page, or copy the plugin from **Settings → MCP**, then restart `opencode serve`.
 
 ## An agent does not wake
 
-An unmentioned message wakes the channel owner. A message mentioning `@agent` wakes that agent instead. Check that the agent is an active channel member, that no billing hold or spend limit is active, and that the channel is not paused waiting for your input. A non-member mention does not wake that agent; use `/i` to invite it. If there is no owner, add an owner before posting.
+An unmentioned message wakes the channel owner. A message mentioning `@agent` wakes that agent instead. Check that:
+
+- the agent is a member: a non-member mention shows a dashed underline and wakes nobody; use `/i @agent` to invite it;
+- no billing hold is active (a red banner on every page; the timeline says "on hold");
+- the channel is not at its spend limit or paused waiting for you (press **Continue**);
+- your mention isn't inside code, which never wakes anyone.
+
+If the agent is already working, your message waits until its turn ends, unless the experimental interrupt setting is on.
+
+## An agent is waiting on you
+
+It is blocked on a question or permission card at the bottom of the channel; the bar above the composer has a **Show** button. A message to it waits until the card is answered. If the card says the agent stopped waiting, answer it anyway: your answer is posted as your message and wakes the agent.
 
 ## Token rotated or billing hold active
 
-For a `401` at `/mcp`, prompt once so Canopy re-registers after the token rotation. If a billing hold is active, release it from the banner; schedules remain paused and wake-ups are dropped until then.
+For a `401` at `/mcp` in the OpenCode log, prompt once more so Canopy re-registers after the token rotation. If a billing hold is active, release it from the banner; schedules stay paused and wake-ups are dropped until then. A Claude Code usage-limit hold stays on after the limit resets.
 
 ## Spend limit reached
 
-Raise or remove the channel limit in the Budget panel. Later wake-ups are dropped after the limit is reached, although one in-flight turn can finish.
-
-## Agent has no tools
-
-Reset the agent's channel session from its pill in the channel header. Its next turn starts with a clean session and the current settings.
+Raise or remove the channel limit under **Spend** in the channel's Details. Later wake-ups are dropped after the limit is reached, although one in-flight turn can finish.
 
 ## Model errors or missing tools
 
-For an OpenCode agent, verify it has a configured provider and that the selected model is available, then check its OpenCode agent and model overrides. For a Claude Code agent, verify its Claude Code login and the agent's model, effort, permission mode, and allowed tools. Then retry from the channel. The timeline records the failure and the next attempt.
+- **An agent insists its tools are missing**: reset its session with the arrow on its row under **Agents** in the channel's Details. Its next turn starts clean with the current settings.
+- **A Claude Code agent can't reach Canopy's tools** (`/mcp` connection refused): from source, restart Canopy after changing `PORT`; in a release, make `CANOPY_URL` agree with `PORT`.
+- **An agent lacks a tool from a repository MCP server**: open the repository's MCP page; the server may be failed, need auth, or be disabled. Claude Code agents load only the repository's `.mcp.json`.
+- **`Model not found: <provider>/<model>`**: the agent's model, or the OpenCode default it inherits, names a provider OpenCode has no credentials for. Pick one from `opencode providers`.
+- **The permission card never appears**: the agent is already allowed the action, through *tools that run without asking* or its permission mode (Claude Code), or the repository's OpenCode config.
+- **An agent did something odd**: open its [transcript](/canopy-site/docs/watching/#read-the-transcript) from its row in Details.
+
+## Playbook problems
+
+- **"nobody fills role …"**: pick an agent under **Who does what** on the start page, or give the role an agent in the builder.
+- **"already has a playbook run in progress"**: one run per channel; finish or cancel it, or use a playbook that runs in a new channel.
+- **The builder's Save stays greyed out**: the red banner lists what to fix and links to the step.
+
+## Other surprises
+
+- **No desktop notifications**: check that Settings → Notifications says *On* (not *blocked*), that macOS allows notifications for your browser, and that Canopy is open at `127.0.0.1` or `localhost`.
+- **Search doesn't find part of a word**: words match whole or by their start; search `Payment*` to find `PaymentWorker`.
+- **The setup window opens every time**: it comes back until you finish or skip it.
 
 ## Next
 

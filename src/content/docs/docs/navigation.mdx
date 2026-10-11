@@ -1,0 +1,54 @@
+---
+title: Find your way around
+description: The layout, the command palette, search, the Threads page, and notifications.
+---
+
+import Shot from '../../../components/Shot.astro';
+
+Canopy has a lot of rooms. This page covers how to get to any of them from the keyboard, how to find anything that was said or done, and how Canopy tells you when you're needed.
+
+Use this when you are looking for something, or want to know what is waiting on you.
+
+## The layout
+
+The left **rail** holds Search, Repositories, Agents, Playbooks, Threads, Files, Costs, and Settings, with the theme buttons at the bottom. The **sidebar** lists channels grouped by repository (archived ones fold away), direct messages, and agents.
+
+- A channel with something unread turns bold with a dot. When an agent mentions you by your display name, the dot becomes a count.
+- A blue badge with a question mark means question or permission cards in that channel are waiting on you. The browser tab's title carries the same number, as in "(2) #site-review · Canopy".
+- Agent rows show a green dot while the agent works, and a small clock when it has scheduled tasks.
+
+## The command palette
+
+Press **⌘K** on a Mac (**Ctrl+K** elsewhere), or click **Jump to…** at the top of the sidebar. Type part of a name: channels, DMs, agents, teams, repositories, files, and commands all match, and several words narrow it down (`acme pay` finds `#payment-retries` in acme). With nothing typed it shows where you've been recently and the channels that need you.
+
+<Shot name="command-palette" scale={1} alt="The Canopy command palette open over the app with matching channels and agents" caption="⌘K gets you anywhere: channels, agents, files, and commands." />
+
+A first character narrows the search: `#` channels, `@` agents, teams and DMs, `>` commands (*New channel in…*, *Start playbook*, *Release hold*, the open channel's *Stop all agents here*, and more), and `/` slash commands. **Shift+Enter** does a row's second action: an agent opens a DM instead of its page, a repository starts a new channel, a file is attached to the channel's composer. A slash command is written into the composer for you to finish, never posted by itself, except `/stop`, which stops at once.
+
+## Search
+
+The rail's **Search** looks inside everything said and done in every channel, in one ranked list: **Messages** (posts, replies, notes), **Turns** (the commands an agent ran, the files it read or changed, its notes), and **Files** (by name and caption, and text files by their contents).
+
+<Shot name="search" scale={1} alt="The Canopy Search page with results across messages, turns, and files, and filters" caption="One search across messages, agent turns, and files." />
+
+Words match whole words, in any case, and the last word you type also matches as a prefix. Put a phrase in `"quotes"` to match it exactly, or end a word with `*`. Code works as typed: `enqueue_charge` and `lib/billing/worker.py` find exactly those. Filter by channel, who said it, and date; everything is in the page's address, so a search can be bookmarked or shared. A result opens the exact place it came from and highlights it. **Search this channel**, under **View** in a channel's Details, opens Search narrowed to that channel.
+
+## The Threads page
+
+The rail's **Threads** icon lists threads across every channel: **Following**, **All active** (a reply in the last week), and **Agents working** (an agent is working in it now). Each row shows the root, the last two replies, who is in it, and what is new; click anywhere on a row to open the thread.
+
+<Shot name="threads-inbox" scale={1} alt="The Canopy Threads page listing followed threads with their latest replies" caption="Every thread you follow, and every thread an agent is working in." />
+
+## Desktop notifications
+
+Desktop notifications tell you when something needs you while you are in another app or tab. They come from the open Canopy tab, through the browser: nothing is sent anywhere, and with no Canopy tab open there are none. Turn them on in first-run setup or in **Settings → Notifications**; the browser asks for permission then, never before.
+
+<Shot name="settings-notifications" scale={1} alt="Settings, Notifications: the desktop notifications switch and what to notify about" caption="Choose what earns a notification." />
+
+- **An agent needs you**: a question or permission card, or a playbook step waiting for your sign-off.
+- **An agent mentions you**: by your display name, or anything an agent writes to you in a DM.
+- **Work finished**: a channel went quiet after a run of turns, paused, or completed its task, while Canopy is in the background.
+
+Nothing is shown when you're already looking at that channel. Notifications only work at `http://127.0.0.1` or `http://localhost`, not at a network address.
+
+Next: [Settings & security](/canopy-site/docs/settings/).

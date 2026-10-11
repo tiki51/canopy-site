@@ -4,8 +4,9 @@ description: About five minutes from install to your first agent reply, with Cla
 ---
 
 import { Steps, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import Shot from '../../../components/Shot.astro';
 
-About five minutes from install to your first agent reply. By the end you'll have Canopy running at `http://localhost:4000`, Claude Code checked in Settings, a project registered, and a channel where an agent has answered you without changing a single file.
+About five minutes from install to your first agent reply. By the end you'll have Canopy running on your machine, Claude Code as the default engine, a project registered, and a channel where an agent has answered you without changing a single file.
 
 | At a glance | |
 |---|---|
@@ -37,13 +38,16 @@ About five minutes from install to your first agent reply. By the end you'll hav
      <TabItem label="Homebrew (Apple Silicon)" icon="apple">
        ```bash
        brew install tiki51/canopy/canopy
-       canopy
+       brew services start tiki51/canopy/canopy   # runs in the background, starts at login
+       canopy seed                                # the thirteen starter agents
        ```
 
-       Homebrew installs Canopy and all dependencies. `canopy` starts it at [127.0.0.1:4000](http://127.0.0.1:4000) and seeds thirteen starter agents.
+       Homebrew installs a prebuilt release, so nothing else needs installing. Open [127.0.0.1:4000](http://127.0.0.1:4000). `canopy start` runs Canopy in the foreground instead (`Ctrl-C` quits), and `canopy seed` is safe to run again: it only adds back a missing starter agent.
+
+       Your database, shared files, and generated secret live under `~/Library/Application Support/Canopy`; the service logs to `$(brew --prefix)/var/log/canopy.log`.
 
        :::note[Checkpoint]
-       Canopy opens at [127.0.0.1:4000](http://127.0.0.1:4000) with the agent roster visible.
+       Canopy opens at [127.0.0.1:4000](http://127.0.0.1:4000) with the setup window over it.
        :::
      </TabItem>
      <TabItem label="From source (any OS)" icon="github">
@@ -55,7 +59,7 @@ About five minutes from install to your first agent reply. By the end you'll hav
        mix setup    # dependencies, database, and thirteen starter agents
        ```
 
-       `mix setup` compiles dependencies, creates the development database, and seeds thirteen starter agents, from `@backend` to `@reviewer`. The first run takes a few minutes and only happens once.
+       `mix setup` compiles dependencies, creates the development database, and seeds thirteen starter agents, from `@backend` to `@reviewer`. The first run takes a few minutes and only happens once. `mix run priv/repo/seeds.exs` adds back a missing starter agent later without touching the ones you changed.
 
        Then start the server:
 
@@ -66,64 +70,69 @@ About five minutes from install to your first agent reply. By the end you'll hav
        Open [localhost:4000](http://localhost:4000).
 
        :::note[Checkpoint]
-       Canopy opens at [localhost:4000](http://localhost:4000) with the agent roster visible.
+       Canopy opens at [localhost:4000](http://localhost:4000) with the setup window over it.
        :::
      </TabItem>
    </Tabs>
 
-3. ## Check Claude Code in Settings
+3. ## Walk through first-run setup
 
-   Open **Settings** from the gear in the left rail. Under **Claude Code**, verify the **Binary** path (usually `claude` if it is on your PATH). Choose **Check Claude Code** to confirm it is installed and you are logged in.
+   The first time you open Canopy, setup opens as a window over the app. It has six short steps (**You**, **Look**, **Engines**, **Pace**, **Notifications**, **Project**), and every choice saves as you make it.
 
-   :::note[Checkpoint]
-   Settings confirms Claude Code is installed and logged in.
-   :::
+   <Shot name="setup-modal" scale={1} alt="Canopy first-run setup window over the dimmed app, on the Engines step" caption="Setup checks both engines as it opens and picks the default engine for you." />
 
-4. ## Choose Claude Code for an agent
+   - **You**: the name agents call you, prefilled from your git `user.name`.
+   - **Look**: light, dark, or system, and one of four palettes.
+   - **Engines**: Canopy checks Claude Code and shows its version and the account it is logged in as. When Claude Code is ready it becomes the **default engine**, which the thirteen starter agents run on. Pick the **default model** (`fable`, `opus`, `sonnet`, or `haiku`, the latest of each family) and default effort.
+   - **Pace**: how much agents do on their own. **Balanced** is the default; see [Settings](/canopy-site/docs/settings/#personalize-and-pace-conversations).
+   - **Notifications** (optional): desktop notifications when an agent needs you.
+   - **Your first project** (optional): a folder on this machine and a name. It does not need to be a git repository; if it is not one, Canopy runs `git init` and otherwise leaves it alone.
 
-   Open **Agents** and choose the agent that will own your first task (e.g. `@backend`). Select **Claude Code** as its engine and fill in three settings:
-
-   - **Model:** Choose `opus`, `sonnet`, `haiku`, or `fable` (Claude Code resolves these to the latest model in each family), or pick any model your Claude Code login has access to.
-   - **Effort:** Choose `medium` for balanced speed and cost.
-   - **Permissions:** Leave **Tools that run without asking** blank to use the default allow-list.
-
-   Then save.
-
-   :::details[Default tools Claude Code agents can use without permission]
-   **Read, Glob, Grep, Edit, Write, MultiEdit, NotebookEdit, Bash(git *), and all Canopy tools.** Canopy tools are always allowed. Everything else asks first.
-   :::
-
-   With **ask first** enabled, any tool outside the allow-list appears as a permission card in the channel; choose to allow it once, always, or reject it. Agent questions also appear as cards there. Each agent chooses its own engine independently, so Claude Code and OpenCode agents can collaborate in the same channel.
-
-   In **Settings**, you can also set an optional per-turn spend cap in USD for Claude Code.
+   If setup says **Claude Code not found**, give the path to `claude` in the field that appears and press *Check*. If it says **not logged in**, run `claude` once in a terminal, then *Check again*.
 
    :::note[Checkpoint]
-   The agent shows Claude Code as its engine, with a model and effort level set.
+   The Engines step shows Claude Code as ready and selected as the default engine.
    :::
 
-5. ## Add a repository and channel
+4. ## Create a channel
 
-   Open **Repositories** and add a local project folder. It should be inside your home directory; a path outside it requires the checkbox on the form. It does not need to be a git repository; if the folder is not one, Canopy runs `git init` and otherwise never modifies it. Registering also creates a small `.canopy/` workspace inside the project with shared notes and one notes file per agent, listed in `.git/info/exclude` so it never shows up in your diffs.
+   **Finish setup** shows a summary. Choose *Start a channel*: the New channel form opens with your project already picked.
 
-   With a project in place, create a channel. Its name becomes the `#slug` in the sidebar; the topic is one line on what the channel is for. Choose the Claude Code agent you configured as owner and leave the other members unchecked for this first task. The owner is who a plain, unaddressed message wakes.
+   Its name becomes the `#slug` in the sidebar; the topic is one line on what the channel is for. Every active agent is ticked as a member by default: use **Clear all**, tick one agent (e.g. `@backend`), and make it the **Initial owner**. The owner is who a plain, unaddressed message wakes.
 
    :::note[Checkpoint]
-   The repository appears, the channel opens, and its Claude Code owner is visible.
+   The channel opens, empty, with its owner in the header's agents button.
    :::
 
-6. ## Send a simple first task
+5. ## Send a simple first task
 
    Post: *"Inspect this repository and tell me which test command I should run first. Do not edit files."* An unmentioned message wakes the channel owner; mentioning an agent wakes only that agent.
 
-   Watch the channel header: the owner's dot turns green and a live card opens under the message. The reply arrives as an ordinary message. Turn on **Activity** in the header to see the finished line with its tools, reported cost, and duration.
+   The owner's dot in the header turns green and a live card opens under your message, naming what it is running now. The reply arrives as an ordinary message, and the turn ends in a card headed `@agent finished · N tools · $cost · duration`: click it for every call the agent made.
 
-   If Claude Code needs approval or an answer while it works, Canopy shows the request in the channel. Review it there before responding.
+   If Claude Code needs approval or an answer while it works, a permission or question card appears in the channel. Answer it there.
 
    :::note[Checkpoint]
    The owner shows working, then posts a reply and records the outcome in the timeline.
    :::
 
 </Steps>
+
+## Tune an agent (optional)
+
+Agents follow the defaults from setup until you give them their own. Open **Agents**, choose an agent, and choose **Edit**:
+
+- **Engine:** *Default (Claude Code)* follows Settings; pick Claude Code or OpenCode to pin it.
+- **Model** and **Effort:** leave them on *Default (…)* or pick one for this agent.
+- **Permissions:** ask before any tool not on the list, also approve file edits without asking, or read-only planning. **Tools that run without asking** takes one pattern per line, such as `Bash(git *)`.
+
+:::details[Default tools Claude Code agents can use without permission]
+**Read, Glob, Grep, Edit, Write, MultiEdit, NotebookEdit, Bash(git *), and all Canopy tools.** Canopy tools are always allowed. Everything else asks first.
+
+Filling in **Tools that run without asking** replaces this list rather than adding to it. Leave Edit and Write off an agent's list and its edits ask first, with the diff on the card, unless its permission mode approves file edits.
+:::
+
+Any tool outside the allowance appears as a permission card in the channel: allow it once, always, or reject it. In **Settings → Claude Code** you can also set an optional spend cap per turn in USD.
 
 <CardGrid>
   <a class="guide-card" href="/canopy-site/docs/channels/"><Card title="Understand channels">Give every outcome a focused home with one clear owner.</Card></a>

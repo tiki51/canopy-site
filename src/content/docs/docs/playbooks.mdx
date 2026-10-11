@@ -1,0 +1,59 @@
+---
+title: Playbooks
+description: Write a repeatable process once and let an agent lead each run.
+---
+
+import Shot from '../../../components/Shot.astro';
+
+A playbook is a process you repeat, written down once: the roles, the ordered steps, and what "done" means for each. When a run starts, one agent becomes its **lead**: it follows the steps with the tools it already has (delegating each step to its owner, handing off, posting), and Canopy keeps track of where the run is. The state lives in Canopy, not in the agent's session, so a run survives compaction and restarts.
+
+Use this when the same kind of work (a bug fix, a release, a review) should go the same way every time.
+
+<Shot name="playbooks" scale={1} alt="The Canopy Playbooks library with the bug-fix starter playbook and its steps" caption="The library: every playbook, its steps at a glance, and whether agents can use it." />
+
+The seed step adds one, **bug-fix**: triage, reproduce with a failing test, fix, verify, review, and your sign-off, led by `@project-manager` with `@bugfix-team` in a new channel. Playbooks are global to Canopy; a run happens in a channel, so it works in that channel's repository.
+
+## The library
+
+**Playbooks** in the rail lists every playbook as a card: its title, where it came from (*starter*, *yours*, or *draft by @agent*), its steps as a strip (↩︎ can send work back, ✓ waits for you, ⤼ can be skipped), and who leads a run. Enabled playbooks are listed in every agent's prompt; a disabled one can't be started.
+
+**+ New playbook** offers three starts: copy an existing one, start blank, or **describe it to an agent**: Canopy posts your request in a DM with the agent you pick, and the agent saves a disabled draft for you to review.
+
+## The builder
+
+The builder shows a whole playbook on one page.
+
+<Shot name="playbook-builder" scale={1} alt="The Canopy playbook builder with the About card, settings, and a list of steps" caption="Edit the settings, then each step: who does it, what should happen, and when it's done." />
+
+- **About**: the title, the short name agents know it by, and one sentence on when to use it.
+- **Settings**: **Led by** (or *Choose when starting*), **Team**, **Runs in** (a new channel each run, or the channel it's started from), **Nudge the lead** after a quiet step (30 minutes by default), **Ask when starting**, and **Roles**.
+- **Steps**, up to 20: **Who does it** (roles or agents; two or more work in parallel, or *The lead does it*), **What should happen**, **Done when**, and three switches: send work back to an earlier step if changes are requested, wait for your approval, and let the lead skip it.
+
+**+ Add step** offers ready-made kinds: *Task for an agent*, *Parallel work*, *Review*, *Your sign-off*, and *Lead's step*. Drag a step by its ⋮⋮ grip to reorder. Problems show as you go in a red banner, and **Save** (⌘S) stays disabled until there are none.
+
+Underneath, a playbook is one Markdown file with YAML frontmatter. **Edit file text** in the builder's `⋯` menu opens it for hand editing; export and import use the same file.
+
+## Start a run
+
+- **Ask an agent**: "@project-manager run the bug-fix playbook: checkout button does nothing on Safari."
+- **The start page**: **Start** on a card. Say what the run is about, where it runs, who leads it, and who does what; **What will happen** previews the steps.
+- **In a channel**: **Playbook › Run…** under **Automation** in the channel's Details.
+- **The composer**: `/playbook bug-fix [@lead] the brief`.
+
+Canopy fills the roles (your overrides, then the team, then the playbook's defaults) and refuses to start when a role has nobody. Anyone in the roster who isn't in the channel joins it. One run can be in progress per channel; a run keeps the text it started with, so editing a playbook never moves a run in progress.
+
+## Follow a run
+
+While a run is in progress the header shows its chip (`bug-fix · 3/6 Fix · @backend @frontend`), and Details shows the brief, the roster, and every step with its owners, status, and result. **Reassign** changes the lead; **Cancel run** stops it.
+
+<Shot name="playbook-run" scale={1} alt="A playbook run in a channel's Details: the roster and steps with their status" caption="Where the run is, who has each step, and what each step produced." />
+
+Only the lead advances a run; each step's owners report through their delegations. The timeline records the run in compact lines: "started the bug-fix playbook · 6 steps", "bug-fix: Reproduce done → Fix", "the bug-fix playbook is complete".
+
+- **Sign-off**: a step that waits for you turns the chip amber and badges the channel. **Approve** moves the run on; **Request changes** (with a note) sends the lead back. An agent can never skip a sign-off step.
+- **Stalls**: if a step goes quiet for longer than *Nudge the lead*, Canopy wakes the lead once to check on it.
+- **Drafts**: an agent can draft a playbook with `canopy_playbook_save`. It is saved disabled, because an enabled playbook instructs every agent; **Review draft** opens it with **Enable playbook** and **Delete draft**.
+
+A [GitHub watch](/canopy-site/docs/context/#watch-github) can also start a playbook for each new item, such as every failed CI run on `main`.
+
+Next: [Find your way around](/canopy-site/docs/navigation/).
