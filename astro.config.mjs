@@ -24,7 +24,7 @@ export default defineConfig({
       { tag: 'meta', attrs: { property: 'og:image', content: ogImage } },
       { tag: 'meta', attrs: { property: 'og:image:width', content: '1200' } },
       { tag: 'meta', attrs: { property: 'og:image:height', content: '630' } },
-      { tag: 'meta', attrs: { property: 'og:image:alt', content: 'Canopy: your coding agents, working as a team.' } },
+      { tag: 'meta', attrs: { property: 'og:image:alt', content: 'You write the playbook. Agents execute. You sign off. A Feature build playbook, its run in #csv-export, and the card waiting for your sign-off.' } },
       { tag: 'meta', attrs: { name: 'twitter:image', content: ogImage } },
       { tag: 'meta', attrs: { name: 'theme-color', content: '#0a1730' } },
     ],

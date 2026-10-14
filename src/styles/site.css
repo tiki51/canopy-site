@@ -220,6 +220,20 @@ pre {
   overflow-x: auto;
   font-size: inherit;
   white-space: nowrap;
+  scrollbar-width: none;
+}
+
+/* Too long for a phone: it scrolls sideways, and fades at the right edge instead of cutting a word in half.
+   The padding lets the last characters scroll clear of the fade. */
+@media (max-width: 767px) {
+  .command-chip {
+    font-size: 0.8125rem;
+  }
+
+  .command-chip code {
+    padding-right: 1.5rem;
+    mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent);
+  }
 }
 
 .command-chip code::before {
@@ -424,11 +438,17 @@ img.frame,
   margin-inline: auto;
 }
 
+/* Section ledes: even lines, so no word is left alone on the last one. */
+:is(.section-head, .brakes-copy, .dogfood-text, .closing-panel) > .section-body {
+  text-wrap: balance;
+}
+
 .section-body {
   max-width: 60ch;
   margin-top: 1.25rem;
   color: var(--text-muted);
   line-height: 1.6;
+  text-wrap: pretty;
 }
 
 .section-body code,
@@ -482,30 +502,6 @@ img.frame,
   line-height: 1;
 }
 
-.avatar-priya {
-  --agent: #58b7ff;
-  --agent-ink: #06122a;
-}
-
-/* Seed colours, with the app's initial colour: navy where white text would fall below 4.5:1. */
-.avatar-backend {
-  --agent: var(--agent-backend);
-}
-
-.avatar-researcher {
-  --agent: var(--agent-researcher);
-  --agent-ink: #0b1834;
-}
-
-.avatar-reviewer {
-  --agent: var(--agent-reviewer);
-}
-
-.avatar-finops {
-  --agent: #0891b2;
-  --agent-ink: #0b1834;
-}
-
 /* Reveal on enter, once. Without html.motion everything is simply there. */
 .motion [data-reveal] {
   opacity: 0;
@@ -524,32 +520,50 @@ img.frame,
 /* ---------- 1. Hero ---------- */
 
 .hero {
-  display: grid;
-  gap: 3rem;
-  align-items: center;
   width: 100%;
   max-width: var(--container-wide);
   margin-inline: auto;
-  padding: 3rem var(--gutter) 4rem;
+  padding: 2rem var(--gutter) 4rem;
 }
 
-/* The install chip never wraps; let it scroll instead of widening the column. */
-.hero > * {
+.hero-copy {
+  text-align: center;
+}
+
+/* The chip never wraps; it scrolls instead of widening the page. */
+.hero-copy > * {
   min-width: 0;
 }
 
-@media (min-width: 1024px) {
-  .hero {
-    grid-template-columns: 1.1fr 1fr;
-    gap: 4rem;
-    min-height: min(88vh, 820px);
-    padding-block: 2rem 4rem;
-  }
+.tagline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem 0.9rem 0.3rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: #0f1f3dcc;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.tagline img {
+  flex: none;
+  width: 22px;
+  height: 22px;
+}
+
+.tagline b {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .hero h1 {
-  margin-bottom: 1.5rem;
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  margin: 0 auto 1rem;
+  font-size: clamp(2.35rem, 4.4vw, 3.25rem);
   font-weight: 650;
   letter-spacing: -0.045em;
   line-height: 1.02;
@@ -580,12 +594,15 @@ img.frame,
   }
 }
 
-.hero .actions {
-  margin-top: 2rem;
+.hero .lede {
+  max-width: 66ch;
+  margin-inline: auto;
+  font-size: 1.125rem;
 }
 
-.hero .command-chip {
-  margin-top: 1.25rem;
+.hero .actions {
+  justify-content: center;
+  margin-top: 1.5rem;
 }
 
 .micro {
@@ -594,19 +611,41 @@ img.frame,
   font-size: var(--text-sm);
 }
 
-.hero-visual {
-  display: flex;
-  justify-content: center;
-  min-width: 0;
+@media (max-width: 767px) {
+  .hero {
+    padding-top: 1rem;
+  }
+
+  .hero-copy {
+    text-align: left;
+  }
+
+  .tagline {
+    gap: 0.45rem;
+    padding: 0.25rem 0.75rem 0.25rem 0.3rem;
+    border-radius: 14px;
+    font-size: 0.82rem;
+  }
+
+  .hero h1 {
+    margin-left: 0;
+  }
+
+  .hero .lede {
+    font-size: 1.02rem;
+  }
+
+  .hero .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
-/* The live channel: HTML styled like the app. Static markup is the final frame. */
-.live {
+/* Mock UI in the app's visual language: a framed panel with a header row. */
+.mock {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  width: 100%;
-  max-width: 560px;
-  height: 520px;
   overflow: hidden;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius-md);
@@ -614,169 +653,520 @@ img.frame,
   box-shadow: var(--frame-shadow);
   font-size: 0.875rem;
   line-height: 1.5;
+  text-align: left;
 }
 
-@media (max-width: 767px) {
-  .live {
-    height: 440px;
-  }
-}
-
-.live-head {
+.mock-head {
   display: flex;
-  flex: none;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   border-bottom: 1px solid var(--line);
   background: var(--bg-raised);
-}
-
-.live-name {
-  font-weight: 600;
-}
-
-.live-name,
-.live-spend {
   white-space: nowrap;
 }
 
-@media (max-width: 399px) {
-  .live-head {
-    gap: 0.5rem;
-    padding-inline: 0.75rem;
-  }
-
-  .live-spend .subtle {
-    display: none;
-  }
-}
-
-.live-owner {
-  display: inline-grid;
-}
-
-.live-owner > * {
-  grid-area: 1 / 1;
-  justify-self: start;
-}
-
-.live-spend {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.live-body {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-}
-
-/* Bottom-anchored; the page script translates it so the newest item sits on the bottom edge. */
-.live-stack {
-  position: absolute;
-  inset: auto 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-  padding: 1rem 1rem 0.75rem;
-}
-
-.live.is-playing .live-stack {
-  transition: transform var(--dur-3) var(--ease-out);
-}
-
-.msg {
-  display: flex;
-  gap: 0.625rem;
-  align-items: flex-start;
-}
-
-.msg-meta {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-}
-
-.msg-meta span {
-  color: var(--text-subtle);
-  font-size: 0.75rem;
-}
-
-.msg p:not(.msg-meta) {
-  color: #d8e1f2;
-}
-
-.msg code {
-  padding: 0 0.25rem;
-  border-radius: 4px;
-  background: var(--bg-raised);
-}
-
-/* Timeline line, as the app draws delegation, handoff and finished-turn rows. */
-.tl {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-  color: var(--text-subtle);
-  font-size: 0.8125rem;
-}
-
-.tl b {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.tl-icon {
-  flex: none;
-  width: 1rem;
-  text-align: center;
-}
-
-.tl-ok,
-.tl-ok b,
-.tl-done .tl-icon {
-  color: var(--accent);
-}
-
-.tl-done {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-}
-
-.perm {
-  padding: 0.75rem;
-  border: 1px solid #f5c45180;
-  border-radius: 10px;
-  background: #f5c45110;
-}
-
-.perm-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.625rem;
-}
-
-.perm-actions span {
-  padding: 0.125rem 0.625rem;
-  border-radius: var(--radius-sm);
-  color: var(--accent);
-  font-size: 0.8125rem;
+.mock-name {
   font-weight: 600;
 }
 
-.perm-actions span:last-child {
-  color: #f87171;
+.mock-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
 }
 
-.perm-actions .perm-once {
+.mock-head .pill {
+  background: #ffffff0d;
+}
+
+.mock-head .pill.waiting {
+  background: #f5c45122;
+  color: var(--warn);
+}
+
+.avatar.sm {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  font-size: 0.6875rem;
+  font-weight: 650;
+}
+
+.avs {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.you-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 0.45rem;
+  border-radius: 5px;
+  background: #f5c45122;
+  color: var(--warn);
+  font: 600 0.7rem var(--font-mono);
+  white-space: nowrap;
+}
+
+.back {
+  color: var(--info);
+  font-size: 0.8rem;
+}
+
+/* Step status, as the run panel draws it. */
+.st {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.st.done {
   background: var(--accent);
   color: var(--accent-ink);
 }
 
-.perm-once.is-pressed {
+.st.run {
+  border: 2px solid var(--info);
+}
+
+.st.run::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--info);
+}
+
+.st.wait {
+  border: 2px solid var(--warn);
+  font-size: 9px;
+}
+
+.st.todo {
+  border: 1.5px solid var(--line-strong);
+}
+
+/* Three stages: side by side from 1024px, stacked from 768px, and only the run (under a stepper) on phones. */
+.pipe {
+  display: grid;
+  margin-top: 2.25rem;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.stage-label,
+.stepper {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.stage-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.stage-label .k,
+.stepper .k {
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.stage-label .k {
+  width: 22px;
+  height: 22px;
+  font-size: 0.7rem;
+}
+
+.pipe-arrow {
+  display: grid;
+  place-items: center;
+}
+
+.pipe-arrow span {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--line-strong), var(--accent));
+}
+
+.pipe-arrow span::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  right: -2px;
+  border: 5px solid transparent;
+  border-left: 7px solid var(--accent);
+}
+
+.stepper {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .pipe {
+    grid-template-columns: 1fr 44px 1.25fr 44px 1fr;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pipe {
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+  }
+
+  .pipe-arrow {
+    height: 44px;
+  }
+
+  .pipe-arrow span {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(180deg, var(--line-strong), var(--accent));
+  }
+
+  .pipe-arrow span::after {
+    top: auto;
+    right: -4px;
+    bottom: -2px;
+    border: 5px solid transparent;
+    border-top: 7px solid var(--accent);
+  }
+}
+
+@media (max-width: 767px) {
+  .pipe {
+    margin-top: 2rem;
+  }
+
+  .stage-write,
+  .stage-sign,
+  .pipe-arrow,
+  .stage-label {
+    display: none;
+  }
+
+  .stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
+
+  .stepper > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .stepper .k {
+    width: 18px;
+    height: 18px;
+  }
+
+  .stepper .on .k {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .stepper i {
+    flex: 1;
+    height: 1px;
+    margin: auto 0.4rem;
+    background: var(--line-strong);
+  }
+}
+
+/* Stage 1: the builder. */
+.build,
+.run {
+  margin: 0;
+  padding: 0.35rem 0;
+  list-style: none;
+}
+
+.build li {
+  display: grid;
+  grid-template-columns: 10px 1.1rem minmax(0, 1fr) auto;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.3rem 1rem;
+}
+
+.build .grip {
+  color: var(--line-strong);
+  font-size: 0.7rem;
+  letter-spacing: -2px;
+}
+
+.build .n {
+  color: var(--text-subtle);
+  font: 0.72rem var(--font-mono);
+  text-align: right;
+}
+
+.build li.add {
+  display: block;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 550;
+}
+
+.build li.you,
+.run li.you {
+  background: #f5c45114;
+  box-shadow: inset 2px 0 0 var(--warn);
+}
+
+.start-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 0.6rem 1rem 0.8rem;
+  border-top: 1px solid var(--line);
+}
+
+.start-brief {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  color: #d8e1f2;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.start-go {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Stage 2: the run. */
+.run li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.34rem 1rem;
+}
+
+.run li.done {
+  color: var(--text-muted);
+}
+
+.run li.todo {
+  color: var(--text-subtle);
+}
+
+.run li.run {
+  background: var(--info-soft);
+  box-shadow: inset 2px 0 0 var(--info);
+}
+
+.run small {
+  display: block;
+  color: var(--text-subtle);
+  font-size: 0.72rem;
+  line-height: 1.3;
+}
+
+.run li.run small {
+  color: var(--info);
+}
+
+.run li.you small {
+  color: #f5c451cc;
+}
+
+/* The todo ring sits under each step's status, so the replay can tick a step over without moving anything. */
+.st-slot {
+  display: grid;
+}
+
+.st-slot > * {
+  grid-area: 1 / 1;
+}
+
+.run-line {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 0.55rem 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--text-subtle);
+  font-size: 0.78rem;
+}
+
+.run-line b {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Stage 3: the sign-off card, as the app draws it. */
+.signoff {
+  margin: 0.85rem;
+  padding: 0.9rem;
+  border: 1px solid #f5c45180;
+  border-radius: 10px;
+  background: #f5c45114;
+}
+
+.signoff p {
+  margin-top: 0.55rem;
+  color: #d8e1f2;
+}
+
+.signoff .signoff-title {
+  margin: 0;
+  color: var(--warn);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.signoff-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+}
+
+.signoff-files span {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-raised);
+  color: var(--text-muted);
+  font: 0.72rem var(--font-mono);
+}
+
+.signoff-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  font-size: 0.8125rem;
+}
+
+.signoff-actions span {
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.signoff-accept {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.signoff-reject {
+  border: 1px solid var(--line-strong);
+}
+
+.signoff .signoff-note {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg-inset);
+  color: var(--text-subtle);
+  font-size: 0.78rem;
+}
+
+/*
+ * Replay rules (html.motion only). [data-at] appears at its time, [data-out] leaves at its time.
+ * Without motion the final frame shows: nothing with [data-out] is visible.
+ */
+.motion .pipe [data-at],
+.motion .meter [data-at] {
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out);
+}
+
+.motion .pipe [data-at]:not(.is-in),
+.motion .meter [data-at]:not(.is-in) {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.motion .pipe .st[data-at]:not(.is-in) {
+  transform: scale(0.4);
+}
+
+/* A step only lights up once the replay has reached it. */
+.motion .run li:has(.st[data-at]:not(.is-in)) {
+  background: none;
+  box-shadow: none;
+}
+
+/* The arrows draw left to right (top to bottom when stacked). */
+.motion .pipe-arrow[data-at]:not(.is-in) {
+  transform: none;
+}
+
+.motion .pipe-arrow span {
+  transition: clip-path var(--dur-3) var(--ease-out);
+}
+
+.motion .pipe-arrow:not(.is-in) span {
+  clip-path: inset(0 100% 0 0);
+}
+
+@media (max-width: 1023px) {
+  .motion .pipe-arrow:not(.is-in) span {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+/* On phones only stage 2 shows, so it can't wait for stage 1. */
+@media (max-width: 767px) {
+  .motion .stage-run[data-at]:not(.is-in) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html:not(.motion) .meter [data-out],
+.meter [data-out].is-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.is-pressed {
   animation: press 600ms var(--ease-out) 1;
 }
 
@@ -789,170 +1179,123 @@ img.frame,
   }
 }
 
-.live-foot {
-  flex: none;
-  padding: 0 1rem 1rem;
-}
+/* ---------- 2. Meet the team ---------- */
 
-.live-chip {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  height: 2rem;
-  margin-bottom: 0.5rem;
-  padding: 0 0.75rem;
-  border: 1px solid #58b7ff55;
-  border-radius: 10px;
-  background: var(--info-soft);
-  color: var(--info);
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums; /* the tool count ticks 1 → 3 without resizing the chip */
-}
-
-.live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.motion .live-chip.is-in .live-dot {
-  animation: pulse 1.4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.35;
-  }
-}
-
-.live-composer {
-  padding: 0.625rem 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  color: var(--text-subtle);
-  font-size: 0.8125rem;
-}
-
-/*
- * Replay rules (html.motion only). [data-at] appears at its time, [data-out] leaves at its time.
- * Without motion the final frame shows: nothing with [data-out] is visible.
- */
-.motion .live [data-at],
-.motion .meter [data-at] {
-  transition:
-    opacity var(--dur-3) var(--ease-out),
-    transform var(--dur-3) var(--ease-out);
-}
-
-.motion .live [data-at]:not(.is-in),
-.motion .meter [data-at]:not(.is-in) {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.live-owner [data-at]:not(.is-in),
-.live-owner [data-out] {
-  transform: none !important;
-}
-
-html:not(.motion) .live [data-out],
-.live [data-out].is-out,
-html:not(.motion) .meter [data-out],
-.meter [data-out].is-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* The permission card collapses into its one-line result. */
-html:not(.motion) .perm,
-.perm.is-out {
-  display: none;
-}
-
-.motion .perm {
-  transform-origin: 50% 100%;
-}
-
-.motion .perm:not(.is-in) {
-  transform: scale(0.98);
-}
-
-/* ---------- 2. The problem ---------- */
-
-.problem-grid {
+.team-grid {
   display: grid;
   gap: 2rem;
+  align-items: start;
 }
 
 @media (min-width: 1024px) {
-  .problem-grid {
-    grid-template-columns: 1fr 1.75fr;
-    align-items: start;
+  .team-grid {
+    grid-template-columns: 1.45fr 1fr;
+    gap: 3rem;
   }
 }
 
-.problem-panel {
+.traits {
+  display: grid;
+  gap: 1rem;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.term,
-.roster {
-  overflow: hidden;
+.trait {
+  padding: 1.05rem 1.15rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--bg-inset);
+  background: #0f1f3d99;
 }
 
-.term {
-  opacity: 0.7;
-  filter: saturate(0.4);
-}
-
-.term-tabs {
+.trait h3 {
   display: flex;
-  border-bottom: 1px solid var(--line);
-  font-family: var(--font-mono);
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 1.05rem;
+}
+
+.trait-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+.trait > p {
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.snip {
+  margin: 0.75rem 0 0;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-inset);
+  color: #d8e1f2;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.snip b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.snip code {
   font-size: 0.75rem;
 }
 
-.term-tabs span {
-  display: inline-flex;
+.snip .hi {
+  color: var(--accent);
+}
+
+.snip .mention {
+  color: var(--info);
+}
+
+.snip-msg {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+}
+
+.snip-msg + .snip-msg {
+  margin-top: 0.45rem;
+}
+
+.snip-steps {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+}
+
+.snip-steps li {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 0.55rem;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.5rem 1rem;
-  border-right: 1px solid var(--line);
-  color: var(--text-subtle);
-}
-
-.term-tabs .is-active {
-  background: var(--bg-raised);
-  color: var(--text);
-}
-
-.term-tabs i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.6;
-}
-
-.term-body {
-  margin: 0;
-  padding: 1rem 1.25rem 1.5rem;
-  overflow-x: auto;
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  line-height: 1.8;
 }
 
 /* Every seed agent under the app sidebar's group labels: one column on phones, the four groups two by two above that. */
 .roster {
   display: grid;
   gap: 0.25rem 0.5rem;
+  overflow: hidden;
   padding: 0.25rem 0.5rem 0.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
   background: var(--bg-raised);
+  box-shadow: var(--frame-shadow);
 }
 
 @media (min-width: 600px) {
@@ -1008,8 +1351,8 @@ html:not(.motion) .perm,
   margin-top: 8px;
 }
 
-/* Sixteen lines: a quicker stagger than the terminal's five. */
-.motion [data-reveal] .roster [data-line] {
+/* Seventeen lines: a quicker stagger than the default. */
+.motion .roster[data-reveal] [data-line] {
   transition-delay: calc(200ms + var(--i, 0) * 35ms);
 }
 
@@ -1034,21 +1377,17 @@ html:not(.motion) .perm,
   opacity: 1;
 }
 
-.problem-caption {
-  margin-top: 1rem;
-  font-size: 1.375rem;
+.team-close {
+  margin-top: 2.75rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.6rem);
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   line-height: 1.3;
-  text-wrap: balance;
 }
 
-.problem-close {
-  margin-top: 3rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  text-align: center;
+.team-close em {
+  color: var(--accent);
+  font-style: normal;
 }
 
 /* ---------- 3. Story ---------- */
@@ -1076,6 +1415,17 @@ html:not(.motion) .perm,
   width: 100%;
   transform: scale(calc(1 / var(--mw))) translate(calc(var(--mx) * -100%), calc(var(--my) * -100%));
   transform-origin: 0 0;
+}
+
+/* Bottom-anchored windows start mid-message: fade the top 28px into the frame, as a scrolled chat does. An overlay
+   rather than a mask on the frame, which would also clip its border and shadow. */
+.fade-top .shot-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 28px;
+  background: linear-gradient(to bottom, var(--bg-raised), transparent);
+  pointer-events: none;
 }
 
 .story-step p {
@@ -1386,7 +1736,7 @@ html:has(.lightbox[open]) {
 
 /*
  * Crops that include page background around a card: shift the picture so the card's own
- * border is the frame. Offsets are the crop's padding in CSS px (memory-panel: 25 / 24;
+ * border is the frame. Offsets are the crop's padding in CSS px (pb-memory-panel: 25 / 24;
  * image-feedback: 45 to the attachment's left border).
  */
 .tile .frag-card {
@@ -1412,9 +1762,21 @@ html:has(.lightbox[open]) {
   margin-left: -45px;
 }
 
+/* pb-documents: the capture starts at the sidebar's edge, 18px left of the message. */
+.tile .frag-message {
+  width: calc(var(--shot-w) - 18px);
+}
+
+.tile .frag-message picture {
+  width: var(--shot-w);
+  margin-left: -18px;
+}
+
 @media (min-width: 1024px) {
+  /* Four rows of screenshot tiles, then the Playbooks row sized to its cards. */
   .bento {
     grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 220px) auto;
     grid-auto-rows: 220px;
   }
 
@@ -1432,6 +1794,10 @@ html:has(.lightbox[open]) {
 
   .span-4 {
     grid-column: span 4;
+  }
+
+  .span-6 {
+    grid-column: span 6;
   }
 
   .rows-2 {
@@ -1467,11 +1833,119 @@ html:has(.lightbox[open]) {
   }
 }
 
-/* ---------- 5. Two engines ---------- */
+/* Phones: a fragment wider than the tile fades out at the right edge rather than cutting through a line. */
+@media (max-width: 767px) {
+  .tile .frag:not(.lib) {
+    width: 100%;
+    margin-left: 0;
+    mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+  }
+
+  .tile .frag:not(.lib) picture:not(.shot-light) {
+    display: block;
+    width: var(--shot-w);
+  }
+}
+
+/* The Playbooks tile: library cards drawn in HTML, as the app's Playbooks page shows them. */
+.tile-link {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tile-fit {
+  min-height: 0;
+  padding-bottom: 1.5rem;
+}
+
+.tile .lib {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding-right: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.lib-card {
+  flex: none;
+  width: 220px;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-inset);
+}
+
+.lib-top {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lib-top b {
+  font-weight: 600;
+}
+
+.tile .lib-desc {
+  margin: 0.15rem 0 0.5rem;
+  color: var(--text-subtle);
+  font-size: 0.78rem;
+}
+
+.lib-own {
+  align-self: stretch;
+  display: grid;
+  place-items: center;
+  border-style: dashed;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 550;
+}
+
+@media (min-width: 1024px) {
+  .tile-wide.span-6 .tile-text {
+    flex-basis: 48%;
+    max-width: 48%;
+  }
+
+  .tile .lib {
+    flex: 1;
+    align-self: flex-start;
+    align-items: stretch;
+    justify-content: flex-end;
+  }
+
+  .lib-card {
+    width: 210px;
+  }
+
+  .lib-own {
+    width: 150px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .tile .lib {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0;
+  }
+
+  .lib-card {
+    width: auto;
+  }
+
+  .lib-own {
+    padding-block: 0.7rem;
+  }
+}
+
+/* ---------- 5. How it runs ---------- */
 
 .engines {
   max-width: 880px;
-  margin-inline: auto;
+  margin: 3rem auto 0;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
@@ -1636,73 +2110,27 @@ html:has(.lightbox[open]) {
   background: var(--line);
 }
 
+/* $1.03 of $5.00. */
 .meter-fill {
   display: block;
   height: 100%;
   border-radius: inherit;
   background: var(--accent);
-  transform: scaleX(1);
+  transform: scaleX(0.206);
   transform-origin: 0 0;
-  transition:
-    transform 1000ms var(--ease-out),
-    background-color var(--dur-3) ease;
+  transition: transform 1000ms var(--ease-out);
 }
 
 .meter[data-stage='0'] .meter-fill {
   transform: scaleX(0);
 }
 
-.meter[data-stage='1a'] .meter-fill {
-  transform: scaleX(0.7);
+.meter-name {
+  font-weight: 600;
 }
 
-.meter[data-stage='1b'] .meter-fill {
-  background: var(--warn);
-}
-
-.meter-lines {
-  display: grid;
-  gap: 0.25rem;
-  margin: 1rem 0 0;
-  padding: 0;
-  color: var(--text-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  list-style: none;
-}
-
-.meter-lines li {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.meter-lines .tl-icon {
-  color: var(--accent);
-}
-
-.meter-chat {
-  display: grid;
-  gap: 0.625rem;
+.meter .notice {
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line);
-}
-
-.meter-chat p {
-  color: #d8e1f2;
-}
-
-.meter-chat b {
-  margin-right: 0.375rem;
-}
-
-.meter-slot {
-  display: grid;
-  margin-top: 1rem;
-}
-
-.meter-slot > * {
-  grid-area: 1 / 1;
 }
 
 .notice {
@@ -1719,12 +2147,6 @@ html:has(.lightbox[open]) {
   font-size: 0.8125rem;
 }
 
-.notice-limit {
-  border-color: #f5c45180;
-  background: #f5c45110;
-  color: #f8dc9a;
-}
-
 .notice-button {
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-sm);
@@ -1734,16 +2156,24 @@ html:has(.lightbox[open]) {
   white-space: nowrap;
 }
 
-.notice-button.is-pressed {
-  animation: press 600ms var(--ease-out) 1;
+/* Two classes, to outrank Shot's scoped .shot width. */
+.brakes .costs-crop {
+  width: calc(var(--shot-w) - 48px);
+  margin: 1rem auto 0;
 }
 
-.costs-crop {
-  margin: 1rem 0 0;
+/* The capture has 24px of page around the card: crop it so the card's own border is the frame. */
+.costs-crop .shot-frame {
+  border: 0;
+  background: none;
 }
 
-/* ---------- 7. Your machine ---------- */
+.costs-crop picture {
+  width: var(--shot-w);
+  margin: -24px 0 -24px -24px;
+}
 
+/* The stack: a column on phones and tablets, one row from 1024px. */
 .arch {
   display: grid;
   max-width: 880px;
@@ -1774,37 +2204,6 @@ html:has(.lightbox[open]) {
 .lane-text span {
   color: var(--text-subtle);
   font-size: var(--text-sm);
-}
-
-.sessions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.session {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.625rem 0.25rem 0.25rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--bg-inset);
-  font-size: 0.8125rem;
-}
-
-.session .avatar {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  font-size: 0.6875rem;
-}
-
-.session em {
-  color: var(--text-subtle);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-style: normal;
 }
 
 .link {
@@ -1858,6 +2257,51 @@ html:has(.lightbox[open]) {
   }
 }
 
+@media (min-width: 1024px) {
+  .arch {
+    grid-template-columns: 1fr 40px 1fr 40px 1fr 40px 1fr;
+    max-width: none;
+  }
+
+  .lane {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.75rem;
+  }
+
+  .link {
+    align-self: center;
+    width: 100%;
+    height: 2px;
+  }
+
+  .packet {
+    top: -2px;
+    left: 0;
+  }
+
+  .motion .arch.is-visible .packet {
+    animation-name: packet-x;
+  }
+}
+
+@keyframes packet-x {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  15%,
+  45% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: translateX(34px);
+  }
+}
+
 @keyframes db-glow {
   0%,
   100% {
@@ -1868,29 +2312,7 @@ html:has(.lightbox[open]) {
   }
 }
 
-.trust-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem 2.5rem;
-  justify-content: center;
-  margin: 2.5rem 0 0;
-  padding: 0;
-  color: var(--text-muted);
-  font-size: 0.9375rem;
-  list-style: none;
-}
-
-.trust-row li {
-  display: inline-flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.trust-row svg {
-  color: var(--accent);
-}
-
-/* ---------- 9. Built with Canopy ---------- */
+/* ---------- 7. Built with Canopy ---------- */
 
 .dogfood {
   border-block: 1px solid var(--line);
@@ -2148,7 +2570,7 @@ html:has(.lightbox[open]) {
   }
 }
 
-/* ---------- 10. Closing ---------- */
+/* ---------- 8. Closing ---------- */
 
 .closing-panel {
   display: grid;
@@ -2172,7 +2594,7 @@ html:has(.lightbox[open]) {
   padding-bottom: 0;
 }
 
-/* ---------- 8. Install ---------- */
+/* ---------- 9. Install ---------- */
 
 .install-grid {
   display: grid;
