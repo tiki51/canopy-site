@@ -19,7 +19,7 @@ The seed step adds two playbooks. Both are led by `@project-manager`.
 
 | Playbook | Steps | Waits for you |
 |---|---|---|
-| **feature-build** | Capture the request, propose 3 designs, technical design docs and their review, build with a test plan, test and code review, a design check of the result, and telling you it's done. `@designer`, `@frontend`, `@backend`, `@test` and `@reviewer` fill the roles. | You pick one of the three designs before anything is built. |
+| **feature-build** | Capture the request, propose 3 designs, technical design docs and their review, build with a test plan, test and code review, a design check of the result, and a final step that waits for your sign-off. `@designer`, `@frontend`, `@backend`, `@test` and `@reviewer` fill the roles. | You pick one of the three designs before anything is built, and sign off on the result at the end. |
 | **bug-fix** | Triage, reproduce with a failing test, fix, verify, review, and your sign-off, with `@bugfix-team`. | You sign off on the fix at the end. |
 
 In both, review steps can send work back: a code review that finds a problem reopens the build (or the fix), and a rejected design goes back to the designer.

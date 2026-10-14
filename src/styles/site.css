@@ -1586,10 +1586,10 @@ html:not(.motion) .meter [data-out],
   flex-basis: 100%;
 }
 
-/* Full-run lightbox: a native modal <dialog>, sized so the 1032×900 video fits the viewport under its header. */
+/* Full-run lightbox: a native modal <dialog>, sized so the 1440×900 video fits the viewport under its header. */
 .lightbox {
   --head: 61px;
-  width: min(calc(100vw - 2rem), 1032px, calc((100dvh - 2rem - var(--head)) * 1032 / 900));
+  width: min(calc(100vw - 2rem), 1440px, calc((100dvh - 2rem - var(--head)) * 1440 / 900));
   max-width: none;
   max-height: none;
   padding: 0;
@@ -1653,7 +1653,7 @@ html:has(.lightbox[open]) {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1032 / 900;
+  aspect-ratio: 1440 / 900;
   background: var(--bg);
 }
 
