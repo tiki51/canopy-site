@@ -70,45 +70,10 @@ function countTo(el: HTMLElement, from: number, to: number, ms = 700) {
   requestAnimationFrame(frame);
 }
 
-function heroChannel() {
-  const live = document.querySelector<HTMLElement>('[data-live]');
-  const stack = live?.querySelector<HTMLElement>('[data-stack]');
-  if (!live || !stack) return;
-
-  const spend = live.querySelector<HTMLElement>('[data-spend]')!;
-  const tools = live.querySelector<HTMLElement>('[data-tools]')!;
-  spend.textContent = '$0.00';
-  tools.textContent = '1';
-
-  // Keep the newest visible item on the bottom edge. Only `transform` moves, so nothing reflows.
-  const bottomOf = (el: HTMLElement) => {
-    let y = el.offsetHeight;
-    for (let n: HTMLElement | null = el; n && n !== stack; n = n.offsetParent as HTMLElement | null) y += n.offsetTop;
-    return y;
-  };
-  const scroll = () => {
-    let bottom = 0;
-    stack.querySelectorAll<HTMLElement>('[data-at]').forEach((el) => {
-      if (el.classList.contains('is-in') && !el.classList.contains('is-out')) bottom = Math.max(bottom, bottomOf(el));
-    });
-    stack.style.transform = `translateY(${stack.offsetHeight - bottom}px)`;
-  };
-  scroll();
-  requestAnimationFrame(() => live.classList.add('is-playing'));
-  window.addEventListener('resize', scroll, { passive: true });
-
-  const p = player(
-    live,
-    [
-      { t: 2.1, run: () => (tools.textContent = '2') },
-      { t: 2.6, run: () => (tools.textContent = '3') },
-      { t: 6.2, run: () => countTo(spend, 0, 0.21) },
-      { t: 13.0, run: () => countTo(spend, 0.21, 0.53) },
-    ],
-    scroll,
-  );
-  // On phones the panel starts near the bottom of the first screen; wait until most of it is in view.
-  whileVisible(live, p, 0.6);
+// The hero's three stages appear in turn, stage 2 ticks through its steps, and the sign-off card lands last.
+function heroPipe() {
+  const pipe = document.querySelector('[data-pipe]');
+  if (pipe) whileVisible(pipe, player(pipe), 0.3);
 }
 
 function brakesMeter() {
@@ -118,8 +83,7 @@ function brakesMeter() {
   meter.dataset.stage = '0';
   spend.textContent = '$0.00';
   const p = player(meter, [
-    { t: 0.4, run: () => ((meter.dataset.stage = '1a'), countTo(spend, 0, 3.5, 1000)) },
-    { t: 7.0, run: () => ((meter.dataset.stage = '1b'), countTo(spend, 3.5, 5, 700)) },
+    { t: 0.6, run: () => ((meter.dataset.stage = '1'), countTo(spend, 0, 1.03, 1400)) },
   ]);
   whileVisible(meter, p, 0.5);
 }
@@ -358,7 +322,7 @@ export function initHome() {
   if (!motion()) return;
   reveals();
   clips();
-  heroChannel();
+  heroPipe();
   brakesMeter();
   architecture();
 }

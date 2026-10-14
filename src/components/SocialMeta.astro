@@ -8,7 +8,7 @@ interface Props {
   imageAlt?: string;
 }
 
-const { title, description, imageAlt = 'Canopy: your coding agents, working as a team.' } = Astro.props;
+const { title, description, imageAlt = 'You write the playbook. Agents execute. You sign off. A Feature build playbook, its run in #csv-export, and the card waiting for your sign-off.' } = Astro.props;
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const url = new URL(path, Astro.site);
 const image = new URL(`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}og-card.png`, Astro.site);
