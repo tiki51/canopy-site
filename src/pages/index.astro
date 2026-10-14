@@ -48,7 +48,6 @@ const pane = { x: 0.3023, w: 0.6977 };
 // One Feature build run, step by step (copy: .canopy/out/site-hero/story-section.md). Stills: @test's `pb-story-*`
 // from canopy's seed-reports.exs; y puts the window top in a gap between messages. Steps whose window sits at the
 // bottom of the chat (y 0.4) can't start in a gap, so `fade` softens their top edge to read as a scrolled chat.
-// TODO(shot:pb-story-07/08): re-shoot steps 6–7 once canopy's feature-build ends in a "You sign off" step.
 const story = [
   {
     title: 'You start a playbook.',
@@ -73,7 +72,13 @@ const story = [
     alt: "@frontend delegates the CSV endpoint to @backend, above @frontend's live card listing the files it reads and edits.",
     shot: 'pb-story-03-build',
     zoom: { ...pane, y: 0.156, mx: 0.318, my: 0.156, mw: 0.47 },
-    // TODO(shot:pb-story-03-build clip): @test records the clip after #feature-build-signoff lands; until then the still.
+    // The recording replaces the still. It is the whole 1440×900 window with Details open, so the channel pane is
+    // x 311–992; the window sits on the bottom of the feed, where the delegations and live cards land.
+    clip: {
+      label: "Recording: @project-manager delegates the build to @frontend and the test plan to @test, @frontend's live card works through the Reports files, @frontend hands the CSV endpoint to @backend, and @backend is granted edit permission.",
+      zoom: { x: 0.216, w: 0.473, y: 0.43, mx: 0.227, my: 0.455, mw: 0.337 },
+    },
+    fade: true,
   },
   {
     title: 'It asks before it touches your code.',
@@ -96,15 +101,16 @@ const story = [
     title: 'You sign off.',
     body: 'When the last check passes, the run stops for you. The sign-off card has the test report, and <strong>Changes</strong> shows the diff of every file. Accept to finish, or reject with a note and the lead takes it back.',
     caption: 'Feature build is waiting for your sign-off',
-    alt: "@project-manager's summary, \"CSV export on the Reports page is ready for your sign-off\", above a sign-off card with test-report.md attached and Reject and Accept buttons.",
+    alt: '@project-manager\'s sign-off card at step 9 of 9, "Accept the CSV export on the Reports page?": the design, the 5 files changed, the review and the tests, with test-report.md attached and Reject and Accept buttons.',
     shot: 'pb-story-07-signoff',
-    zoom: { ...pane, y: 0.233, mx: 0.52, my: 0.301, mw: 0.47 }, // phones: the card, down to Reject / Accept, right-anchored
+    // The card is pinned at the end of the feed, so this is the lowest window. Phones: the card, down to Reject / Accept, right-anchored.
+    zoom: { ...pane, y: 0.4, mx: 0.52, my: 0.44, mw: 0.47 },
   },
   {
     title: 'Then you close the laptop.',
     body: 'The run, the decisions, the files, and what each agent learned are in a SQLite file on your disk. Next time, <code>@frontend</code> already knows that Reports use the shared DataTable component.',
     caption: 'done · remembered for next time',
-    alt: 'Priya accepts the sign-off in #csv-export, the feature-build playbook is marked complete, and @project-manager closes the run.',
+    alt: "The sign-off card collapses to \"You accepted @project-manager's User sign-off\", the feature-build playbook is marked complete, and @project-manager closes the run.",
     shot: 'pb-story-08-done',
     zoom: { ...pane, y: 0.4, mx: 0.318, my: 0.44, mw: 0.47 },
     fade: true,
@@ -117,14 +123,14 @@ const story = [
 const storySizes = '(min-width: 1024px) 1300px, 100vw';
 const stepSizes = '(min-width: 1024px) 1px, 290vw';
 const mobileW = 0.34;
-const clipSize = { width: 720, height: 540 };
+const clipSize = { width: 1440, height: 900 };
 const zoomStyle = (z: { x: number; y: number; w: number; mx: number; my: number; mw?: number }) =>
   `--x: ${z.x}; --y: ${z.y}; --w: ${z.w}; --mx: ${z.mx}; --my: ${z.my}; --mw: ${z.mw ?? mobileW}`;
 
 // Length of the full recording, read from its mp4 header (mvhd), so the button never quotes a stale length.
 let runLength: string | undefined;
 try {
-  const mp4 = readFileSync(resolve(process.cwd(), 'public/images/full-run.mp4'));
+  const mp4 = readFileSync(resolve(process.cwd(), 'public/images/pb-full-run.mp4'));
   const at = mp4.indexOf('mvhd');
   const v1 = mp4[at + 4] === 1;
   const units = v1 ? Number(mp4.readBigUInt64BE(at + 28)) : mp4.readUInt32BE(at + 20);
@@ -466,7 +472,7 @@ const install = {
             </div>
             <a class="text-link" href={url('docs/try-the-demo/')}>How the demo works <span aria-hidden="true">→</span></a>
             <!-- Without JavaScript this opens the file; home.ts turns it into the lightbox below. -->
-            <a class="button-secondary" href={url('images/full-run.mp4')} data-dialog="full-run">
+            <a class="button-secondary" href={url('images/pb-full-run.mp4')} data-dialog="full-run">
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14"><path d="M3 1.5v11L12 7z" fill="currentColor" /></svg>
               Watch the full run{runLength && <span class="subtle"> ({runLength})</span>}
             </a>
@@ -763,9 +769,9 @@ const install = {
         </button>
       </div>
       <!-- The poster is set on first open, so a closed dialog downloads nothing. -->
-      <video controls playsinline preload="none" width="1032" height="900" data-poster={url('images/full-run-poster.jpg')} aria-labelledby="full-run-title">
-        <source src={url('images/full-run.webm')} type="video/webm" />
-        <source src={url('images/full-run.mp4')} type="video/mp4" />
+      <video controls playsinline preload="none" width="1440" height="900" data-poster={url('images/pb-full-run-poster.jpg')} aria-labelledby="full-run-title">
+        <source src={url('images/pb-full-run.webm')} type="video/webm" />
+        <source src={url('images/pb-full-run.mp4')} type="video/mp4" />
       </video>
     </dialog>
 
