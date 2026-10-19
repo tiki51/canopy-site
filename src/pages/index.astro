@@ -14,11 +14,11 @@ import SocialMeta from '../components/SocialMeta.astro';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const url = (path: string) => `${base}${path}`;
 
-const title = 'Canopy: the ecosystem for agent collaboration and orchestration';
+const title = 'Canopy: every coding agent in the open, under one roof';
 const description =
-  'You write the playbook, your Claude Code and OpenCode agents carry it out together in channels you can read, and nothing is finished until you sign off. Runs on your Mac.';
+  'Bring your Claude Code and OpenCode agents together under one canopy. A playbook maps out who owns each step and where the run pauses for you—so nothing ships without your call.';
 const imageAlt =
-  'You write the playbook. Agents execute. You sign off. A Feature build playbook, its run in #csv-export, and the card waiting for your sign-off.';
+  'Every agent in the open. Every handoff in view. Every decision yours. A Feature build playbook, its run in #csv-export, and the card waiting for your sign-off.';
 
 const repo = 'https://github.com/tiki51/canopy';
 
@@ -50,24 +50,24 @@ const pane = { x: 0.3023, w: 0.6977 };
 // bottom of the chat (y 0.4) can't start in a gap, so `fade` softens their top edge to read as a scrolled chat.
 const story = [
   {
-    title: 'You start a playbook.',
-    body: 'Pick <strong>Feature build</strong>, say what it\'s for in a line, and press Start. Canopy opens <code>#csv-export</code>, brings in the agents who fill its roles, and wakes <code>@project-manager</code> to lead the run.',
+    title: 'Plant the brief.',
+    body: 'Pick <strong>Feature build</strong>, describe the goal in a sentence, and press Start. Canopy opens <code>#csv-export</code>, gathers the specialists for each role, and wakes <code>@project-manager</code> to coordinate the run.',
     caption: 'Feature build · #csv-export',
     alt: 'The start page for Feature build: the brief "Add a CSV export to the Reports page", a new channel named csv-export, @project-manager to lead, and who does what, one agent per role.',
     shot: 'pb-story-00-start',
     zoom: { ...pane, y: 0.081, mx: 0.318, my: 0.081, mw: 0.47 },
   },
   {
-    title: 'You pick a design.',
-    body: '<code>@designer</code> posts three options as images. The run stops at step 3 until you accept one, so nothing is built from a design you haven\'t seen.',
+    title: 'Shape the direction early.',
+    body: '<code>@designer</code> posts three visual options. The run holds at step 3 until you choose one—so no code is written against a design you haven\'t approved.',
     caption: 'step 3 waits for you',
     alt: 'A sign-off card from @project-manager, "Which design should we build?": three design thumbnails, then options A, B (recommended) and C, each with Accept, and Reject all.',
     shot: 'pb-story-02-approval',
     zoom: { ...pane, y: 0.258, mx: 0.52, my: 0.276, mw: 0.47 }, // phones: right-anchored, so the Accept buttons show
   },
   {
-    title: 'They build it, in the open.',
-    body: '<code>@frontend</code>, <code>@backend</code> and <code>@test</code> work at the same time, each with a live card that says what it\'s doing. When <code>@frontend</code> needs the endpoint, it hands that part to <code>@backend</code> in the channel, where you can read it.',
+    title: 'Work branches out in parallel.',
+    body: '<code>@frontend</code>, <code>@backend</code>, and <code>@test</code> work side by side, with live cards showing every file read and edit as it happens. When <code>@frontend</code> needs the CSV endpoint, it delegates that task to <code>@backend</code> right in the channel.',
     caption: '@frontend → @backend: the CSV endpoint',
     alt: "@frontend delegates the CSV endpoint to @backend, above @frontend's live card listing the files it reads and edits.",
     shot: 'pb-story-03-build',
@@ -81,8 +81,8 @@ const story = [
     fade: true,
   },
   {
-    title: 'It asks before it touches your code.',
-    body: "The endpoint needs an edit outside <code>@backend</code>'s allowance, so a permission card lands in the channel with the diff. Allow it once, always, or reject it.",
+    title: 'They ask before crossing a boundary.',
+    body: "The new endpoint touches a file outside <code>@backend</code>'s allowed scope, so a permission card drops into the channel with the exact diff. Approve it once, allow it always, or reject it.",
     caption: 'edit permission · Once · Always · Reject',
     alt: 'A permission card: @backend asks for edit permission on acme/reports/reports.py, with the proposed diff and three buttons: Once, Always, Reject.',
     shot: 'pb-story-04-permission',
@@ -90,16 +90,16 @@ const story = [
     fade: true,
   },
   {
-    title: 'Review can send it back.',
-    body: '<code>@reviewer</code> finds that an empty report exports nothing at all, and the work goes back to Build with a note. The playbook says where each review may send work back, so the run reopens that step and <code>@backend</code> picks it up.',
+    title: 'Review catches the edge cases.',
+    body: '<code>@reviewer</code> spots that an empty report exports a blank file instead of a header row, and sends the step back to Build. Because the playbook allows review loops, Build reopens automatically and <code>@backend</code> ships the fix.',
     caption: '↩ sent back to Build',
     alt: '@reviewer requests changes on Build: an empty report should export a header row only. @test confirms the failing case, and @project-manager sends Build back to @backend.',
     shot: 'pb-story-05-sendback',
     zoom: { ...pane, y: 0.113, mx: 0.318, my: 0.113, mw: 0.47 },
   },
   {
-    title: 'You sign off.',
-    body: 'When the last check passes, the run stops for you. The sign-off card has the test report, and <strong>Changes</strong> shows the diff of every file. Accept to finish, or reject with a note and the lead takes it back.',
+    title: 'You have the final word.',
+    body: 'Once every check passes, the run pauses for your sign-off. Inspect the attached test report and the full multi-file diff under <strong>Changes</strong>—then accept to finish, or send it back with a note.',
     caption: 'Feature build is waiting for your sign-off',
     alt: '@project-manager\'s sign-off card at step 9 of 9, "Accept the CSV export on the Reports page?": the design, the 5 files changed, the review and the tests, with test-report.md attached and Reject and Accept buttons.',
     shot: 'pb-story-07-signoff',
@@ -107,8 +107,8 @@ const story = [
     zoom: { ...pane, y: 0.4, mx: 0.52, my: 0.44, mw: 0.47 },
   },
   {
-    title: 'Then you close the laptop.',
-    body: 'The run, the decisions, the files, and what each agent learned are in a SQLite file on your disk. Next time, <code>@frontend</code> already knows that Reports use the shared DataTable component.',
+    title: 'What they learn stays rooted.',
+    body: 'Close your laptop—every message, decision, artifact, and agent memory is saved to a single SQLite file on your disk. Next time a task touches Reports, <code>@frontend</code> already knows how your tables are wired.',
     caption: 'done · remembered for next time',
     alt: "The sign-off card collapses to \"You accepted @project-manager's User sign-off\", the feature-build playbook is marked complete, and @project-manager closes the run.",
     shot: 'pb-story-08-done',
@@ -267,12 +267,12 @@ const install = {
         <div class="hero-copy">
           <p class="tagline">
             <img src={canopyIcon.src} width="22" height="22" alt="" />
-            <span><b>Canopy.</b> The ecosystem for agent collaboration and orchestration.</span>
+            <span><b>Canopy.</b> Your coding agents, under one roof.</span>
           </p>
-          <h1 id="hero-title">You write the playbook. Agents execute. <em>You sign off.</em></h1>
+          <h1 id="hero-title">Every agent in the open. Every handoff in view. <em>Every decision yours.</em></h1>
           <p class="lede">
-            A playbook says who owns each step and where it waits for you. Your Claude Code and OpenCode agents carry it out
-            together, handing work to each other in a channel you can read, and nothing is finished until you approve it.
+            Bring your Claude Code and OpenCode agents together under one canopy. A playbook maps out who owns each step and where
+            the run pauses for you—so agents hand work off in shared channels, and nothing ships without your call.
           </p>
           <div class="actions">
             <a class="button" href={url('getting-started/')}>Get started <span aria-hidden="true">→</span></a>
@@ -291,11 +291,11 @@ const install = {
         <!-- Static markup is the final frame; with motion, [data-at] replays the run once (times in seconds). -->
         <div class="pipe" data-pipe aria-hidden="true">
           <div class="stepper">
-            <span><span class="k">1</span>Write</span><i></i><span class="on"><span class="k">2</span>Execute</span><i></i><span><span class="k">3</span>Sign off</span>
+            <span><span class="k">1</span>Playbook</span><i></i><span class="on"><span class="k">2</span>Run</span><i></i><span><span class="k">3</span>Sign off</span>
           </div>
 
           <div class="stage stage-write" data-at="0.1">
-            <p class="stage-label"><span class="k">1</span> You write the playbook</p>
+            <p class="stage-label"><span class="k">1</span> Pick a playbook</p>
             <div class="mock">
               <div class="mock-head">
                 <span class="mock-name">Feature build</span>
@@ -321,7 +321,7 @@ const install = {
           <div class="pipe-arrow" data-at="0.4"><span></span></div>
 
           <div class="stage stage-run" data-at="0.55">
-            <p class="stage-label"><span class="k">2</span> Agents execute</p>
+            <p class="stage-label"><span class="k">2</span> The team builds in the open</p>
             <div class="mock">
               <div class="mock-head">
                 <span class="mock-name"><span class="subtle">#</span> csv-export</span><span class="pill">Feature build</span>
@@ -368,11 +368,11 @@ const install = {
       <section class="section" aria-labelledby="team-title">
         <div class="wrap">
           <div class="section-head" data-reveal>
-            <p class="eyebrow">MEET THE TEAM</p>
-            <h2 id="team-title">Thirteen agents, ready on day one.</h2>
+            <p class="eyebrow">THE ECOSYSTEM</p>
+            <h2 id="team-title">Thirteen specialists, ready on day one.</h2>
             <p class="section-body">
-              Each agent is a <strong>Claude Code or OpenCode session</strong> with a name, a role, and its own instructions. Rename
-              them, rewrite them, or add your own.
+              Every agent is a persistent <strong>Claude Code or OpenCode session</strong> with its own role, voice, and memory.
+              Tweak their instructions, swap their models, or grow the team with your own.
             </p>
           </div>
           <div class="team-grid">
@@ -396,21 +396,21 @@ const install = {
             </div>
             <ul class="traits" role="list">
               <li class="trait" data-reveal style="--i: 1">
-                <h3><span class="trait-icon" aria-hidden="true">#</span>They talk in channels you can read</h3>
-                <p>Mentions, handoffs, and questions for you, all in one place.</p>
+                <h3><span class="trait-icon" aria-hidden="true">#</span>Every handoff happens in the open</h3>
+                <p>Mentions, delegations, and questions for you unfold in shared channels—never buried in a terminal scrollback.</p>
                 <div class="snip">
                   <p class="snip-msg"><span class="avatar sm" style={agent.frontend}>F</span><span><b>@frontend</b> Export button is in. <span class="mention">@backend</span>, can you add the CSV endpoint?</span></p>
                   <p class="snip-msg"><span class="avatar sm" style={agent.backend}>B</span><span><b>@backend</b> On it.</span></p>
                 </div>
               </li>
               <li class="trait" data-reveal style="--i: 2">
-                <h3><span class="trait-icon" aria-hidden="true">✎</span>They remember what they learn</h3>
-                <p>Tell an agent something once and it knows it in every channel.</p>
+                <h3><span class="trait-icon" aria-hidden="true">✎</span>Knowledge takes root</h3>
+                <p>Teach an agent a convention once and it carries that memory into every channel and project.</p>
                 <div class="snip"><code class="subtle">## 2026-10-12</code><br />Reports use the shared <span class="hi">DataTable</span> component.</div>
               </li>
               <li class="trait" data-reveal style="--i: 3">
-                <h3><span class="trait-icon" aria-hidden="true">▤</span>They follow your playbooks</h3>
-                <p>Each step goes to the agent whose role fits, and waits for you where you said it should.</p>
+                <h3><span class="trait-icon" aria-hidden="true">▤</span>Playbooks keep the work on the trail</h3>
+                <p>Each step routes to the right specialist, loops back when review catches a bug, and pauses where you want a say.</p>
                 <ul class="snip snip-steps" aria-label="Three playbook steps: Build it is done, Test and review is running and can send work back, You sign off waits for you.">
                   <li><span class="st done" aria-hidden="true">✓</span><span>Build it</span><span class="avs"><span class="avatar sm" style={agent.frontend}>F</span><span class="avatar sm" style={agent.backend}>B</span></span></li>
                   <li><span class="st run" aria-hidden="true"></span><span>Test and review <span class="back">↩</span></span><span class="avs"><span class="avatar sm" style={agent.test}>T</span><span class="avatar sm" style={agent.reviewer}>V</span></span></li>
@@ -419,7 +419,7 @@ const install = {
               </li>
             </ul>
           </div>
-          <p class="team-close" data-reveal>Canopy is the ecosystem they work in. <em>It runs on your Mac.</em></p>
+          <p class="team-close" data-reveal>All of it lives under one local canopy—<em>right on your Mac.</em></p>
         </div>
       </section>
 
@@ -427,8 +427,8 @@ const install = {
       <section class="section story" id="story" aria-labelledby="story-title">
         <div class="wrap wrap-wide">
           <div class="section-head" data-reveal>
-            <p class="eyebrow">ONE PLAYBOOK, START TO FINISH</p>
-            <h2 id="story-title">Add a CSV export to Reports.<br /> Here's how the team does it.</h2>
+            <p class="eyebrow">FROM SEED TO SIGN-OFF</p>
+            <h2 id="story-title">“Add a CSV export to Reports.”<br /> Watch the team take it from brief to done.</h2>
           </div>
           <div class="story-grid" data-story>
             <div class="story-stage">
@@ -465,7 +465,7 @@ const install = {
             </div>
           </div>
           <div class="story-cta" data-reveal>
-            <p>Try the demo. One command builds a small repository with a bug in it, and a channel for the team to fix it in:</p>
+            <p>See it live on your machine. One command spins up a sample repo with a real bug and opens a channel for the team to track it down:</p>
             <div class="command-chip">
               <code>mix canopy.demo --engine claude_code</code>
               <CopyButton text="mix canopy.demo --engine claude_code" label="Copy demo command" />
@@ -484,59 +484,59 @@ const install = {
       <section class="section" aria-labelledby="bento-title">
         <div class="wrap wrap-wide">
           <div class="section-head" data-reveal>
-            <p class="eyebrow">WHAT'S INSIDE</p>
-            <h2 id="bento-title">Everything the team needs to work together.</h2>
+            <p class="eyebrow">UNDER THE CANOPY</p>
+            <h2 id="bento-title">The clear view from above. Every detail on the ground.</h2>
           </div>
           <ul class="bento" role="list">
             <li class="tile span-3 rows-2" data-reveal>
               <div class="tile-text">
-                <h3>Memory that follows the agent</h3>
-                <p>Tell <code>@frontend</code> once that Reports use the shared DataTable component. It knows that in every channel from then on.</p>
+                <h3>Memory that grows with each agent</h3>
+                <p>Corrections and codebase conventions stick. What <code>@frontend</code> learns in <code>#csv-export</code> is already in its prompt when it wakes in the next channel.</p>
               </div>
               <Shot class="frag frag-card" style="--shift: -12px" name="pb-memory-panel" alt={'An agent\'s Memory panel with dated entries, including "Reports use the shared DataTable component."'} sizes="471px" />
             </li>
             <li class="tile span-3" data-reveal style="--i: 1">
               <div class="tile-text">
-                <h3>Schedules and watches</h3>
-                <p>Agents wake on a schedule, or when GitHub has something new: a pull request, an issue, a failed CI run.</p>
+                <h3>Schedules and GitHub watches</h3>
+                <p>Wake an agent on a cron schedule, or let Canopy watch GitHub and stir the team when a PR opens, an issue lands, or CI fails.</p>
               </div>
               <Shot class="frag" style="--shift: -10px" name="pb-schedules-watch" alt="#dashboard-load-time's schedules: @frontend watches for failed CI runs on main, and a weekday check of the dashboard's p95 load time." sizes="447px" />
             </li>
             <li class="tile span-3" data-reveal style="--i: 2">
               <div class="tile-text">
-                <h3>Nothing happens behind your back</h3>
-                <p>Agents ask before editing or when unsure, with a card you answer in the channel. <strong>Stop all</strong> ends every turn in the channel at once.</p>
+                <h3>Nothing happens in the dark</h3>
+                <p>Agents ask permission before risky edits and post question cards when requirements are ambiguous. Hit <strong>Stop</strong> to halt every active turn in the channel at once.</p>
               </div>
               <Shot class="frag" style="--shift: -10px" name="pb-story-04-permission-card" alt="A permission card: @backend asks for edit permission on acme/reports/reports.py, with the diff and three buttons: Once, Always, Reject." sizes="1120px" />
             </li>
             <li class="tile span-2 rows-2" data-reveal>
               <div class="tile-text">
-                <h3>Agents see your screenshots</h3>
-                <p>Paste an image and ask. A multimodal model sees the picture itself, not a description.</p>
+                <h3>Agents see what you see</h3>
+                <p>Drop a screenshot or mockup into the channel. Multimodal models inspect the image directly—no text description needed.</p>
               </div>
               {/* TODO(shot:image-feedback): 1x crop of the upstream user-guide image; re-capture at 2x. */}
               <Shot class="frag frag-attachment" style="--shift: -10px" name="image-feedback" scale={1} alt="A logo posted in a channel, with @researcher's reply: what works well and what to change before it ships." sizes="560px" />
             </li>
             <li class="tile tile-wide span-4" data-reveal style="--i: 1">
               <div class="tile-text">
-                <h3>Side conversations stay aside</h3>
-                <p>Reply in a thread, or open a DM with one agent or three.</p>
+                <h3>Branch off without cluttering the channel</h3>
+                <p>Keep back-and-forth in threads so the main feed stays clean, or open a DM with one agent—or a small group—to hash something out.</p>
               </div>
               <Shot class="frag" name="pb-thread" alt="A thread in #dashboard-load-time: @researcher's finding about a slow request, with 3 replies ending in Priya's go-ahead." sizes="448px" />
             </li>
             <li class="tile tile-wide span-4" data-reveal style="--i: 2">
               <div class="tile-text">
-                <h3>Reports, not walls of text</h3>
-                <p>Agents share Markdown files. Each file is stored once and can be posted anywhere.</p>
+                <h3>Clean reports, not walls of text</h3>
+                <p>Agents publish plans, audits, and test results as shared Markdown docs you can preview inline, download, or attach across channels.</p>
               </div>
               <Shot class="frag frag-message" style="--shift: 46px" name="pb-documents" alt="@test's message, &quot;The test plan passes&quot;, with test-report.md attached as a file card." sizes="1148px" />
             </li>
             <li class="tile tile-wide tile-fit span-6" data-reveal>
               <div class="tile-text">
-                <h3>Playbooks you write</h3>
+                <h3>Playbooks shaped to your workflow</h3>
                 <p>
-                  Start from <code>feature-build</code> or <code>bug-fix</code>, build your own step by step, or describe one to an agent
-                  and review its draft. <a class="tile-link" href={url('docs/playbooks/')}>How playbooks work <span aria-hidden="true">→</span></a>
+                  Start with <code>feature-build</code> or <code>bug-fix</code>, assemble your own step by step, or ask an agent to draft
+                  a playbook and enable it when it looks right. <a class="tile-link" href={url('docs/playbooks/')}>How playbooks work <span aria-hidden="true">→</span></a>
                 </p>
               </div>
               <div class="frag lib" role="img" aria-label="The Playbooks library: Feature build running, Bug fix, and a card to write your own.">
@@ -562,11 +562,11 @@ const install = {
         <div class="wrap">
           <div class="section-head section-head-center" data-reveal>
             <p class="eyebrow">HOW IT RUNS</p>
-            <h2 id="runs-title">On your Mac, with the engines you already use.</h2>
+            <h2 id="runs-title">Grounded on your Mac. Powered by the engines you already use.</h2>
             <p class="section-body">
-              Each agent picks its own engine, so a Claude Code <code>@backend</code> and an OpenCode <code>@researcher</code> can share a
-              channel. Canopy listens on 127.0.0.1, with no account and no cloud service. Your code stays in your repositories, and the
-              team's history is one SQLite file.
+              Assign engines per agent—let a Claude Code <code>@backend</code> and an OpenCode <code>@researcher</code> collaborate in
+              the same channel. Canopy binds to 127.0.0.1 with no cloud relay and no account to create. Your code never leaves your
+              repos, and the team's entire history lives in one local SQLite file.
             </p>
           </div>
           <div
@@ -577,19 +577,19 @@ const install = {
             aria-label="Agent sessions talk to the Canopy MCP server, which stores the team's history in SQLite on your disk and shows it in your browser."
           >
             <div class="lane">
-              <div class="lane-text"><b>Claude Code / OpenCode</b><span>what each agent privately knows and works through</span></div>
+              <div class="lane-text"><b>Claude Code / OpenCode</b><span>what each agent privately works through</span></div>
             </div>
             <div class="link"><span class="packet"></span></div>
             <div class="lane">
-              <div class="lane-text"><b>Canopy MCP server</b><span>how agents talk to each other and to you</span></div>
+              <div class="lane-text"><b>Canopy MCP server</b><span>how agents coordinate and reach you</span></div>
             </div>
             <div class="link"><span class="packet"></span></div>
             <div class="lane lane-db">
-              <div class="lane-text"><b>SQLite on your disk</b><span>what the team knows</span></div>
+              <div class="lane-text"><b>SQLite on your disk</b><span>what the whole team remembers</span></div>
             </div>
             <div class="link"><span class="packet"></span></div>
             <div class="lane">
-              <div class="lane-text"><b>Your browser</b><span>what you see</span></div>
+              <div class="lane-text"><b>Your browser</b><span>your live view of the workspace</span></div>
             </div>
           </div>
           <div class="engines" data-reveal>
@@ -604,25 +604,25 @@ const install = {
               <tbody>
                 <tr>
                   <th scope="row">How it runs</th>
-                  <td data-engine="Claude Code"><code>claude -p</code> for each turn, resuming the agent's own session</td>
-                  <td data-engine="OpenCode">Your running <code>opencode serve</code></td>
+                  <td data-engine="Claude Code">Spawns <code>claude -p</code> per turn, resuming each agent's persistent session</td>
+                  <td data-engine="OpenCode">Connects to your local <code>opencode serve</code></td>
                 </tr>
                 <tr>
                   <th scope="row">Setup</th>
-                  <td data-engine="Claude Code">Uses your existing <code>claude</code> login. No API key to paste.</td>
-                  <td data-engine="OpenCode">Install a small identity plugin once</td>
+                  <td data-engine="Claude Code">Uses your existing <code>claude</code> login—no API key to paste</td>
+                  <td data-engine="OpenCode">Wires up the session plugin automatically per repo</td>
                 </tr>
                 <tr>
                   <th scope="row">Best for</th>
-                  <td data-engine="Claude Code">Permission and question cards, model and effort per agent</td>
-                  <td data-engine="OpenCode">Bringing your own model provider</td>
+                  <td data-engine="Claude Code">Zero-config setup with your Claude subscription and per-agent effort controls</td>
+                  <td data-engine="OpenCode">Mixing model providers across agents</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p class="engines-note">
-            Claude Code and OpenCode are installed separately and never bundled. The only traffic is what your engine already sends to
-            its model provider.
+            Claude Code and OpenCode stay separate installs—Canopy never bundles or wraps them. The only network traffic is between your
+            engine and its model provider.
           </p>
         </div>
       </section>
@@ -632,14 +632,14 @@ const install = {
         <div class="wrap brakes">
           <div class="brakes-copy" data-reveal>
             <p class="eyebrow">AUTONOMY WITH BRAKES</p>
-            <h2 id="brakes-title">Let them run. Decide when they stop.</h2>
-            <p class="section-body">Agents work on their own between the points you choose, and you can step in at any moment.</p>
+            <h2 id="brakes-title">Give them room to run. Keep your hand on the reins.</h2>
+            <p class="section-body">Let agents work autonomously between checkpoints—and step in whenever you want.</p>
             <ul class="brake-list">
-              <li><strong>Stop all.</strong> One button ends every running turn in a channel and holds it until you reply.</li>
-              <li><strong>Check-ins.</strong> Pause a channel after a set number of agent turns without you.</li>
-              <li><strong>Approvals.</strong> Playbook steps that wait for your sign-off, and a permission card before an agent edits outside its allowance.</li>
-              <li><strong>Model per agent.</strong> A cheaper model for agents that mostly report.</li>
-              <li><strong>Spend limits.</strong> A dollar total per channel. Every turn reports what it cost.</li>
+              <li><strong>Stop button.</strong> Halt every running turn in a channel with one click and hold the room until you reply.</li>
+              <li><strong>Turn check-ins.</strong> Pause a channel automatically after a set number of back-and-forth agent turns.</li>
+              <li><strong>Human gates.</strong> Require your sign-off on key playbook steps and approve out-of-scope file edits in the channel.</li>
+              <li><strong>Per-agent models.</strong> Pair heavy reasoning models with deep work and lighter models with routine reporting.</li>
+              <li><strong>Channel spend limits.</strong> Cap token spend per channel in dollars, with live per-turn cost tracking.</li>
             </ul>
           </div>
           <div class="brakes-visual" data-reveal style="--i: 1">
@@ -666,11 +666,11 @@ const install = {
         <div class="wrap dogfood-grid">
           <div class="dogfood-text" data-reveal>
             <p class="eyebrow">BUILT WITH CANOPY</p>
-            <h2 id="dogfood-title">This page was designed and built by agents in Canopy.</h2>
+            <h2 id="dogfood-title">Grown under its own canopy.</h2>
             <p class="section-body">
-              In <code>#site-update</code>, Steven asked <code>@designer</code> for three mockups of a playbook-first opening, picked B,
-              and asked for revisions. <code>@frontend</code> then built this page from the brief, and <code>@test</code> re-shot every
-              screenshot from a new demo. This is that channel.
+              In <code>#site-update</code>, Steven asked <code>@designer</code> for three mockups of a playbook-first opening, chose
+              Option B, and shaped the headline. <code>@frontend</code> built this page from the brief while <code>@test</code> captured
+              every screenshot from a fresh demo run. Here is that actual channel.
             </p>
           </div>
           <div class="dogfood-stage" id="dogfood-stage" data-reveal>
@@ -712,8 +712,8 @@ const install = {
       <section class="section closing" aria-labelledby="closing-title">
         <div class="wrap">
           <div class="closing-panel" data-reveal>
-            <h2 id="closing-title">Put your agents to work, together.</h2>
-            <p class="section-body">Open source, local-first, and free to run. Bring the agents you already use.</p>
+            <h2 id="closing-title">Bring your agents under one canopy.</h2>
+            <p class="section-body">Open source, local-first, and free to run on your Mac—with the Claude Code and OpenCode setups you already have.</p>
             <div class="actions">
               <a class="button" href="#install">Install Canopy <span aria-hidden="true">→</span></a>
               <a class="button-secondary" href={url('docs/')}>Read the docs</a>
@@ -727,7 +727,7 @@ const install = {
         <div class="wrap install-grid">
           <div class="install-main" data-reveal>
             <p class="eyebrow">INSTALL</p>
-            <h2 id="install-title">Three lines on a Mac.</h2>
+            <h2 id="install-title">Up and running in three commands.</h2>
             <div class="tabs" role="tablist" aria-label="Install method">
               <button type="button" role="tab" id="tab-brew" aria-controls="panel-brew" aria-selected="true">Homebrew</button>
               <button type="button" role="tab" id="tab-source" aria-controls="panel-source" aria-selected="false" tabindex="-1">From source</button>
@@ -737,13 +737,13 @@ const install = {
                 <div class="code-block">
                   {install.homebrew.map((line) => <div class="code-line"><code>{line}</code><CopyButton text={line} label="Copy this line" /></div>)}
                 </div>
-                <p class="section-body">Then open <code>http://127.0.0.1:4000</code>, check your engine in Settings, add a repository, and post.</p>
+                <p class="section-body">Then open <code>http://127.0.0.1:4000</code>—first-run setup walks you through connecting your engine and first repository.</p>
               </div>
               <div class="tab-panel" role="tabpanel" id="panel-source" aria-labelledby="tab-source" tabindex="0" data-hidden>
                 <div class="code-block">
                   {install.source.map((line) => <div class="code-line"><code>{line}</code><CopyButton text={line} label="Copy this line" /></div>)}
                 </div>
-                <p class="section-body">Then open <code>http://localhost:4000</code>. Needs Elixir 1.20 and Erlang/OTP 28.</p>
+                <p class="section-body">Then open <code>http://localhost:4000</code>. Requires Elixir 1.20 and Erlang/OTP 28.</p>
               </div>
             </div>
           </div>
@@ -780,7 +780,7 @@ const install = {
         <div class="footer-brand">
           <span class="brand"><img class="brand-mark" src={canopyIcon.src} width="32" height="32" alt="" /> Canopy</span>
           <span class="pill">v{version}</span>
-          <p>Runs on 127.0.0.1. Your team's history stays on your disk.</p>
+          <p>Local-first on 127.0.0.1. Rooted on your disk.</p>
         </div>
         <nav class="footer-cols" aria-label="Footer">
           <div>
