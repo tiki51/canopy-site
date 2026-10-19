@@ -28,9 +28,24 @@ When the turn ends, the card becomes a finished card: `@agent finished · N tool
 
 When an agent's engine is set to ask before an action, the agent pauses and a permission card appears with the permission, the pattern, and the diff.
 
-<Shot name="permission-card" scale={1} alt="A permission card in a Canopy channel asking to allow an edit, with the diff" caption="Allow once, always for this session, or reject." />
+<Shot name="permission-card" scale={1} alt="A permission card in a Canopy channel asking to allow an edit, with the diff and four buttons: Once, Always, Allow globally, Reject" caption="Allow once, for this session, everywhere, or reject." />
 
-**Once** allows this action, **Always** allows it for the rest of the session, **Reject** refuses. What asks is up to the agent: for Claude Code, the permissions and *tools that run without asking* on its edit form; for OpenCode, the repository's `.opencode/opencode.json` (for example, `{ "permission": { "edit": "ask" } }`).
+- **Once** allows this action.
+- **Always** allows it until this agent's session in the channel resets.
+- **Allow globally** (teal, with a globe) lets this agent use the tool in every repository and channel without asking, until you remove it.
+- **Reject** refuses.
+
+What asks is up to the agent: for Claude Code, the permissions and *tools that run without asking* on its edit form; for OpenCode, the repository's `.opencode/opencode.json` (for example, `{ "permission": { "edit": "ask" } }`).
+
+### Allow globally
+
+A global permission covers the tool by name, whatever the pattern: allow `Bash` globally and the agent runs any command without asking. A toast says what you allowed ("@backend can now run any Bash command, anywhere, without asking.") and offers **Undo** for a few seconds. The agent's other waiting cards for that tool, in any channel, are approved too.
+
+From then on there is no card. The timeline shows a teal line instead, such as "@test ran edit without asking · global permission · acme/billing/webhooks.py". Question tools and OpenCode's repeated-call guard can't be allowed globally, so their cards leave the button out. On OpenCode, each approval is sent as Once, so removing the grant takes effect on the next request.
+
+<Shot name="permission-auto-approved" scale={1} alt="A teal timeline line: @test ran edit without asking, global permission, acme/billing/webhooks.py" caption="A global permission leaves a line where the card would have been." />
+
+Each agent's page lists its grants under **Global permissions**, where **Remove** takes one away; see [Agents and teams](/canopy-site/docs/agents/#global-permissions).
 
 ## Question cards
 
@@ -41,6 +56,18 @@ An agent that needs a decision asks with its engine's question tool, and a quest
 While an agent waits on you, the header's agents button says *waiting on you*, a bar above the composer has a **Show** button, and the sidebar badges the channel with a blue question mark. A message in the composer is never taken as the answer; answer on the card. Under *One agent at a time*, an agent waiting on you doesn't hold the channel: the next agent in line starts.
 
 An agent does not wait forever. A Claude Code agent waits for the time set in Settings (10 minutes by default), then ends its turn; a Claude Code permission request waits 30 minutes. The card stays: answering it later posts your answer as a message from you, which wakes the agent like any message.
+
+## Sign-off cards
+
+When an agent wants you to accept its work, it asks with `canopy_signoff_request`, and a sign-off card appears at the foot of the timeline: a title, the question, an optional summary, and any files it attached. The agent doesn't wait for you; it ends its turn.
+
+<Shot name="signoff-card" scale={1} alt="A sign-off card from @test asking which receipt layout to build, with options A, B (recommended), and C, each with an Accept button, a note box, and Reject all" caption="A sign-off card with options: accept one, or reject them all." />
+
+- **Accept** or **Reject** answers a plain card.
+- When the agent offers options (say, three header designs), each one has its own **Accept**, solid on the one it recommends, and **Reject all** replaces Reject.
+- A note is optional on every answer. Enter in the note answers nothing; press a button.
+
+Your answer is posted in the channel as your message to that agent, with your note, and wakes only that agent. The card then collapses to one line, such as "You accepted B · Banner for @designer's Header design". A [playbook step that waits for you](/canopy-site/docs/playbooks/#sign-off) uses the same card. While a card is open, the bar above the composer, the sidebar badge, and desktop notifications count it, as they do a question.
 
 ## Passing
 

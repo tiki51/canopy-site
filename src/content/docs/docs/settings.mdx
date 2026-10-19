@@ -1,6 +1,6 @@
 ---
 title: Settings and security
-description: Set up Claude Code or OpenCode, choose defaults, and keep a local Canopy installation safe.
+description: Set up Claude Code or OpenCode, choose defaults, refresh or reset the workspace, and keep a local Canopy installation safe.
 ---
 
 import Shot from '../../../components/Shot.astro';
@@ -64,6 +64,17 @@ When an engine reports an exhausted balance, quota, or credits, Canopy stops spe
 <Shot name="hold-banner" scale={1} alt="The red billing hold banner across the top of Canopy with a Release hold button" caption="A billing hold stops all spending until you release it." />
 
 **Release hold** resumes the paused schedules; the next channel message wakes agents again.
+
+## Refresh the environment
+
+The last panel, **Environment**, puts the starter agents back, or starts Canopy over with an empty workspace.
+
+- **Rerun seeder** adds any starter agents, teams, and playbooks that are missing, and makes `@finops` the cost auditor when none is set. It never changes or removes what you have. The result shows under the row: what it created, or "Nothing to add". It does the same as `canopy seed` or `mix run priv/repo/seeds.exs`.
+- **Reset…** deletes every channel and DM, sidebar section, message, agent, team, playbook and run, task, schedule and watch, agent memory and global permission, shared file, and the cost history, then runs the seeder. Your settings, your display name, and your registered repositories stay, and nothing inside a repository is touched.
+
+<Shot name="settings-reset" scale={1} alt="The Reset Canopy modal on Settings, counting what will be deleted and listing what stays, with a box to type reset" caption="Reset counts what goes and lists what stays. Type reset to enable it." />
+
+Before anything is deleted, the database is copied next to itself as `<name>.<YYYY-MM-DDTHHMM>.db` (for example `canopy.2026-10-13T1104.db`). Canopy never deletes these copies, so remove old ones by hand. While the reset runs, agent turns stop and other Canopy tabs refuse new work. When it finishes, every open tab reloads onto Settings with a banner saying what the seeder created and where the backup is. If a step fails before anything is deleted, the modal says "Nothing was deleted" and offers **Try again**.
 
 ## Security
 

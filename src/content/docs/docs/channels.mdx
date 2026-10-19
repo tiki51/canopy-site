@@ -23,8 +23,9 @@ Each member runs in its own private engine session inside the channel, whether i
 | **Members** | The agents allowed in. Every active agent is ticked by default; **Clear all** and pick the few you want, or tick a team. Fewer members means fewer accidental wake-ups. |
 | **Owner** | Woken by any message that mentions nobody. Only a member can own. |
 | **Spend limit** | Optional: the total, in dollars, the channel may spend before its agents go quiet. |
+| **Section** | Optional: the [sidebar section](/canopy-site/docs/navigation/#sections) to file it under, an existing one or a new one. |
 
-Agents can create channels too, with `canopy_channel_create`; the agent becomes the owner.
+Agents can create channels too, with `canopy_channel_create`; the agent becomes the owner, and can name a section.
 
 ## What a good channel looks like
 
@@ -46,7 +47,7 @@ The header is one row: the name and topic, a chip per [lock](/canopy-site/docs/w
 - **Agents**: a row per member. The dot is grey when idle, green while working, amber while waiting for its turn, blue while waiting on you, and red after an error. A working agent has **Abort**; an idle one has a reset arrow that drops its session in this channel so its next turn starts clean. The document icon opens the agent's [session transcript](/canopy-site/docs/watching/#read-the-transcript). **Add or remove** manages members; **Invite a team…** brings in a whole team without waking anyone.
 - **Locks**: the repository's locks, and **Take a lock**.
 - **Automation**: **Playbook**, **Scheduled**, and **Spend**, where you set, raise, or remove the channel's limit.
-- **View**: **Routine activity**, **Search this channel**, and **Archive channel…**.
+- **View**: **Routine activity**, **Search this channel**, and **Archive channel**.
 
 ## The brief
 
@@ -65,7 +66,7 @@ A message wakes the agents you mention, or the owner if you mention nobody. Whil
 | `/i @agent [message]` | Invite an agent (or `@team`) into the channel |
 | `/delegate @agent task` | Give a member a subtask; ownership stays put |
 | `/handoff @agent reason` | Ask a member to take over the channel's task |
-| `/playbook name [@lead] brief` | Start a playbook run here |
+| `/playbook name [@lead] [brief]` | Start a playbook run here |
 | `/stop` | Stop every turn and hold the channel until you reply |
 
 ## Reactions
@@ -78,6 +79,16 @@ Between messages, the timeline records what happened: delegations, handoffs, own
 
 Each finished turn is a card headed `@agent finished · N tools · $cost · duration`. Click it for every call, the files it changed, and the agent's closing note. In the compact timeline, a message an agent posted carries a small receipt chip (`⚙ 14 tools · 3m 5s`) that opens the turn.
 
-You'll see: unread channels turn bold with a dot; a blue badge with a question mark means a card in that channel is waiting on you. **Archive channel…** closes a finished channel with a **Reopen** button; the record is still there tomorrow.
+## Archive a channel
+
+Archiving closes a channel in one click, with no confirmation: an *Archived #name* toast offers **Undo** for a few seconds. Archive from **Archive channel** under **View** in Details, from the archive icon or the **⋯** menu on the channel's sidebar row, or with *Archive this channel* in the command palette.
+
+<Shot name="archived-channel" scale={1} alt="The Archived toast with an Undo button, and the 1 archived toggle under the repository in the sidebar" caption="One click archives; Undo is there for a few seconds." />
+
+An archived channel gets an *archived* badge, its composer becomes a notice with a **Reopen** button, and the sidebar folds it under the repository's "N archived" toggle. The record is still there tomorrow.
+
+When a channel's task is completed, its sidebar row shows a ✓ and the channel offers a **Task done** bar with **Archive channel** and **Keep open**. **Keep open** stops the offer for that channel.
+
+You'll see: unread channels turn bold with a dot; a blue badge with a question mark means a card in that channel is waiting on you.
 
 Next: [Learn about agents](/canopy-site/docs/agents/).

@@ -11,7 +11,7 @@ When a run starts, one agent becomes its **lead** (the playbook file calls it th
 
 Use a playbook when the same kind of work (a feature, a bug fix, a release) should go the same way every time.
 
-<Shot name="playbooks" scale={1} alt="The Canopy Playbooks library with the starter playbooks and their steps" caption="The library: every playbook, its steps at a glance, and whether agents can use it." />
+<Shot name="playbooks" scale={1} alt="The Canopy Playbooks library: a filter, Bug fix starred on top, and the other playbooks as compact rows with their people, step count, and Start" caption="The library: starred playbooks on top, one compact row each, and a Start button." />
 
 ## The two starters
 
@@ -22,7 +22,7 @@ The seed step adds two playbooks. Both are led by `@project-manager`.
 | **feature-build** | Capture the request, propose 3 designs, technical design docs and their review, build with a test plan, test and code review, a design check of the result, and a final step that waits for your sign-off. `@designer`, `@frontend`, `@backend`, `@test` and `@reviewer` fill the roles. | You pick one of the three designs before anything is built, and sign off on the result at the end. |
 | **bug-fix** | Triage, reproduce with a failing test, fix, verify, review, and your sign-off, with `@bugfix-team`. | You sign off on the fix at the end. |
 
-In both, review steps can send work back: a code review that finds a problem reopens the build (or the fix), and a rejected design goes back to the designer.
+In both, review steps can send work back: a code review that finds a problem reopens the build (or the fix), and a rejected design goes back to the designer. Rejecting the final sign-off sends the work back to the build (or the fix) too.
 
 Playbooks are global to Canopy. A run happens in a channel, so it works in that channel's repository.
 
@@ -38,15 +38,22 @@ Each step has:
   - **↩ If changes are requested, send it back to** an earlier step. When a review rejects the work, the run reopens that step and its owners pick it up again.
   - **⤼ The lead may skip this step.**
 
-On the library cards and in the builder, ↩ marks a step that can send work back, ✓ one that waits for you, and ⤼ one that can be skipped.
+In the library's step strips and in the builder, ↩ marks a step that can send work back, ✓ one that waits for you, and ⤼ one that can be skipped.
 
 ## The library
 
-**Playbooks** in the rail lists every playbook as a card: its title, where it came from (*starter*, *yours*, or *draft by @agent*), *N running* while runs are in progress, its steps as a strip, and who leads a run. Enabled playbooks are listed in every agent's prompt; a disabled one can't be started.
+**Playbooks** in the rail lists every playbook as a compact row: a star, the title and description, who does the steps, how many steps there are, when it last ran (or *● N running*), **Start**, and a **⋯** menu with **Edit**, **Duplicate**, **Export file**, **Disable** (**Enable** on a draft), and **Delete**.
+
+- **Star** the playbooks you run most and they move to a **Starred** section at the top; the rest are under **Other playbooks**.
+- **Filter playbooks** narrows the list by name, title, and description; **Esc** clears it.
+- Click a row to open it in place: its steps as a strip, and the channels where it is running.
+- Disabled playbooks, including agents' drafts, sit in a collapsed **Drafts** section. Agents can't see or run a draft until you enable it, and drafts can't be starred.
+
+Enabled playbooks are listed in every agent's prompt; a disabled one can't be started.
 
 **+ New playbook** offers three starts:
 
-- **Copy a playbook**: a disabled copy opens in the builder.
+- **Copy a playbook**: pick one (starred ones are listed first, with a filter once there are more than five), and a disabled copy opens in the builder.
 - **Start blank**: one empty step and default settings.
 - **Describe it to an agent**: say how the work should go and pick who drafts it. Canopy posts your request in a DM with that agent, and the agent saves a disabled draft for you to review.
 
@@ -84,19 +91,26 @@ steps:
     title: User sign-off
     owner: coordinator
     approval: user
+    on_reject: fix
 ---
 ```
 
+An optional `section:` in the frontmatter files each run's new channel under that [sidebar section](/canopy-site/docs/navigation/#sections).
+
 ## Start a run
 
-- **Ask an agent**: "@project-manager run the bug-fix playbook: checkout button does nothing on Safari." The agent that starts a run leads it.
-- **The start page**: **Start** on a card, or **Start a run** in the builder. Say what the run is about, where it runs (a new channel named from the brief, or a channel that exists), who leads it, and who does what. **What will happen** previews the steps.
+- **Ask an agent**: "@project-manager run the bug-fix playbook: checkout button does nothing on Safari." The agent that starts a run leads it, in its current channel unless you ask for a new one ("…in a new channel called checkout-safari").
+- **The start page**: **Start** on a row, or **Start a run** in the builder. Say what the run is about (optional, and you can drop, paste, or attach up to 10 files), where it runs, who leads it, and who does what. **What will happen** previews the steps.
 - **In a channel**: **Playbook › Run…** under **Automation** in the channel's Details.
-- **The composer**: `/playbook bug-fix [@lead] the brief`.
+- **The composer**: `/playbook bug-fix [@lead] [brief]`, in the current channel.
+
+**Runs in** offers a **New channel**, named from the brief (you can change the name, the repository, and the [section](/canopy-site/docs/navigation/#sections)), or an **Existing channel**, picked from the open channels by repository (one with a run in progress can't be picked). Files you add are posted with the brief as the run's first message, and the lead is pointed at them. With no brief, the lead starts from the playbook alone.
+
+<Shot name="playbook-start" scale={1} alt="The playbook start page: an optional brief with one attached file, Runs in set to a new channel in a Payments section, Led by, Who does what, and the What will happen preview" caption="Say what the run is about, if you like, and where it runs." />
 
 Canopy fills the roles (your choices first, then the team, then the playbook's defaults) and refuses to start when a role has nobody. Anyone on the roster who isn't in the channel joins it. One run can be in progress per channel, and a run keeps the text it started with, so editing a playbook never changes a run in progress.
 
-A [GitHub watch](/canopy-site/docs/context/#watch-github) can also start a playbook for each new item, such as every failed CI run on `main`.
+A [GitHub watch](/canopy-site/docs/context/#watch-github) can also start a playbook for each new item, such as every failed CI run on `main`, each in a channel of its own.
 
 ## Follow a run
 
@@ -115,10 +129,12 @@ When the run reaches a step that waits for you, the chip turns amber ("waiting f
 - When the lead offers options (say, three designs), each has its own **Accept**, and **Reject all** replaces Reject.
 - A note is optional on every answer and goes to the lead with it.
 
+The held step in the run panel carries a compact copy of the card, whose buttons work the same. Agents can raise the same card outside a playbook; see [Sign-off cards](/canopy-site/docs/watching/#sign-off-cards).
+
 If the run goes back before a step you approved, that step needs your approval again.
 
 ## Agent-written playbooks
 
-An agent can draft a playbook with `canopy_playbook_save`. It is saved **disabled** and marked *draft by @agent*, because an enabled playbook instructs every agent. **Review draft** on its card opens it in the builder with **Enable playbook** and **Delete draft**.
+An agent can draft a playbook with `canopy_playbook_save`. It is saved **disabled**, because an enabled playbook instructs every agent. A notice at the top of the library ("@agent drafted … for you to review") and **Review** on the draft's row open it in the builder, with **Enable playbook** and **Delete draft**.
 
 Next: [Find your way around](/canopy-site/docs/navigation/).

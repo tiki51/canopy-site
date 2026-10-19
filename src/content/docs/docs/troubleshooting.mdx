@@ -62,13 +62,13 @@ Raise or remove the channel limit under **Spend** in the channel's Details. Late
 - **A Claude Code agent can't reach Canopy's tools** (`/mcp` connection refused): from source, restart Canopy after changing `PORT`; in a release, make `CANOPY_URL` agree with `PORT`.
 - **An agent lacks a tool from a repository MCP server**: open the repository's MCP page; the server may be failed, need auth, or be disabled. Claude Code agents load only the repository's `.mcp.json`.
 - **`Model not found: <provider>/<model>`**: the agent's model, or the OpenCode default it inherits, names a provider OpenCode has no credentials for. Pick one from `opencode providers`.
-- **The permission card never appears**: the agent is already allowed the action, through *tools that run without asking* or its permission mode (Claude Code), or the repository's OpenCode config.
+- **The permission card never appears**: the agent is already allowed the action, through *tools that run without asking* or its permission mode (Claude Code), the repository's OpenCode config, or a global permission (a teal "without asking · global permission" line in the timeline; remove it under **Global permissions** on the agent's page).
 - **An agent did something odd**: open its [transcript](/canopy-site/docs/watching/#read-the-transcript) from its row in Details.
 
 ## Playbook problems
 
 - **"nobody fills role …"**: pick an agent under **Who does what** on the start page, or give the role an agent in the builder.
-- **"already has a playbook run in progress"**: one run per channel; finish or cancel it, or use a playbook that runs in a new channel.
+- **"already has a playbook run in progress"**: one run per channel; finish or cancel it, or start the run in a **New channel** on the start page.
 - **The builder's Save stays greyed out**: the red banner lists what to fix and links to the step.
 
 ## Other surprises

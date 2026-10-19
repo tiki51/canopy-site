@@ -18,10 +18,11 @@ You need a source checkout; see [Run from source](/canopy-site/getting-started/c
    From inside the `canopy` directory:
 
    ```bash
-   mix canopy.demo --engine claude_code
+   mix canopy.demo --engine claude_code   # agents on Claude Code
+   mix canopy.demo                        # the same demo on OpenCode
    ```
 
-   The task creates `tmp/demo-repo`, a tiny Python billing worker, registers it as a repository, and creates `#payment-retries` owned by `@backend` with `@researcher` as a member. It is idempotent, so run it as often as you like to reset. If this is a fresh database, first-run setup opens the first time you load Canopy; finish or skip it.
+   The task creates `tmp/demo-repo`, a tiny Python billing worker, registers it as a repository, and creates `#payment-retries` owned by `@backend` with `@researcher` as a member. It is idempotent: running it again leaves the repository and channel as they are. It also marks first-run setup as done, so no setup window opens; run it any time from **Settings → Run setup again**.
 
 2. ## Start Canopy and OpenCode (if using OpenCode)
 
@@ -57,11 +58,11 @@ Here is what happens next:
 
 **@backend picks it up.** Its dot in the header turns green, and a live card shows what it is doing: reading `payments.py`, searching for callers, running the tests. You can stop it at any time with the red **Stop** button in the header.
 
-**It asks before running something new.** When `@backend` reaches for a tool outside its allowance, such as a test command, a permission card lands in the channel. The demo's Claude Code agents may edit files without asking; on OpenCode, what asks depends on the repository's permission rules (an edit card shows the diff). Allow it once, always, or reject it.
+**It asks before running something new.** When `@backend` reaches for a tool outside its allowance, such as a test command, a permission card lands in the channel. The demo's Claude Code agents may edit files without asking; on OpenCode, what asks depends on the repository's permission rules (an edit card shows the diff). Allow it once, for the session, globally, or reject it.
 
 **It brings in a specialist.** Tracing every caller is a job for `@researcher`. `@backend` delegates the task and keeps ownership. The researcher works in its own session in the channel and reports back, often with a shared Markdown file.
 
-**It hands off for review.** After the delegation completes, invite a reviewer with `/i @reviewer`, then type `/handoff @reviewer needs a second pair of eyes`. `@reviewer` wakes with the handoff and accepts or rejects it; a banner also offers you **Accept** and **Reject**. On accept, ownership moves to the reviewer.
+**It hands off for review.** After the delegation completes, invite a reviewer with `/i @reviewer` (on a fresh database, set **Settings → Default engine** first, so `@reviewer` runs on the engine you started), then type `/handoff @reviewer needs a second pair of eyes`. `@reviewer` wakes with the handoff and accepts or rejects it; a banner also offers you **Accept** and **Reject**. On accept, ownership moves to the reviewer.
 
 **Every turn has a receipt.** Each finished turn ends in a card showing which agent ran, how many tools it called, what it cost, and how long it took. Click it for every call and the files it changed; a changed file opens its diff.
 
@@ -70,10 +71,10 @@ Here is what happens next:
 After the agents have edited the demo repository, reset it for another run:
 
 ```bash
-git -C tmp/demo-repo checkout -- .
+git -C tmp/demo-repo reset --hard HEAD && git -C tmp/demo-repo clean -fd
 ```
 
-Then run `mix canopy.demo --engine claude_code` again. The channel and agents stay in place; only the code in `tmp/demo-repo` rolls back.
+This drops the agents' edits and any files they added; if an agent committed, reset to the first commit instead. The channel and agents stay in place; only the code in `tmp/demo-repo` rolls back.
 
 ## What you are seeing
 
