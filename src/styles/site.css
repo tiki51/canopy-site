@@ -1944,7 +1944,7 @@ html:has(.lightbox[open]) {
 /* ---------- 5. How it runs ---------- */
 
 .engines {
-  max-width: 880px;
+  max-width: 960px;
   margin: 3rem auto 0;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -1972,7 +1972,7 @@ html:has(.lightbox[open]) {
 }
 
 .engines tbody th {
-  width: 22%;
+  width: 16%;
   color: var(--text-subtle);
   font-weight: 500;
 }

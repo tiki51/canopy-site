@@ -5,17 +5,17 @@ description: See spend and put human-controlled brakes on agent work.
 
 import Shot from '../../../components/Shot.astro';
 
-Every finished turn reports what it spent. The Costs page adds it up, and you can cap spend per turn and per channel, in dollars, before the work starts.
+Every finished turn reports what it spent. Claude Code and OpenCode report their costs directly; Codex turns are estimated from tokens at OpenAI's API list prices and marked with **≈** (`≈$1.03`, with the split between reported and estimated dollars on hover). The Costs page adds it up, and you can cap spend per turn and per channel, in dollars, before the work starts.
 
 Use this when you need to review spend or put a firm limit on a channel.
 
-<Shot name="costs" scale={1} alt="Canopy Costs page showing totals, daily spend, where the tokens go, and breakdowns by agent, channel, model, and trigger" caption="Review aggregate spend here; set or raise a channel limit under Spend in that channel's Details." />
+<Shot name="costs" scale={1} alt="Canopy Costs page showing totals, daily spend, spend by engine, where the tokens go, and breakdowns by agent, channel, model, and trigger" caption="Review aggregate spend here; set or raise a channel limit under Spend in that channel's Details." />
 
 ## Inspect spend
 
 Open **Costs** from the banknotes icon in the rail:
 
-- **Today, last 7 days, all time**, with turn and tool-call counts, and a bar per day for the last 14 days.
+- **Today, last 7 days, all time**, with turn and tool-call counts, a bar per day for the last 14 days, and **By engine** (Claude Code, Codex, OpenCode) beside it. When any row includes a Codex estimate, a footnote notes that on a ChatGPT plan you pay the plan, not these estimated API list prices.
 - **Where the tokens go**: model calls, cost per turn, context per call, cache hit rate, and the turns that bought nothing.
 - **By agent, channel, model, and trigger**: *trigger* is what woke the agent (your messages, agent messages, delegations, handoffs, schedules).
 - **Costliest turns**, and every **channel spend limit**, red when reached.
@@ -32,8 +32,8 @@ From gentlest to firmest:
 
 1. **Model choice.** Change the default model first, since it moves every agent without its own; then override the few that need a stronger or cheaper one.
 2. **One agent at a time** and the **optional pause** (Settings → Conversation).
-3. **A spend cap per turn** (Settings → Claude Code, Claude Code agents only), passed as `--max-budget-usd`.
-4. **Channel spend limits**, set on the new-channel form or under **Spend** in the channel's Details. Once a channel reaches its limit, later wake-ups are dropped and a red bar sits above the composer until you raise it. A turn already in flight finishes, so a channel can overshoot by one turn. Only you can change a limit.
+3. **A spend cap per turn** (Settings → Claude Code, Claude Code agents only), passed as `--max-budget-usd`. Codex has no per-turn cap.
+4. **Channel spend limits**, set on the new-channel form or under **Spend** in the channel's Details (Codex estimates count towards the limit). Once a channel reaches its limit, later wake-ups are dropped and a red bar sits above the composer until you raise it. A turn already in flight finishes, so a channel can overshoot by one turn. Only you can change a limit.
 5. **The billing hold**, which Canopy engages itself when an engine reports an empty balance, quota, or usage limit. See [Settings](/canopy-site/docs/settings/#billing-holds).
 
 <Shot name="spend-limit-reached" scale={1} alt="A Canopy channel at its spend limit, with a red bar above the composer" caption="At the limit, the channel goes quiet until you raise it." />

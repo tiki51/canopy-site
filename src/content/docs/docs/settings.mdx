@@ -1,21 +1,21 @@
 ---
 title: Settings and security
-description: Set up Claude Code or OpenCode, choose defaults, refresh or reset the workspace, and keep a local Canopy installation safe.
+description: Set up Claude Code, Codex, or OpenCode, choose defaults, refresh or reset the workspace, and keep a local Canopy installation safe.
 ---
 
 import Shot from '../../../components/Shot.astro';
 
-Settings is where Canopy meets its engines: Claude Code runs locally through `claude -p`; OpenCode connects through its local server and identity plugin. It also holds the workspace-wide defaults. Open it from the gear in the rail; **Run setup again**, top right, reopens first-run setup with your current choices filled in.
+Settings is where Canopy meets its engines: Claude Code runs locally through `claude -p`; Codex runs locally through `codex app-server`; OpenCode connects through its local server and identity plugin. It also holds the workspace-wide defaults. Open it from the gear in the rail; **Run setup again**, top right, reopens first-run setup with your current choices filled in.
 
 Use this when checking an engine, choosing defaults, or deciding how much agents do on their own.
 
-<Shot name="settings" scale={1} alt="Canopy Settings showing the default engine cards and the OpenCode and Claude Code panels" caption="Choose the default engine, check each engine, and set the default models." />
+<Shot name="settings" scale={1} alt="Canopy Settings showing the default engine cards and the Claude Code panel" caption="Choose the default engine (Claude Code, Codex, OpenCode), check each engine, and set the default models." />
 
 ## Choose the default engine and models
 
 **Default engine** is the engine every agent without one of its own runs on, including the thirteen starter agents. Each engine shows whether it is ready. Changing the default reaches those agents at their next turn in each channel: a session belongs to one engine, so each starts a fresh one on the new engine, with a line in the channel saying so. Memory and the channel's history carry over.
 
-Each engine panel also has a **default model** (and, for Claude Code, a default effort) for agents without their own. A line counts the agents that follow the default; **Use the default for all** clears their own choice. A changed default reaches every inheriting agent on its next turn.
+Each engine panel also has a **default model** (and, for Claude Code and Codex, a default effort) for agents without their own. A line counts the agents that follow the default; **Use the default for all** clears their own choice. A changed default reaches every inheriting agent on its next turn.
 
 ## Set up Claude Code
 
@@ -24,6 +24,14 @@ Each engine panel also has a **default model** (and, for Claude Code, a default 
 3. Choose **Check Claude Code**: it reports the version and whether you are logged in.
 
 Each turn runs `claude -p` with your local login. Canopy gives every agent session its own MCP token, so identity and channel tools stay scoped to that session. Leave the optional config directory blank to use your own Claude Code login; point it elsewhere to give agents a login of their own. The optional **spend cap per turn** is passed to Claude Code as `--max-budget-usd`.
+
+## Set up Codex
+
+1. Install OpenAI's [`codex` CLI](https://github.com/openai/codex) (0.163.0 or newer) and sign in on this machine (`codex login`, with a ChatGPT plan or an API key).
+2. Under **Codex**, leave **Binary** as `codex` when it is on your PATH, or enter its path.
+3. Choose **Check Codex**: it reports the version, path, and how you are signed in (`signed in with ChatGPT (Pro)` or `signed in with an API key`), and loads the model and effort lists.
+
+Each turn runs `codex app-server` on this machine, one process per turn, with a per-session Canopy MCP token. Leave the optional **Config directory** blank to use `~/.codex`, or point it at a directory of its own (`CODEX_HOME` for agent processes; run `codex login` with `CODEX_HOME` set to log in there). Unlike Claude Code, Codex has no strict-MCP mode, so agents also load the MCP servers in the config directory's `config.toml` and, when Codex trusts the repository, its `.codex/config.toml`; use a separate config directory to keep personal MCP servers away from agents. There is no spend cap per turn for Codex.
 
 ## Connect OpenCode
 
@@ -35,7 +43,7 @@ You'll see: the version in green, and every Canopy tool call carries a session i
 
 ## Install the identity plugin
 
-**MCP** shows the endpoint Canopy registers with OpenCode, the bearer token that protects it (rotate it here; Canopy re-registers on the next prompt), and the identity plugin's source with a copy button. The global path is `~/.config/opencode/plugins/canopy.js`. Canopy also installs a copy in each registered repository under `.opencode/plugins/`, excluded from git. Restart `opencode serve` after installing it. Claude Code agents need nothing here.
+**MCP** shows the endpoint Canopy registers with OpenCode, the bearer token that protects it (rotate it here; Canopy re-registers on the next prompt), and the identity plugin's source with a copy button. The global path is `~/.config/opencode/plugins/canopy.js`. Canopy also installs a copy in each registered repository under `.opencode/plugins/`, excluded from git. Restart `opencode serve` after installing it. Claude Code and Codex agents need nothing here.
 
 ## Personalize and pace conversations
 
@@ -49,7 +57,7 @@ You'll see: the version in green, and every Canopy tool call carries a session i
 - **Minutes an agent may keep a lock across turns** (30 by default).
 - **Mentioning a working agent interrupts it** (experimental, off by default).
 
-**Collaboration prompt** is the instructions every agent gets above its own role prompt, with `{{variables}}` Canopy fills in per agent.
+**Collaboration prompt** is the instructions every agent gets above its own role prompt, with `{{variables}}` Canopy fills in per agent. The shipped text asks agents to end pull request descriptions with a *Built using Canopy* line; take it out of your copy if you don't want it.
 
 ## Appearance, notifications, and GitHub
 

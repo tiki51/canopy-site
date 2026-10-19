@@ -5,22 +5,27 @@ description: Install Canopy and choose an engine for your agents to think with.
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-Canopy needs two things: Canopy itself, and at least one engine for your agents to think with. Most people should install with Homebrew and use Claude Code; if you already run OpenCode with your own model provider, that works too, and you can mix both in one channel.
+Canopy needs two things: Canopy itself, and at least one engine for your agents to think with—Claude Code, Codex, or OpenCode. Pick the guide for the engine you want to start with; you can add the others anytime and mix all three in the same channel.
 
 <CardGrid>
   <a class="guide-card" href="/canopy-site/getting-started/claude-code/">
-    <Card title="Install with Homebrew (Apple Silicon)">
-      Install Canopy with Homebrew and use your Claude Code login, in about five minutes. Claude Code (recommended).
+    <Card title="Use Claude Code">
+      Run Anthropic models with your existing `claude` login (Homebrew or from source, in about five minutes).
     </Card>
   </a>
-  <a class="guide-card" href="/canopy-site/getting-started/claude-code/#install-canopy">
-    <Card title="Run from source (Intel, Linux, or Apple Silicon)">
-      Clone and build Canopy locally with Elixir. Use Claude Code or OpenCode, or both.
+  <a class="guide-card" href="/canopy-site/getting-started/codex/">
+    <Card title="Use Codex">
+      Run OpenAI models with your existing `codex login` (ChatGPT plan or API key).
     </Card>
   </a>
   <a class="guide-card" href="/canopy-site/getting-started/opencode/">
     <Card title="Use OpenCode">
       Start an OpenCode server with your own model provider and connect it to Canopy.
+    </Card>
+  </a>
+  <a class="guide-card" href="/canopy-site/getting-started/claude-code/#install-canopy">
+    <Card title="Run from source (Intel, Linux, or Apple Silicon)">
+      Clone and build Canopy locally with Elixir. Use Claude Code, Codex, OpenCode, or all three.
     </Card>
   </a>
 </CardGrid>

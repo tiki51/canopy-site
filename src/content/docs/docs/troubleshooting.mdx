@@ -25,6 +25,8 @@ Use this when a local setup needs a direct recovery path.
 
 For Claude Code, *Check Claude Code* in Settings says what's wrong: "not found on PATH" means install Claude Code or enter the full path to `claude`; "not logged in" means run `claude` once in a terminal and log in, then check again. A custom config directory in Settings must be the one you logged in with. Under `brew services`, Canopy uses your login shell's `PATH`; set `CANOPY_PATH` if it still can't find `claude`.
 
+For Codex, *Check Codex* in Settings says what's wrong: "not found on PATH" means install the `codex` CLI or enter its full path in **Settings → Codex**; "older than 0.163.0" means upgrade `codex`; "not signed in" means run `codex login` in a terminal (with `CODEX_HOME` set if Settings names a config directory) and check again. If the model and effort selects say "Couldn't read Codex's models", press *Check Codex*, fix what it reports, and try again.
+
 For OpenCode, confirm `opencode serve --port 4096` is still running and that **Settings → OpenCode server** uses the same URL, then *Check connection*. Restart the server after changing its port.
 
 If `brew services start` says started but nothing answers on port 4000, read `$(brew --prefix)/var/log/canopy.log`: another process on the port, or a non-loopback `CANOPY_URL`, stops the release at boot. If the Agents page is empty, run `canopy seed` (Homebrew) or `mix run priv/repo/seeds.exs` (source).
@@ -59,10 +61,10 @@ Raise or remove the channel limit under **Spend** in the channel's Details. Late
 ## Model errors or missing tools
 
 - **An agent insists its tools are missing**: reset its session with the arrow on its row under **Agents** in the channel's Details. Its next turn starts clean with the current settings.
-- **A Claude Code agent can't reach Canopy's tools** (`/mcp` connection refused): from source, restart Canopy after changing `PORT`; in a release, make `CANOPY_URL` agree with `PORT`.
-- **An agent lacks a tool from a repository MCP server**: open the repository's MCP page; the server may be failed, need auth, or be disabled. Claude Code agents load only the repository's `.mcp.json`.
+- **A Claude Code or Codex agent can't reach Canopy's tools** (`/mcp` connection refused): from source, restart Canopy after changing `PORT`; in a release, make `CANOPY_URL` agree with `PORT`.
+- **An agent lacks a tool from a repository MCP server**: open the repository's MCP page; the server may be failed, need auth, or be disabled. Claude Code agents load only the repository's `.mcp.json`; Codex agents read `config.toml` in the Codex config directory and the repository's `.codex/config.toml`, not `.mcp.json`.
 - **`Model not found: <provider>/<model>`**: the agent's model, or the OpenCode default it inherits, names a provider OpenCode has no credentials for. Pick one from `opencode providers`.
-- **The permission card never appears**: the agent is already allowed the action, through *tools that run without asking* or its permission mode (Claude Code), the repository's OpenCode config, or a global permission (a teal "without asking · global permission" line in the timeline; remove it under **Global permissions** on the agent's page).
+- **The permission card never appears**: the agent is already allowed the action, through *tools that run without asking* or its permission mode (Claude Code), its permission mode on Codex (*Ask first* runs in-repo edits and plain git commands freely; *Ask only outside the sandbox* runs everything inside the sandbox), the repository's OpenCode config, or a global permission (a teal "without asking · global permission" line in the timeline; remove it under **Global permissions** on the agent's page).
 - **An agent did something odd**: open its [transcript](/canopy-site/docs/watching/#read-the-transcript) from its row in Details.
 
 ## Playbook problems

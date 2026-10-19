@@ -22,7 +22,7 @@ Click the header to open it:
 - **Changed files**: chips with line counts; each opens that file's diff.
 - **⤢ Open in panel**: the same rows in the side panel, full height, with a link you can share.
 
-When the turn ends, the card becomes a finished card: `@agent finished · N tools · $cost · duration`. OpenCode reports cost as it goes; Claude Code reports it once, at the end. **Abort** on the agent's row in the channel's Details ends a turn; **Stop** in the header ends every turn in the channel and holds it until you reply.
+When the turn ends, the card becomes a finished card: `@agent finished · N tools · $cost · duration`. Claude Code reports cost once, at the end; Codex turns show tokens and an estimated `≈$cost`; OpenCode reports cost as it goes. **Abort** on the agent's row in the channel's Details ends a turn; **Stop** in the header ends every turn in the channel and holds it until you reply.
 
 ## Permission cards
 
@@ -35,7 +35,9 @@ When an agent's engine is set to ask before an action, the agent pauses and a pe
 - **Allow globally** (teal, with a globe) lets this agent use the tool in every repository and channel without asking, until you remove it.
 - **Reject** refuses.
 
-What asks is up to the agent: for Claude Code, the permissions and *tools that run without asking* on its edit form; for OpenCode, the repository's `.opencode/opencode.json` (for example, `{ "permission": { "edit": "ask" } }`).
+What asks is up to the agent: for Claude Code, the permissions and *tools that run without asking* on its edit form; for Codex, the permissions mode on its edit form (*Ask first*, *Ask only outside the sandbox*, or *Read-only*); for OpenCode, the repository's `.opencode/opencode.json` (for example, `{ "permission": { "edit": "ask" } }`).
+
+On Codex, a card says whether the agent wants to **run a command** (with a *network* or *outside sandbox* badge when applicable; *Always* covers commands starting with the same prefix for the session, and *Allow globally* stores a `Bash` grant covering any command), **edit files** (with *view change* to expand the proposed diff in the card, and no *Allow globally*), or get **network access** or **files outside the repo** (no *Allow globally*). A read-only (*plan*) Codex agent's command card offers **Once** and **Reject** only.
 
 ### Allow globally
 
@@ -49,7 +51,7 @@ Each agent's page lists its grants under **Global permissions**, where **Remove*
 
 ## Question cards
 
-An agent that needs a decision asks with its engine's question tool, and a question card appears at the bottom of the channel with the options and a box for your own words. **Send** answers; **Dismiss** declines.
+An agent that needs a decision asks with its engine's question tool (`AskUserQuestion` in Claude Code, Codex's request for user input, `question` in OpenCode), and a question card appears at the bottom of the channel with the options and a box for your own words. **Send** answers; **Dismiss** declines.
 
 <Shot name="question-card" alt="A question card from @backend asking whether the claim key should include the attempt number, with two options" caption="A question card: pick an option or answer in your own words." />
 
@@ -75,7 +77,7 @@ An agent woken for something that needs no answer, like "thanks, all good", call
 
 ## Read the transcript
 
-The channel shows what an agent chose to post; its **transcript** shows why: the agent's whole engine session in the channel, read back from Claude Code's session file or OpenCode's history. Open it from the document icon on the agent's row in Details, **Transcript** on the agent's page, or **View in transcript →** on a turn card.
+The channel shows what an agent chose to post; its **transcript** shows why: the agent's whole engine session in the channel, read back from Claude Code's session file, Codex's thread history through `codex app-server`, or OpenCode's history. Open it from the document icon on the agent's row in Details, **Transcript** on the agent's page, or **View in transcript →** on a turn card.
 
 <Shot name="transcript" scale={1} alt="An agent's session transcript in Canopy, with prompts, tool calls, and turn dividers" caption="Every prompt, tool call, and result, with Canopy's turn dividers alongside." />
 
@@ -83,7 +85,7 @@ It shows every prompt Canopy sent, the system prompt, the model's text between t
 
 ## Redirect a working agent (experimental)
 
-Off by default: turn on *Mentioning a working agent interrupts it* under **Settings → Conversation**. With it on, your @mention of a working agent goes into the turn it is running: the agent finishes its current step, reads your message, and carries on or changes course. **Interrupt now** on the card's chip stops the turn at once and starts a new one with your message; **Alt+Enter** sends the old way, after the turn. It is experimental because mid-turn delivery hasn't been checked against the real Claude Code and OpenCode yet.
+Off by default: turn on *Mentioning a working agent interrupts it* under **Settings → Conversation**. With it on, your @mention of a working agent goes into the turn it is running: the agent finishes its current step, reads your message, and carries on or changes course. **Interrupt now** on the card's chip stops the turn at once and starts a new one with your message; **Alt+Enter** sends the old way, after the turn. It is experimental because mid-turn delivery hasn't been checked against the real engines yet.
 
 ## Taking turns
 

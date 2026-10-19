@@ -6,7 +6,7 @@ description: Names, roles, engines, teams, and memory for coding agents.
 
 import Shot from '../../../components/Shot.astro';
 
-An agent is a named coworker: a role, a system prompt, and an engine, Claude Code or OpenCode. Its memory travels across every channel; its sessions stay private to each one. The seed step creates thirteen to start from: engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@finops`, the cost auditor. Rename, edit, or retire any of them.
+An agent is a named coworker: a role, a system prompt, and an engine—Claude Code, Codex, or OpenCode. Its memory travels across every channel; its sessions stay private to each one. The seed step creates thirteen to start from: engineers, a reviewer, a researcher, product roles including `@copywriter`, `@devops`, `@docs`, and `@finops`, the cost auditor. Rename, edit, or retire any of them.
 
 Use this when you are choosing the agent that should own a task, or the crew that should share one.
 
@@ -42,8 +42,9 @@ Create new agents for roles that fit your team, or add one from the [gallery](#s
 - **Role**: one line that other agents and the sidebar see.
 - **Group**: a heading (Engineering, Product, …) that sorts the Agents page, the sidebar, and the new-channel members list.
 - **System prompt**: standing instructions, sent with every prompt after Canopy's collaboration prompt.
-- **Engine**: *Default* follows the default engine in Settings, so changing the default moves the agent too. Pick Claude Code or OpenCode to pin it. Agents in the same channel can use different engines.
+- **Engine**: *Default* follows the default engine in Settings, so changing the default moves the agent too. Pick Claude Code, Codex, or OpenCode to pin it. Agents in the same channel can use different engines.
 - **Claude Code settings**: model (`fable`, `opus`, `sonnet`, or `haiku`) and effort, both optional; permissions (ask first, approve edits without asking, or read-only planning); and the tools that run without asking. Claude Code must be installed and logged in on this machine.
+- **Codex settings**: model and effort from Codex's model list, both optional; and permissions (*Ask first*, which edits files in the repository and runs plain git commands freely while asking for other commands, files outside the repository, and agent settings paths; *Ask only outside the sandbox*, which works freely in the repository and asks before network access, files elsewhere, or commands outside the sandbox; or *Read-only*, which reads only and offers *Once* and *Reject* when a command asks to run outside the sandbox). Codex 0.163.0+ must be installed and signed in on this machine.
 - **OpenCode settings**: `build`, `plan`, or another agent your OpenCode server offers, with an optional model override.
 
 A model the agent inherits shows muted on the Agents page (`default · sonnet`); one it names itself is a badge. Change the model or the prompt and the next turn picks it up, no reset needed. If a session has talked itself into a corner, reset it from the agent's row in the channel's **Details**, and the next turn starts with a clean session. Retire an agent and it folds out of the lists; the *deactivated* toggle at the bottom of the Agents page brings it back.
@@ -52,7 +53,7 @@ A model the agent inherits shows muted on the Agents page (`default · sonnet`);
 
 ## Global permissions
 
-**Allow globally** on a [permission card](/canopy-site/docs/watching/#permission-cards) lets the agent use that tool in every repository and channel without asking. The agent's page lists these grants in its **Global permissions** panel, and for a Claude Code agent the *Permissions* line shows how many there are (`+ 2 global`).
+**Allow globally** on a [permission card](/canopy-site/docs/watching/#permission-cards) lets the agent use that tool in every repository and channel without asking. The agent's page lists these grants in its **Global permissions** panel, and for a Claude Code or Codex agent the *Permissions* line shows how many there are (`+ 2 global`).
 
 Each row names the tool, where and when you allowed it, and how often it has been used since: "Allowed Oct 16 in #csv-export · 3 auto-approvals · last 5m ago". **Remove** takes the grant away, and the agent asks for that tool again next time. A toast offers **Undo** for a few seconds, which puts the grant back with its date and count.
 

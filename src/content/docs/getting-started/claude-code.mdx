@@ -79,11 +79,11 @@ About five minutes from install to your first agent reply. By the end you'll hav
 
    The first time you open Canopy, setup opens as a window over the app. It has six short steps (**You**, **Look**, **Engines**, **Pace**, **Notifications**, **Project**), and every choice saves as you make it.
 
-   <Shot name="setup-modal" scale={1} alt="Canopy first-run setup window over the dimmed app, on the Engines step" caption="Setup checks both engines as it opens and picks the default engine for you." />
+   <Shot name="setup-modal" scale={1} alt="Canopy first-run setup window over the dimmed app, on the Engines step" caption="Setup checks all three engines as it opens and picks the default engine for you." />
 
    - **You**: the name agents call you, prefilled from your git `user.name`.
    - **Look**: light, dark, or system, and one of four palettes.
-   - **Engines**: Canopy checks Claude Code and shows its version and the account it is logged in as. When Claude Code is ready it becomes the **default engine**, which the thirteen starter agents run on. Pick the **default model** (`fable`, `opus`, `sonnet`, or `haiku`, the latest of each family) and default effort.
+   - **Engines**: Canopy checks Claude Code, Codex, and OpenCode, and shows Claude Code's version and the account it is logged in as. When Claude Code is ready it becomes the **default engine**, which the thirteen starter agents run on. Pick the **default model** (`fable`, `opus`, `sonnet`, or `haiku`, the latest of each family) and default effort.
    - **Pace**: how much agents do on their own. **Balanced** is the default; see [Settings](/canopy-site/docs/settings/#personalize-and-pace-conversations).
    - **Notifications** (optional): desktop notifications when an agent needs you.
    - **Your first project** (optional): a folder on this machine and a name. It does not need to be a git repository; if it is not one, Canopy runs `git init` and otherwise leaves it alone.
@@ -122,7 +122,7 @@ About five minutes from install to your first agent reply. By the end you'll hav
 
 Agents follow the defaults from setup until you give them their own. Open **Agents**, choose an agent, and choose **Edit**:
 
-- **Engine:** *Default (Claude Code)* follows Settings; pick Claude Code or OpenCode to pin it.
+- **Engine:** *Default (Claude Code)* follows Settings; pick Claude Code, Codex, or OpenCode to pin it.
 - **Model** and **Effort:** leave them on *Default (…)* or pick one for this agent.
 - **Permissions:** ask before any tool not on the list, also approve file edits without asking, or read-only planning. **Tools that run without asking** takes one pattern per line, such as `Bash(git *)`.
 
@@ -136,7 +136,7 @@ Any tool outside the allowance appears as a permission card in the channel: allo
 
 <CardGrid>
   <a class="guide-card" href="/canopy-site/docs/channels/"><Card title="Understand channels">Give every outcome a focused home with one clear owner.</Card></a>
-  <a class="guide-card" href="/canopy-site/docs/troubleshooting/"><Card title="Fix a setup problem">Diagnose Claude Code, OpenCode, route, and first-task issues.</Card></a>
+  <a class="guide-card" href="/canopy-site/docs/troubleshooting/"><Card title="Fix a setup problem">Diagnose Claude Code, Codex, OpenCode, route, and first-task issues.</Card></a>
   <a class="guide-card" href="/canopy-site/docs/agents/"><Card title="Understand agents">Learn how names, roles, engines, memory, and private sessions work.</Card></a>
 </CardGrid>
 

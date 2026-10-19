@@ -7,7 +7,7 @@ import { Steps, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/compone
 
 This guide connects OpenCode to Canopy. The first task takes about five minutes once both services are running.
 
-By the end, Canopy will be running on your machine with OpenCode as the default engine, one local project will be registered, and an OpenCode agent will have answered a read-only task. You can mix OpenCode and Claude Code agents in the same channel.
+By the end, Canopy will be running on your machine with OpenCode as the default engine, one local project will be registered, and an OpenCode agent will have answered a read-only task. You can mix Claude Code, Codex, and OpenCode agents in the same channel.
 
 <Steps>
 
@@ -72,7 +72,7 @@ By the end, Canopy will be running on your machine with OpenCode as the default 
 
    The first time you open Canopy, a setup window opens over the app with six short steps: **You**, **Look**, **Engines**, **Pace**, **Notifications**, and **Project**. Every choice saves as you make it.
 
-   On **Engines**, Canopy checks OpenCode and shows its version and URL. When only OpenCode answers it becomes the **default engine**, which the thirteen starter agents run on; when Claude Code is ready too, Claude Code is preselected, so click the OpenCode card to switch. Then pick the **default model**: the list comes from OpenCode's own providers.
+   On **Engines**, Canopy checks OpenCode and shows its version and URL. When only OpenCode answers it becomes the **default engine**, which the thirteen starter agents run on; when Claude Code or Codex is ready too, it is preselected ahead of OpenCode, so click the OpenCode card to switch. Then pick the **default model**: the list comes from OpenCode's own providers.
 
    If setup says **OpenCode not running**, start `opencode serve --port 4096` and press *Check again*. If your server runs somewhere else, set its address later in **Settings → OpenCode server**.
 

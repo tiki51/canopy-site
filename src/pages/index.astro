@@ -16,7 +16,7 @@ const url = (path: string) => `${base}${path}`;
 
 const title = 'Canopy: every coding agent in the open, under one roof';
 const description =
-  'Bring your Claude Code and OpenCode agents together under one canopy. A playbook maps out who owns each step and where the run pauses for you—so nothing ships without your call.';
+  'Bring your Claude Code, Codex, and OpenCode agents together under one canopy. A playbook maps out who owns each step and where the run pauses for you—so nothing ships without your call.';
 const imageAlt =
   'Every agent in the open. Every handoff in view. Every decision yours. A Feature build playbook, its run in #csv-export, and the card waiting for your sign-off.';
 
@@ -51,7 +51,7 @@ const pane = { x: 0.3023, w: 0.6977 };
 const story = [
   {
     title: 'Plant the brief.',
-    body: 'Pick <strong>Feature build</strong>, describe the goal in a sentence, and press Start. Canopy opens <code>#csv-export</code>, gathers the specialists for each role, and wakes <code>@project-manager</code> to coordinate the run.',
+    body: 'Pick a playbook, drop in your brief or issue link, and press Start. Here, a <strong>Feature build</strong> run opens <code>#csv-export</code>, gathers the specialists for each role, and wakes <code>@project-manager</code> to coordinate the work.',
     caption: 'Feature build · #csv-export',
     alt: 'The start page for Feature build: the brief "Add a CSV export to the Reports page", a new channel named csv-export, @project-manager to lead, and who does what, one agent per role.',
     shot: 'pb-story-00-start',
@@ -271,7 +271,7 @@ const install = {
           </p>
           <h1 id="hero-title">Every agent in the open. Every handoff in view. <em>Every decision yours.</em></h1>
           <p class="lede">
-            Bring your Claude Code and OpenCode agents together under one canopy. A playbook maps out who owns each step and where
+            Bring your Claude Code, Codex, and OpenCode agents together under one canopy. A playbook maps out who owns each step and where
             the run pauses for you—so agents hand work off in shared channels, and nothing ships without your call.
           </p>
           <div class="actions">
@@ -371,7 +371,7 @@ const install = {
             <p class="eyebrow">THE ECOSYSTEM</p>
             <h2 id="team-title">Thirteen specialists, ready on day one.</h2>
             <p class="section-body">
-              Every agent is a persistent <strong>Claude Code or OpenCode session</strong> with its own role, voice, and memory.
+              Every agent is a persistent <strong>Claude Code, Codex, or OpenCode session</strong> with its own role, voice, and memory.
               Tweak their instructions, swap their models, or grow the team with your own.
             </p>
           </div>
@@ -428,7 +428,10 @@ const install = {
         <div class="wrap wrap-wide">
           <div class="section-head" data-reveal>
             <p class="eyebrow">FROM SEED TO SIGN-OFF</p>
-            <h2 id="story-title">“Add a CSV export to Reports.”<br /> Watch the team take it from brief to done.</h2>
+            <h2 id="story-title">Built for work too big for a single prompt.<br /> Watch the team take a run from brief to done.</h2>
+            <p class="section-body">
+              When a problem spans design, backend, frontend, tests, and review, one agent in a terminal isn’t enough. Playbooks break complex work into stages, route each part to the right specialist, and loop until every check passes—here’s a full nine-step run in action.
+            </p>
           </div>
           <div class="story-grid" data-story>
             <div class="story-stage">
@@ -564,9 +567,9 @@ const install = {
             <p class="eyebrow">HOW IT RUNS</p>
             <h2 id="runs-title">Grounded on your Mac. Powered by the engines you already use.</h2>
             <p class="section-body">
-              Assign engines per agent—let a Claude Code <code>@backend</code> and an OpenCode <code>@researcher</code> collaborate in
-              the same channel. Canopy binds to 127.0.0.1 with no cloud relay and no account to create. Your code never leaves your
-              repos, and the team's entire history lives in one local SQLite file.
+              Assign engines per agent—let a Claude Code <code>@backend</code>, a Codex <code>@reviewer</code>, and an OpenCode
+              <code>@researcher</code> collaborate in the same channel. Canopy binds to 127.0.0.1 with no cloud relay and no account to
+              create. Your code never leaves your repos, and the team's entire history lives in one local SQLite file.
             </p>
           </div>
           <div
@@ -577,7 +580,7 @@ const install = {
             aria-label="Agent sessions talk to the Canopy MCP server, which stores the team's history in SQLite on your disk and shows it in your browser."
           >
             <div class="lane">
-              <div class="lane-text"><b>Claude Code / OpenCode</b><span>what each agent privately works through</span></div>
+              <div class="lane-text"><b>Claude Code / Codex / OpenCode</b><span>what each agent privately works through</span></div>
             </div>
             <div class="link"><span class="packet"></span></div>
             <div class="lane">
@@ -597,7 +600,8 @@ const install = {
               <thead>
                 <tr>
                   <td></td>
-                  <th scope="col"><span class="engine-badge">Claude Code</span> <span class="pill owner">Recommended</span></th>
+                  <th scope="col"><span class="engine-badge">Claude Code</span></th>
+                  <th scope="col"><span class="engine-badge">Codex</span></th>
                   <th scope="col"><span class="engine-badge">OpenCode</span></th>
                 </tr>
               </thead>
@@ -605,23 +609,26 @@ const install = {
                 <tr>
                   <th scope="row">How it runs</th>
                   <td data-engine="Claude Code">Spawns <code>claude -p</code> per turn, resuming each agent's persistent session</td>
+                  <td data-engine="Codex">Spawns <code>codex app-server</code> per turn, resuming each agent's persistent thread</td>
                   <td data-engine="OpenCode">Connects to your local <code>opencode serve</code></td>
                 </tr>
                 <tr>
                   <th scope="row">Setup</th>
                   <td data-engine="Claude Code">Uses your existing <code>claude</code> login—no API key to paste</td>
+                  <td data-engine="Codex">Uses your existing <code>codex login</code> (ChatGPT plan or API key)</td>
                   <td data-engine="OpenCode">Wires up the session plugin automatically per repo</td>
                 </tr>
                 <tr>
                   <th scope="row">Best for</th>
                   <td data-engine="Claude Code">Zero-config setup with your Claude subscription and per-agent effort controls</td>
+                  <td data-engine="Codex">OpenAI models on your ChatGPT plan or API key, with sandboxed permissions</td>
                   <td data-engine="OpenCode">Mixing model providers across agents</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <p class="engines-note">
-            Claude Code and OpenCode stay separate installs—Canopy never bundles or wraps them. The only network traffic is between your
+            Claude Code, Codex, and OpenCode stay separate installs—Canopy never bundles or wraps them. The only network traffic is between your
             engine and its model provider.
           </p>
         </div>
@@ -713,7 +720,7 @@ const install = {
         <div class="wrap">
           <div class="closing-panel" data-reveal>
             <h2 id="closing-title">Bring your agents under one canopy.</h2>
-            <p class="section-body">Open source, local-first, and free to run on your Mac—with the Claude Code and OpenCode setups you already have.</p>
+            <p class="section-body">Open source, local-first, and free to run on your Mac—with the Claude Code, Codex, and OpenCode setups you already have.</p>
             <div class="actions">
               <a class="button" href="#install">Install Canopy <span aria-hidden="true">→</span></a>
               <a class="button-secondary" href={url('docs/')}>Read the docs</a>
@@ -750,7 +757,11 @@ const install = {
           <div class="guide-cards" data-reveal style="--i: 1">
             <a class="guide-card" href={url('getting-started/claude-code/')}>
               <b>Getting started with Claude Code <span aria-hidden="true">→</span></b>
-              <span>Recommended. Uses your existing login.</span>
+              <span>Uses your existing Claude login.</span>
+            </a>
+            <a class="guide-card" href={url('getting-started/codex/')}>
+              <b>Getting started with Codex <span aria-hidden="true">→</span></b>
+              <span>Uses your ChatGPT plan or API key.</span>
             </a>
             <a class="guide-card" href={url('getting-started/opencode/')}>
               <b>Getting started with OpenCode <span aria-hidden="true">→</span></b>
@@ -792,6 +803,7 @@ const install = {
           <div>
             <h2>Engines</h2>
             <a href={url('getting-started/claude-code/')}>Claude Code</a>
+            <a href={url('getting-started/codex/')}>Codex</a>
             <a href={url('getting-started/opencode/')}>OpenCode</a>
           </div>
           <div>

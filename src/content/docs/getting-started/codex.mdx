@@ -1,0 +1,140 @@
+---
+title: Getting started with Codex
+description: About five minutes from install to your first agent reply, with OpenAI's Codex CLI.
+---
+
+import { Steps, Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+About five minutes from install to your first agent reply. By the end you'll have Canopy running on your machine, Codex as the default engine, a project registered, and a channel where an agent has answered you without changing a single file. You can mix Claude Code, Codex, and OpenCode agents in the same channel.
+
+| At a glance | |
+|---|---|
+| Time | ~5 min total (Homebrew) or ~10 min (from source) |
+| You need | OpenAI's `codex` CLI (0.163.0+), signed in; git |
+| Simple first prompt | Read-only |
+
+<Steps>
+
+1. ## Check Codex and sign in
+
+   Install OpenAI's [`codex` CLI](https://github.com/openai/codex), version 0.163.0 or newer, and sign in once on this machine with a ChatGPT plan or an API key. Canopy uses that local login (`~/.codex` by default); it stores no key of its own.
+
+   Verify Codex and sign in from any terminal:
+
+   ```bash
+   codex --version
+   codex login
+   ```
+
+   :::note[Checkpoint]
+   `codex --version` reports 0.163.0 or newer, and `codex login` has signed in.
+   :::
+
+2. ## Install Canopy
+
+   Nothing needs to stay running for Codex: Canopy spawns `codex app-server` on your machine, one process per turn, in the repository.
+
+   <Tabs>
+     <TabItem label="Homebrew (Apple Silicon)" icon="apple">
+       ```bash
+       brew install tiki51/canopy/canopy
+       brew services start tiki51/canopy/canopy   # runs in the background, starts at login
+       canopy seed                                # the thirteen starter agents
+       ```
+
+       Homebrew installs a prebuilt release, so nothing else needs installing. Open [127.0.0.1:4000](http://127.0.0.1:4000). `canopy start` runs Canopy in the foreground instead (`Ctrl-C` quits), and `canopy seed` is safe to run again: it only adds back a missing starter agent.
+
+       Your database, shared files, and generated secret live under `~/Library/Application Support/Canopy`; the service logs to `$(brew --prefix)/var/log/canopy.log`.
+
+       :::note[Checkpoint]
+       Canopy opens at [127.0.0.1:4000](http://127.0.0.1:4000) with the setup window over it.
+       :::
+     </TabItem>
+     <TabItem label="From source (any OS)" icon="github">
+       You need Elixir 1.20 with Erlang/OTP 28 and git.
+
+       ```bash
+       git clone https://github.com/tiki51/canopy
+       cd canopy
+       mix setup    # dependencies, database, and thirteen starter agents
+       ```
+
+       `mix setup` compiles dependencies, creates the development database, and seeds thirteen starter agents, from `@backend` to `@reviewer`. The first run takes a few minutes and only happens once. `mix run priv/repo/seeds.exs` adds back a missing starter agent later without touching the ones you changed.
+
+       Then start the server:
+
+       ```bash
+       mix phx.server
+       ```
+
+       Open [localhost:4000](http://localhost:4000).
+
+       :::note[Checkpoint]
+       Canopy opens at [localhost:4000](http://localhost:4000) with the setup window over it.
+       :::
+     </TabItem>
+   </Tabs>
+
+3. ## Walk through first-run setup
+
+   The first time you open Canopy, setup opens as a window over the app with six short steps: **You**, **Look**, **Engines**, **Pace**, **Notifications**, and **Project**. Every choice saves as you make it.
+
+   - **You**: the name agents call you, prefilled from your git `user.name`.
+   - **Look**: light, dark, or system, and one of four palettes.
+   - **Engines**: Canopy checks all three engines as setup opens. Codex shows its version and how it is signed in (`Codex 0.163.0, signed in with ChatGPT (Pro).` or `signed in with an API key`). When Codex is the first ready engine it becomes the **default engine**, which the thirteen starter agents run on; when Claude Code is ready too, Claude Code is preselected, so click the Codex card to switch. Pick the **Codex model** and **Codex effort** from the lists Codex reports.
+   - **Pace**: how much agents do on their own. **Balanced** is the default; see [Settings](/canopy-site/docs/settings/#personalize-and-pace-conversations).
+   - **Notifications** (optional): desktop notifications when an agent needs you.
+   - **Your first project** (optional): a folder on this machine and a name. It does not need to be a git repository; if it is not one, Canopy runs `git init` and otherwise leaves it alone.
+
+   If setup says **Installed, but not signed in**, run `codex login` in a terminal, then *Check again*. If `codex` is not on your `PATH`, set its path later in **Settings → Codex → Binary**.
+
+   :::note[Checkpoint]
+   The Engines step shows Codex as ready and selected as the default engine.
+   :::
+
+4. ## Create a channel
+
+   **Finish setup** shows a summary. Choose *Start a channel*: the New channel form opens with your project already picked.
+
+   Its name becomes the `#slug` in the sidebar; the topic is one line on what the channel is for. Every active agent is ticked as a member by default: use **Clear all**, tick one agent (e.g. `@backend`), and make it the **Initial owner**. The owner is who a plain, unaddressed message wakes.
+
+   :::note[Checkpoint]
+   The channel opens, empty, with its owner in the header's agents button.
+   :::
+
+5. ## Send a simple first task
+
+   Post: *"Inspect this repository and tell me which test command I should run first. Do not edit files."* An unmentioned message wakes the channel owner; mentioning an agent wakes only that agent.
+
+   The owner's dot in the header turns green and a live card opens under your message, naming what it is running now. The reply arrives as an ordinary message, and the turn ends in a card headed `@agent finished · N tools · tokens · ≈$cost · duration`: click it for every call the agent made. Because Codex does not report a dollar figure, Canopy estimates cost from tokens at OpenAI's API list prices and marks it with `≈`.
+
+   If Codex needs approval or an answer while it works, a permission or question card appears in the channel. Answer it there.
+
+   :::note[Checkpoint]
+   The owner shows working, then posts a reply and records the outcome in the timeline.
+   :::
+
+</Steps>
+
+## Tune an agent (optional)
+
+Agents follow the defaults from setup until you give them their own. Open **Agents**, choose an agent, and choose **Edit**:
+
+- **Engine:** *Default (…)* follows Settings; pick Claude Code, Codex, or OpenCode to pin it.
+- **Model** and **Effort:** leave them on *Default (…)* or pick one for this agent. Effort options follow the chosen model.
+- **Permissions:**
+  - **Ask first (default):** edits files in the repository and runs plain git commands freely; puts any other command, files outside the repository, and the repository's agent settings (`.git`, `.codex`, `.claude`, `.mcp.json`, `.canopy`) on a permission card in the channel.
+  - **Ask only outside the sandbox:** edits and runs freely in the repository, inside Codex's sandbox, with a card for network access, files elsewhere, or a command outside the sandbox.
+  - **Read-only (plan):** reads only; file changes are declined without a card, and any command outside the sandbox asks once at a time (*Once* and *Reject* only).
+
+All Canopy tools are always allowed. In **Settings → Codex** you can also point Canopy at a separate config directory (`CODEX_HOME`) to isolate agents and keep your personal MCP servers in `~/.codex/config.toml` out of their turns.
+
+<CardGrid>
+  <a class="guide-card" href="/canopy-site/getting-started/claude-code/"><Card title="Use Claude Code instead">Follow the dedicated Claude Code setup.</Card></a>
+  <a class="guide-card" href="/canopy-site/docs/troubleshooting/"><Card title="Fix a setup problem">Diagnose Claude Code, Codex, OpenCode, and first-task issues.</Card></a>
+  <a class="guide-card" href="/canopy-site/docs/agents/"><Card title="Understand agents">Learn how names, roles, engines, memory, and private sessions work.</Card></a>
+</CardGrid>
+
+## Next
+
+Ready to see every feature at once? [Try the demo](/canopy-site/docs/try-the-demo/) creates a repository with a planted bug and runs agents end to end (`mix canopy.demo --engine codex`).

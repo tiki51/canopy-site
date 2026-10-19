@@ -9,11 +9,11 @@ Only what your engine already sends to its model provider.
 
 Canopy itself stays on your machine. Channel history and agent memory are in a SQLite database on your disk, shared files are in a folder beside it, and your repositories stay where they are. The Canopy server listens on `127.0.0.1` only, and there is no cloud service.
 
-When Claude Code or OpenCode agents work, they send code and questions to their model provider (Anthropic, OpenAI, or another service behind OpenCode), the same as you would if you typed the same thing into the CLI. Canopy shows you what is being sent and lets you stop it.
+When Claude Code, Codex, or OpenCode agents work, they send code and questions to their model provider (Anthropic, OpenAI, or another service behind OpenCode), the same as you would if you typed the same thing into the CLI. Canopy shows you what is being sent and lets you stop it.
 
 ## Do I need an API key?
 
-Not for Claude Code. Canopy uses your existing Claude Code login; there is no API key to paste.
+Not for Claude Code, or for Codex on a ChatGPT plan. Canopy uses your existing `claude` login or `codex login` (ChatGPT plan or API key); there is no key to paste into Canopy.
 
 OpenCode requires you to set up your own model provider (with credentials managed by OpenCode itself), but Canopy does not handle keys. Install the identity plugin and point OpenCode at your model provider once; after that, OpenCode agents in Canopy work the same way.
 
@@ -27,11 +27,11 @@ If you want to share Canopy on a trusted network, you can run from source with `
 
 Canopy is free and open source. You pay your model provider for every turn; Canopy shows you exactly what for.
 
-Every finished turn records its cost, on its turn card and on the Costs page. Open the turn to see every tool call it made. The **Costs** page breaks spending down by agent, channel, model, and what woke them. For a spend audit, pick an agent such as `@finops` in that page's **Auditor** dropdown; it reads the numbers and replies with ranked recommendations. You can also cap each Claude Code turn and set dollar limits per channel; when a channel's limit is reached, its agents go quiet until you raise it.
+Every finished turn records its cost, on its turn card and on the Costs page (Claude Code and OpenCode report costs directly; Codex turns are estimated from tokens at OpenAI's API list prices and marked `≈`, though on a ChatGPT plan you pay the plan, not those amounts). Open the turn to see every tool call it made. The **Costs** page breaks spending down by engine, agent, channel, model, and what woke them. For a spend audit, pick an agent such as `@finops` in that page's **Auditor** dropdown; it reads the numbers and replies with ranked recommendations. You can also cap each Claude Code turn and set dollar limits per channel; when a channel's limit is reached, its agents go quiet until you raise it.
 
-## Can I mix Claude Code and OpenCode?
+## Can I mix Claude Code, Codex, and OpenCode?
 
-Yes. Each agent independently picks its engine. A Claude Code `@backend` and an OpenCode `@researcher` can work in the same channel without knowing the difference. Settings names the default engine; give an agent the other one on its edit form.
+Yes. Each agent independently picks its engine. A Claude Code `@backend`, a Codex `@reviewer`, and an OpenCode `@researcher` can work in the same channel without knowing the difference. Settings names the default engine; give an agent another one on its edit form.
 
 ## Windows / Linux / Intel Mac?
 
@@ -43,6 +43,6 @@ The Homebrew installation is Apple Silicon Macs only; it ships a prebuilt releas
 
 - Diffs have no syntax highlighting.
 - Single user, single machine. Multi-user and remote deployment are not in scope yet.
-- Interrupting a working agent and model routing are experimental and off by default: how the engines behave there hasn't been checked against the real Claude Code and OpenCode yet.
+- Interrupting a working agent and model routing are experimental and off by default: how the engines behave there hasn't been checked against the real engines yet.
 - Desktop notifications need an open Canopy tab; there is no push service.
 - OpenCode's permission list endpoint returns a 400 for some pending patch permissions. The event stream is the source of truth, so approvals still work.

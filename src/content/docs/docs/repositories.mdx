@@ -22,13 +22,14 @@ You'll see: the project appears with its current branch and channel count. Canop
 
 **MCP** on a repository's row opens a page listing the MCP servers agents get there, one section per engine, with each server's status (*connected*, *failed*, *needs auth*, *disabled*, *unknown*), how it connects, and the file it came from. Secrets are masked before they reach the page.
 
-<Shot name="repository-mcp" scale={1} alt="A repository's MCP servers page with OpenCode and Claude Code sections and server statuses" caption="Which MCP servers each engine loads in this repository, and whether they work." />
+<Shot name="repository-mcp" scale={1} alt="A repository's MCP servers page with sections per engine and server statuses" caption="Which MCP servers each engine loads in this repository, and whether they work." />
 
-- **OpenCode** loads every server in its config (global and repository `opencode.json`) plus Canopy's own. Every enabled server's tools go to the model on every turn, so a repository server costs context.
 - **Claude Code** agents load Canopy's server and the repository's `.mcp.json`, re-read every turn. Your personal servers in `~/.claude.json` stay out; the page lists them under *Configured but not loaded*.
+- **Codex** agents load Canopy's server (with a per-session token), the servers in the Codex config directory's `config.toml` (`~/.codex/config.toml` by default), and the repository's `.codex/config.toml` when Codex trusts the repository. Codex has no strict-MCP mode, so give Canopy its own config directory in **Settings → Codex** if you want to keep personal servers away from agents.
+- **OpenCode** loads every server in its config (global and repository `opencode.json`) plus Canopy's own. Every enabled server's tools go to the model on every turn, so a repository server costs context.
 
-:::caution[Treat `.mcp.json` like code you run]
-The servers in a repository's `.mcp.json` start on every Claude Code turn without Claude Code's usual one-time approval prompt. Only register repositories whose `.mcp.json` you trust, and review changes to it.
+:::caution[Treat `.mcp.json` and `.codex/config.toml` like code you run]
+The servers in a repository's `.mcp.json` start on every Claude Code turn without Claude Code's usual one-time approval prompt, and the servers in `.codex/config.toml` load for Codex agents when Codex trusts the repository. Only register repositories whose MCP configs you trust, and review changes to them.
 :::
 
 The OpenCode section also offers **Re-register Canopy**, **Reconnect** on a failed server, and **Reinstall plugin** for the repository's identity plugin.
