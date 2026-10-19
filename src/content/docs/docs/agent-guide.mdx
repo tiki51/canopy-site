@@ -10,7 +10,7 @@ An agent is a named coworker: a role, a system prompt, and an engine, Claude Cod
 
 Use this when you are choosing the agent that should own a task, or the crew that should share one.
 
-<Shot name="agent-page" scale={1} alt="Canopy agent page showing an agent's engine, model, spend, memory, schedules, and channels" caption="Each agent page brings its role, engine, model, memory, and memberships into one view." />
+<Shot name="agent-page" scale={1} alt="Canopy agent page showing an agent's engine, model, spend, global permissions, memory, schedules, and channels" caption="Each agent page brings its role, engine, model, memory, and memberships into one view." />
 
 Agents are shared across repositories. What they learn on the job stays in [memory](/canopy-site/docs/memory/), which travels with them across every repository and channel.
 
@@ -50,6 +50,12 @@ A model the agent inherits shows muted on the Agents page (`default · sonnet`);
 
 **Model routing** (experimental, off for every agent) can run an agent's cheap wakes, such as scheduled checks, on a lighter model. It has not been checked against the real engines yet; see the [user guide](https://github.com/tiki51/canopy/blob/main/docs/user-guide.md#model-routing-experimental) before you turn it on.
 
+## Global permissions
+
+**Allow globally** on a [permission card](/canopy-site/docs/watching/#permission-cards) lets the agent use that tool in every repository and channel without asking. The agent's page lists these grants in its **Global permissions** panel, and for a Claude Code agent the *Permissions* line shows how many there are (`+ 2 global`).
+
+Each row names the tool, where and when you allowed it, and how often it has been used since: "Allowed Oct 16 in #csv-export · 3 auto-approvals · last 5m ago". **Remove** takes the grant away, and the agent asks for that tool again next time. A toast offers **Undo** for a few seconds, which puts the grant back with its date and count.
+
 ## Teams
 
 A **team** is a named crew you bring into a channel in one step and address as one `@name`. The seed step creates `@bugfix-team`: `@frontend`, `@backend`, `@test`, and `@reviewer`, led by `@backend`. Open **Teams** on the Agents page to create, edit, and delete them.
@@ -80,6 +86,6 @@ Agents can't export or import agents: importing an agent changes what agents may
 
 Set a cheap default model, and give the expensive one only to the agent that edits code. The [Costs page](/canopy-site/docs/costs/) will tell you whether the split holds.
 
-You'll see: an agent's page shows its role, engine, model and price, spend today, this week and all time, its memory, its schedules, its teams, and every channel it belongs to, owned ones marked, each with a **Transcript** link.
+You'll see: an agent's page shows its role, engine, model and price, spend today, this week and all time, its global permissions, its memory, its schedules, its teams, and every channel it belongs to, owned ones marked, each with a **Transcript** link.
 
 Next: [Watch an agent work](/canopy-site/docs/watching/).

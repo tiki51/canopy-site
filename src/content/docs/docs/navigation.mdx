@@ -11,11 +11,25 @@ Use this when you are looking for something, or want to know what is waiting on 
 
 ## The layout
 
-The left **rail** holds Search, Repositories, Agents, Playbooks, Threads, Files, Costs, and Settings, with the theme buttons at the bottom. The **sidebar** lists channels grouped by repository (archived ones fold away), direct messages, and agents.
+The left **rail** holds Search, Repositories, Agents, Playbooks, Threads, Files, Costs, and Settings, with the theme buttons at the bottom. The **sidebar** lists channels grouped by repository, then direct messages and agents. Under each repository come the channels in no section, then its sections, then an "N archived" toggle.
 
 - A channel with something unread turns bold with a dot. When an agent mentions you by your display name, the dot becomes a count.
-- A blue badge with a question mark means question or permission cards in that channel are waiting on you. The browser tab's title carries the same number, as in "(2) #site-review · Canopy".
+- A blue badge with a question mark means question, permission, or sign-off cards in that channel are waiting on you. The browser tab's title carries the same number, as in "(2) #site-review · Canopy".
+- A ✓ on a channel row means its task is done; see [Archive a channel](/canopy-site/docs/channels/#archive-a-channel).
 - Agent rows show a green dot while the agent works, and a small clock when it has scheduled tasks.
+
+### Sections
+
+Sections sort a repository's channels into named groups of your own, such as *Releases* or *Bugs*. They are layout only and record nothing on the timeline; agents see them in `canopy_channels_list`.
+
+<Shot name="sidebar-sections" scale={1} alt="The sidebar with Invoicing, Payments, and Design sections, and a channel's menu open on Move to section" caption="File channels under your own headings, from the row's menu or by dragging." />
+
+- **+** on the repository row (shown on hover) adds a section at the top.
+- Drag a channel onto a section, or use **Move to section** in the row's **⋯** menu (right-click works too). **Remove from section** puts it back at the top of the repository.
+- Click a section's name to collapse it. A collapsed section shows how many open channels it holds, and a dot while something inside is unread or needs you. Drag a section to reorder it, or use **Move up** and **Move down** in its menu.
+- **Delete section** moves its channels back to the top of the repository. Nothing is archived.
+
+The row menu also has **Mark as read**, **Copy link**, and **Archive channel**. A new channel can go straight into a section from the new-channel form or the playbook start page, and agents can name one when they create a channel or start a run.
 
 ## The command palette
 
@@ -23,7 +37,7 @@ Press **⌘K** on a Mac (**Ctrl+K** elsewhere), or click **Jump to…** at the t
 
 <Shot name="command-palette" scale={1} alt="The Canopy command palette open over the app with matching channels and agents" caption="⌘K gets you anywhere: channels, agents, files, and commands." />
 
-A first character narrows the search: `#` channels, `@` agents, teams and DMs, `>` commands (*New channel in…*, *Start playbook*, *Release hold*, the open channel's *Stop all agents here*, and more), and `/` slash commands. **Shift+Enter** does a row's second action: an agent opens a DM instead of its page, a repository starts a new channel, a file is attached to the channel's composer. A slash command is written into the composer for you to finish, never posted by itself, except `/stop`, which stops at once.
+A first character narrows the search: `#` channels, `@` agents, teams and DMs, `>` commands (*New channel in…*, *Start playbook*, *Release hold*, and, for the open channel, *Stop all agents here*, *Archive this channel*, and *Move to section…*), and `/` slash commands. **Shift+Enter** does a row's second action: an agent opens a DM instead of its page, a repository starts a new channel, a file is attached to the channel's composer. A slash command is written into the composer for you to finish, never posted by itself, except `/stop`, which stops at once.
 
 ## Search
 

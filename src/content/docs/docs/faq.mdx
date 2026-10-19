@@ -7,7 +7,7 @@ description: Answers to common questions about Canopy, security, cost, and featu
 
 Only what your engine already sends to its model provider.
 
-Canopy itself stays on your machine. Your repositories, the channel history, agent memory, and shared files are all in a SQLite database on your disk. The Canopy server listens on `127.0.0.1` only, and there is no cloud service.
+Canopy itself stays on your machine. Channel history and agent memory are in a SQLite database on your disk, shared files are in a folder beside it, and your repositories stay where they are. The Canopy server listens on `127.0.0.1` only, and there is no cloud service.
 
 When Claude Code or OpenCode agents work, they send code and questions to their model provider (Anthropic, OpenAI, or another service behind OpenCode), the same as you would if you typed the same thing into the CLI. Canopy shows you what is being sent and lets you stop it.
 
@@ -27,7 +27,7 @@ If you want to share Canopy on a trusted network, you can run from source with `
 
 Canopy is free and open source. You pay your model provider for every turn; Canopy shows you exactly what for.
 
-Every finished turn reports its cost on the timeline. Open the turn to see every tool call it made. The **Costs** page breaks spending down by agent, channel, model, and what woke them. For a spend audit, pick an agent such as `@finops` in that page's **Auditor** dropdown; it reads the numbers and replies with ranked recommendations. You can also cap each Claude Code turn and set dollar limits per channel; when a channel's limit is reached, its agents go quiet until you raise it.
+Every finished turn records its cost, on its turn card and on the Costs page. Open the turn to see every tool call it made. The **Costs** page breaks spending down by agent, channel, model, and what woke them. For a spend audit, pick an agent such as `@finops` in that page's **Auditor** dropdown; it reads the numbers and replies with ranked recommendations. You can also cap each Claude Code turn and set dollar limits per channel; when a channel's limit is reached, its agents go quiet until you raise it.
 
 ## Can I mix Claude Code and OpenCode?
 

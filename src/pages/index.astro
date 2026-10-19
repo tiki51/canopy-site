@@ -82,11 +82,11 @@ const story = [
   },
   {
     title: 'They ask before crossing a boundary.',
-    body: "The new endpoint touches a file outside <code>@backend</code>'s allowed scope, so a permission card drops into the channel with the exact diff. Approve it once, allow it always, or reject it.",
-    caption: 'edit permission · Once · Always · Reject',
-    alt: 'A permission card: @backend asks for edit permission on acme/reports/reports.py, with the proposed diff and three buttons: Once, Always, Reject.',
+    body: "The new endpoint touches a file outside <code>@backend</code>'s allowed scope, so a permission card drops into the channel with the exact diff. Approve it once, for the session, or globally, or reject it.",
+    caption: 'edit permission · Once · Always · Allow globally · Reject',
+    alt: 'A permission card: @backend asks for edit permission on acme/reports/reports.py, with the proposed diff and four buttons: Once, Always, Allow globally, Reject.',
     shot: 'pb-story-04-permission',
-    zoom: { ...pane, y: 0.4, mx: 0.52, my: 0.461, mw: 0.47 }, // the lowest window: the card is pinned above the composer; phones: right-anchored, for Once / Always / Reject
+    zoom: { ...pane, y: 0.4, mx: 0.52, my: 0.461, mw: 0.47 }, // the lowest window: the card is pinned above the composer; phones: right-anchored, for Once / Always / Allow globally / Reject
     fade: true,
   },
   {
@@ -507,7 +507,7 @@ const install = {
                 <h3>Nothing happens in the dark</h3>
                 <p>Agents ask permission before risky edits and post question cards when requirements are ambiguous. Hit <strong>Stop</strong> to halt every active turn in the channel at once.</p>
               </div>
-              <Shot class="frag" style="--shift: -10px" name="pb-story-04-permission-card" alt="A permission card: @backend asks for edit permission on acme/reports/reports.py, with the diff and three buttons: Once, Always, Reject." sizes="1120px" />
+              <Shot class="frag" style="--shift: -10px" name="pb-story-04-permission-card" alt="A permission card: @backend asks for edit permission on acme/reports/reports.py, with the diff and four buttons: Once, Always, Allow globally, Reject." sizes="1120px" />
             </li>
             <li class="tile span-2 rows-2" data-reveal>
               <div class="tile-text">
